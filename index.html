@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CV ATS PRO — CV optimisé pour les ATS</title>
+  <meta name="description" content="Créez, analysez et optimisez votre CV pour chaque offre : score ATS, correspondance avec l'offre, lettre de motivation et préparation d'entretien.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230f766e'/%3E%3Cpath d='M9 16.5l4.5 4.5L23 11' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app"></div>
+  <noscript><p style="padding:2rem;font-family:sans-serif">CV ATS PRO nécessite JavaScript. Activez-le pour utiliser l'application.</p></noscript>
+
+  <!-- Ordre de chargement : données → couche IA → moteur ATS → générateur de CV → entretien → interface -->
+  <script src="data.js"></script>
+  <script src="ai.js"></script>
+  <script src="ats-engine.js"></script>
+  <script src="cv-generator.js"></script>
+  <script src="interview.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
