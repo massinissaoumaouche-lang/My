@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jeu Pays-Capitales</title>
+<style>
+  :root { --ink: #1a1a1a; --muted: #777; --line: #bbb; --accent: #c0392b; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Arial, Helvetica, sans-serif; color: var(--ink); background: #e9e9e9; }
+  .controls { position: sticky; top: 0; z-index: 2; display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+    padding: 10px 16px; background: #fff; border-bottom: 1px solid #ccc; }
+  .controls button, .controls select { font-size: 15px; padding: 6px 10px; }
+  .controls .info { font-size: 13px; color: var(--muted); }
+  .sheet { background: #fff; margin: 16px auto; box-shadow: 0 1px 4px rgba(0,0,0,.2); }
+  .sheet.a3 { width: min(297mm, calc(100% - 32px)); }
+  .sheet.a4 { width: min(210mm, calc(100% - 32px)); padding: 10mm; }
+  .sheet.a3 svg { display: block; width: 100%; height: auto; }
+  h1 { font-size: 18pt; margin: 0 0 3mm; }
+  h2 { font-size: 13pt; margin: 6mm 0 2mm; }
+  p, li { font-size: 10pt; line-height: 1.35; margin: 1mm 0; }
+  table.cablage { border-collapse: collapse; width: 100%; font-size: 10pt; }
+  table.cablage th, table.cablage td { border: 1px solid #999; padding: 1.2mm 2mm; text-align: center; }
+  table.cablage td.ok { width: 18mm; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; }
+  .cards { display: grid; grid-template-columns: repeat(3, 63mm); grid-auto-rows: 14mm; gap: 1mm; justify-content: center; }
+  .card { position: relative; border: 1px dashed #888; display: flex; align-items: center; justify-content: center;
+    font-size: 14pt; font-weight: bold; text-align: center; padding: 0 6mm; overflow: hidden; }
+  .card .code { position: absolute; top: .8mm; left: 1.2mm; font-size: 6.5pt; font-weight: normal; color: var(--muted); }
+  .card.cap { font-style: italic; }
+
+  @page a3 { size: A3 portrait; margin: 0; }
+  @page a4 { size: A4 portrait; margin: 0; }
+  @media print {
+    body { background: #fff; }
+    .controls { display: none; }
+    .sheet { margin: 0; box-shadow: none; break-after: page; }
+    .sheet.a3 { page: a3; width: 297mm; height: 420mm; }
+    .sheet.a3 svg { width: 297mm; height: 420mm; }
+    .sheet.a4 { page: a4; width: 210mm; height: 297mm; }
+    body[data-print="a3"] .sheet.a4, body[data-print="a4"] .sheet.a3 { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="controls">
+  <label>Thème
+    <select id="theme"></select>
+  </label>
+  <button id="shuffle">Nouvelle grille</button>
+  <button data-print="a3">Imprimer les gabarits (A3)</button>
+  <button data-print="a4">Imprimer câblage + étiquettes (A4)</button>
+  <span class="info" id="info"></span>
+</div>
+
+<section class="sheet a3"><svg id="front" viewBox="0 0 297 420" width="297mm" height="420mm"></svg></section>
+<section class="sheet a3"><svg id="back" viewBox="0 0 297 420" width="297mm" height="420mm"></svg></section>
+
+<section class="sheet a4">
+  <h1>Tableau de câblage</h1>
+  <p>Ce câblage est <b>fixe</b> : il ne change jamais, quel que soit le thème ou la grille d'étiquettes.
+     Chaque fil relie une seule douille P à une seule douille C. Coche la case après avoir testé le fil.</p>
+  <div class="cols">
+    <table class="cablage" id="table-a"></table>
+    <table class="cablage" id="table-b"></table>
+  </div>
+  <h2>Schéma électrique</h2>
+  <svg viewBox="0 0 190 66" width="190mm" height="66mm" font-size="3.6" font-family="Arial">
+    <g fill="none" stroke="#1a1a1a" stroke-width=".5">
+      <!-- pile -->
+      <line x1="20" y1="8" x2="20" y2="28"/><line x1="14" y1="28" x2="26" y2="28"/>
+      <line x1="17" y1="33" x2="23" y2="33"/><line x1="20" y1="33" x2="20" y2="54"/>
+      <line x1="20" y1="8" x2="60" y2="8"/><line x1="20" y1="54" x2="175" y2="54"/>
+      <!-- panneau entre les deux sondes -->
+      <rect x="60" y="2" width="40" height="18" stroke-dasharray="1.5 1"/>
+      <line x1="100" y1="8" x2="175" y2="8"/>
+      <!-- branche 1 : résistance + LED -->
+      <line x1="140" y1="8" x2="140" y2="13"/>
+      <rect x="137.5" y="13" width="5" height="12"/>
+      <line x1="140" y1="25" x2="140" y2="31"/>
+      <polygon points="135,31 145,31 140,38"/><line x1="135" y1="38" x2="145" y2="38"/>
+      <line x1="140" y1="38" x2="140" y2="54"/>
+      <line x1="146" y1="32" x2="149" y2="29"/><line x1="147" y1="35" x2="150" y2="32"/>
+      <!-- branche 2 : buzzer, en parallèle sur la branche LED -->
+      <line x1="175" y1="8" x2="175" y2="26"/>
+      <rect x="170" y="26" width="10" height="10"/>
+      <line x1="175" y1="36" x2="175" y2="54"/>
+    </g>
+    <g fill="#1a1a1a">
+      <text x="8" y="29">+</text><text x="8" y="35">−</text>
+      <text x="0" y="45">Pile 4,5 V</text><text x="0" y="49">(3 × AA)</text>
+      <text x="62" y="9">Sonde A → P</text><text x="62" y="15">Sonde B → C</text>
+      <text x="58" y="26">panneau : contact seulement</text><text x="58" y="30">si bonne paire</text>
+      <text x="118" y="21">150 Ω</text>
+      <text x="113" y="36">LED</text><text x="105" y="41">patte longue</text><text x="105" y="45">vers le haut (+)</text>
+      <text x="168" y="25">+</text>
+      <text x="175" y="60" text-anchor="middle">Buzzer actif</text><text x="175" y="64" text-anchor="middle">(+ vers le haut)</text>
+    </g>
+  </svg>
+  <h2>Tests avant de fermer la boîte</h2>
+  <ol>
+    <li><b>Sondes l'une contre l'autre</b> : la LED s'allume et le buzzer sonne. Sinon, problème dans le circuit pile / résistance / LED (LED à l'envers ?).</li>
+    <li><b>Les 20 bonnes paires</b> (tableau ci-dessus) : chacune doit allumer. Sinon, fil mal serré ou coupé.</li>
+    <li><b>Les voisins</b> : sonde A sur P1 et sonde B sur P2, puis P2–P3, …, P19–P20, puis C1–C2, …, C19–C20. Tout doit rester <b>éteint</b>.
+        Une lumière ici veut dire que deux fils voisins se touchent (brin de cuivre qui dépasse, écrou qui touche le voisin).</li>
+    <li><b>Quelques mauvaises paires</b> au hasard (ex. P1–C1, P5–C6) : éteint.</li>
+  </ol>
+</section>
+
+<section class="sheet a4">
+  <h1 id="cards-title">Étiquettes</h1>
+  <p>Découpe sur les pointillés, colle chaque étiquette (pâte adhésive) dans la case qui porte le même code (P… / C…) sur le panneau.
+     Pour une nouvelle partie : clique « Nouvelle grille », imprime cette page, remplace les étiquettes. Le câblage ne change pas.</p>
+  <div class="cards" id="cards"></div>
+</section>
+
+<script>
+// Câblage FIXE : WIRING[i] = numéro de la douille capitale reliée à la douille pays P(i+1).
+// Ne jamais modifier une fois le panneau câblé.
+const WIRING = [17, 11, 15, 20, 10, 13, 19, 12, 16, 1, 7, 4, 18, 6, 2, 8, 3, 14, 5, 9];
+
+const THEMES = {
+  monde: { name: "Monde (mélange)", pairs: [
+    ["France","Paris"],["Algérie","Alger"],["Maroc","Rabat"],["Tunisie","Tunis"],["Espagne","Madrid"],
+    ["Italie","Rome"],["Allemagne","Berlin"],["Royaume-Uni","Londres"],["Portugal","Lisbonne"],["Suisse","Berne"],
+    ["Égypte","Le Caire"],["Sénégal","Dakar"],["États-Unis","Washington"],["Canada","Ottawa"],["Brésil","Brasília"],
+    ["Argentine","Buenos Aires"],["Japon","Tokyo"],["Chine","Pékin"],["Turquie","Ankara"],["Australie","Canberra"]]},
+  europe: { name: "Europe", pairs: [
+    ["France","Paris"],["Espagne","Madrid"],["Italie","Rome"],["Allemagne","Berlin"],["Royaume-Uni","Londres"],
+    ["Portugal","Lisbonne"],["Suisse","Berne"],["Belgique","Bruxelles"],["Pays-Bas","Amsterdam"],["Autriche","Vienne"],
+    ["Grèce","Athènes"],["Pologne","Varsovie"],["Suède","Stockholm"],["Norvège","Oslo"],["Danemark","Copenhague"],
+    ["Finlande","Helsinki"],["Irlande","Dublin"],["Hongrie","Budapest"],["Tchéquie","Prague"],["Roumanie","Bucarest"],
+    ["Croatie","Zagreb"],["Russie","Moscou"],["Islande","Reykjavik"],["Bulgarie","Sofia"]]},
+  afrique: { name: "Afrique", pairs: [
+    ["Algérie","Alger"],["Maroc","Rabat"],["Tunisie","Tunis"],["Égypte","Le Caire"],["Libye","Tripoli"],
+    ["Sénégal","Dakar"],["Mali","Bamako"],["Niger","Niamey"],["Mauritanie","Nouakchott"],["Nigeria","Abuja"],
+    ["Ghana","Accra"],["Cameroun","Yaoundé"],["Kenya","Nairobi"],["Éthiopie","Addis-Abeba"],["Madagascar","Antananarivo"],
+    ["Tanzanie","Dodoma"],["Rwanda","Kigali"],["Gabon","Libreville"],["Angola","Luanda"],["RD Congo","Kinshasa"],
+    ["Congo","Brazzaville"],["Burkina Faso","Ouagadougou"],["Guinée","Conakry"],["Soudan","Khartoum"],["Tchad","N'Djaména"]]},
+  ameriques_asie: { name: "Amériques, Asie, Océanie", pairs: [
+    ["États-Unis","Washington"],["Canada","Ottawa"],["Mexique","Mexico"],["Brésil","Brasília"],["Argentine","Buenos Aires"],
+    ["Chili","Santiago"],["Pérou","Lima"],["Colombie","Bogota"],["Cuba","La Havane"],["Venezuela","Caracas"],
+    ["Japon","Tokyo"],["Chine","Pékin"],["Inde","New Delhi"],["Corée du Sud","Séoul"],["Vietnam","Hanoï"],
+    ["Thaïlande","Bangkok"],["Philippines","Manille"],["Pakistan","Islamabad"],["Turquie","Ankara"],["Iran","Téhéran"],
+    ["Arabie saoudite","Riyad"],["Australie","Canberra"],["Nouvelle-Zélande","Wellington"]]},
+};
+
+const ROW_Y = i => 76 + i * 16.5;         // i = 0..19, en mm
+const X_P = 28, X_C = 269;               // centres des douilles (vue de face)
+const COLORS = ["#c0392b","#2471a3","#1e8449","#b9770e","#7d3c98","#117a65","#a04000","#2e4053","#d4ac0d","#922b21"];
+
+const svgNS = "http://www.w3.org/2000/svg";
+function el(parent, tag, attrs, text) {
+  const e = document.createElementNS(svgNS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (text != null) e.textContent = text;
+  parent.appendChild(e);
+  return e;
+}
+function drillMark(g, x, y, r) {
+  el(g, "circle", { cx: x, cy: y, r, fill: "none", stroke: "#1a1a1a", "stroke-width": .3 });
+  el(g, "line", { x1: x - r - 2, y1: y, x2: x + r + 2, y2: y, stroke: "#1a1a1a", "stroke-width": .2 });
+  el(g, "line", { x1: x, y1: y - r - 2, x2: x, y2: y + r + 2, stroke: "#1a1a1a", "stroke-width": .2 });
+}
+function cornerMarks(g) {
+  for (const [x, y, dx, dy] of [[6,6,1,1],[291,6,-1,1],[6,414,1,-1],[291,414,-1,-1]]) {
+    el(g, "path", { d: `M${x + 8*dx} ${y} H${x} V${y + 8*dy}`, fill: "none", stroke: "#999", "stroke-width": .3 });
+  }
+}
+function scaleBar(g, label) {
+  el(g, "line", { x1: 98.5, y1: 412, x2: 198.5, y2: 412, stroke: "#1a1a1a", "stroke-width": .4 });
+  el(g, "line", { x1: 98.5, y1: 409, x2: 98.5, y2: 415, stroke: "#1a1a1a", "stroke-width": .4 });
+  el(g, "line", { x1: 198.5, y1: 409, x2: 198.5, y2: 415, stroke: "#1a1a1a", "stroke-width": .4 });
+  el(g, "text", { x: 148.5, y: 408, "font-size": 3, "text-anchor": "middle", fill: "#555" }, label);
+}
+
+function drawFront() {
+  const svg = document.getElementById("front");
+  svg.innerHTML = "";
+  const g = el(svg, "g", { "font-family": "Arial, Helvetica, sans-serif" });
+  cornerMarks(g);
+  el(g, "text", { x: 148.5, y: 22, "font-size": 11, "font-weight": "bold", "text-anchor": "middle" }, "PAYS  ⟷  CAPITALES");
+  el(g, "text", { x: 148.5, y: 29, "font-size": 3.2, "text-anchor": "middle", fill: "#555" },
+     "GABARIT FACE AVANT — imprimer à 100 % (taille réelle), coller sur le panneau, percer aux croix");
+  // Sorties des sondes, LED, buzzer
+  drillMark(g, 60, 42, 3);   el(g, "text", { x: 60, y: 50, "font-size": 3, "text-anchor": "middle" }, "sortie sonde A (Ø 6)");
+  drillMark(g, 237, 42, 3);  el(g, "text", { x: 237, y: 50, "font-size": 3, "text-anchor": "middle" }, "sortie sonde B (Ø 6)");
+  drillMark(g, 133, 42, 2.5); el(g, "text", { x: 133, y: 50, "font-size": 3, "text-anchor": "middle" }, "LED (Ø 5)");
+  drillMark(g, 164, 42, 1.5); el(g, "text", { x: 164, y: 50, "font-size": 3, "text-anchor": "middle" }, "son (Ø 3)");
+  el(g, "text", { x: 70, y: 64, "font-size": 6, "font-weight": "bold", "text-anchor": "middle" }, "PAYS");
+  el(g, "text", { x: 227, y: 64, "font-size": 6, "font-weight": "bold", "text-anchor": "middle" }, "CAPITALES");
+  for (let i = 0; i < 20; i++) {
+    const y = ROW_Y(i);
+    drillMark(g, X_P, y, 3);
+    drillMark(g, X_C, y, 3);
+    el(g, "text", { x: 8, y: y + 1.2, "font-size": 3.4, fill: "#555" }, "P" + (i + 1));
+    el(g, "text", { x: 289, y: y + 1.2, "font-size": 3.4, fill: "#555", "text-anchor": "end" }, "C" + (i + 1));
+    el(g, "rect", { x: 38, y: y - 7, width: 63, height: 14, fill: "none", stroke: "#bbb", "stroke-width": .3, "stroke-dasharray": "1.5 1" });
+    el(g, "rect", { x: 196, y: y - 7, width: 63, height: 14, fill: "none", stroke: "#bbb", "stroke-width": .3, "stroke-dasharray": "1.5 1" });
+  }
+  scaleBar(g, "cette barre doit mesurer 100 mm — sinon l'impression n'est pas à l'échelle");
+}
+
+function drawBack() {
+  // Vue de l'arrière : gauche et droite sont inversées.
+  const svg = document.getElementById("back");
+  svg.innerHTML = "";
+  const g = el(svg, "g", { "font-family": "Arial, Helvetica, sans-serif" });
+  const xP = 297 - X_P, xC = 297 - X_C;
+  cornerMarks(g);
+  el(g, "text", { x: 148.5, y: 20, "font-size": 9, "font-weight": "bold", "text-anchor": "middle" }, "FACE ARRIÈRE — CÂBLAGE");
+  el(g, "text", { x: 148.5, y: 27, "font-size": 3.2, "text-anchor": "middle", fill: "#555" },
+     "Vue de derrière : les pays sont à DROITE, les capitales à GAUCHE. Un fil par trait.");
+  el(g, "text", { x: xC, y: 64, "font-size": 5, "font-weight": "bold", "text-anchor": "middle" }, "C (capitales)");
+  el(g, "text", { x: xP, y: 64, "font-size": 5, "font-weight": "bold", "text-anchor": "middle" }, "P (pays)");
+  for (let i = 0; i < 20; i++) {
+    const c = WIRING[i] - 1, color = COLORS[i % COLORS.length];
+    el(g, "line", { x1: xP - 4, y1: ROW_Y(i), x2: xC + 4, y2: ROW_Y(c), stroke: color, "stroke-width": .6,
+                    "stroke-dasharray": i < 10 ? "none" : "3 1.2" });
+  }
+  for (let i = 0; i < 20; i++) {
+    const y = ROW_Y(i);
+    const back = WIRING.indexOf(i + 1) + 1;
+    drillMark(g, xP, y, 3);
+    drillMark(g, xC, y, 3);
+    el(g, "text", { x: xP + 6, y: y + 1.3, "font-size": 3.6, "font-weight": "bold" }, `P${i + 1} → C${WIRING[i]}`);
+    el(g, "text", { x: xC - 6, y: y + 1.3, "font-size": 3.6, "font-weight": "bold", "text-anchor": "end" }, `C${i + 1} ← P${back}`);
+  }
+  el(g, "text", { x: xP, y: 42, "font-size": 3, "text-anchor": "middle" }, "sonde A");
+  el(g, "text", { x: xC, y: 42, "font-size": 3, "text-anchor": "middle" }, "sonde B");
+  scaleBar(g, "barre de contrôle : 100 mm");
+}
+
+function drawTables() {
+  const head = "<tr><th>Fil</th><th>Douille pays</th><th>Douille capitale</th><th>Testé</th></tr>";
+  const row = i => `<tr><td>${i + 1}</td><td>P${i + 1}</td><td>C${WIRING[i]}</td><td class="ok">☐</td></tr>`;
+  document.getElementById("table-a").innerHTML = head + [...Array(10).keys()].map(row).join("");
+  document.getElementById("table-b").innerHTML = head + [...Array(10).keys()].map(i => row(i + 10)).join("");
+}
+
+// Générateur pseudo-aléatoire reproductible : même thème + même numéro = même grille.
+function rng(seed) {
+  return () => {
+    seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+    let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+function grid(themeKey, seed) {
+  const pairs = THEMES[themeKey].pairs.slice();
+  if (seed === 0) return pairs.slice(0, 20); // grille 0 = ordre de la liste
+  const rand = rng(seed);
+  for (let i = pairs.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    [pairs[i], pairs[j]] = [pairs[j], pairs[i]];
+  }
+  return pairs.slice(0, 20);
+}
+
+function drawCards(themeKey, seed) {
+  const pairs = grid(themeKey, seed);
+  const caps = new Array(20);
+  pairs.forEach((p, i) => { caps[WIRING[i] - 1] = p[1]; });
+  const card = (code, name, cls) => `<div class="card ${cls}"><span class="code">${code}</span>${name}</div>`;
+  document.getElementById("cards").innerHTML =
+    pairs.map((p, i) => card("P" + (i + 1), p[0], "")).join("") +
+    caps.map((c, i) => card("C" + (i + 1), c, "cap")).join("");
+  const label = `${THEMES[themeKey].name} — grille n° ${seed}`;
+  document.getElementById("cards-title").textContent = "Étiquettes · " + label;
+  document.getElementById("info").textContent = label;
+}
+
+function readState() {
+  const h = new URLSearchParams(location.hash.slice(1));
+  const theme = THEMES[h.get("theme")] ? h.get("theme") : "monde";
+  const seed = Number.isInteger(+h.get("grille")) && h.get("grille") !== null ? +h.get("grille") : 0;
+  return { theme, seed };
+}
+function render() {
+  const { theme, seed } = readState();
+  document.getElementById("theme").value = theme;
+  drawCards(theme, seed);
+}
+
+const sel = document.getElementById("theme");
+for (const k in THEMES) sel.add(new Option(THEMES[k].name, k));
+sel.onchange = () => { location.hash = `theme=${sel.value}&grille=0`; };
+document.getElementById("shuffle").onclick = () => {
+  location.hash = `theme=${sel.value}&grille=${1 + Math.floor(Math.random() * 9999)}`;
+};
+document.querySelectorAll("button[data-print]").forEach(b => b.onclick = () => {
+  document.body.dataset.print = b.dataset.print;
+  window.print();
+  delete document.body.dataset.print;
+});
+window.onhashchange = render;
+
+drawFront();
+drawBack();
+drawTables();
+render();
+</script>
+</body>
+</html>
