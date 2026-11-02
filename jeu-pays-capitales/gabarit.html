@@ -65,45 +65,77 @@
     <table class="cablage" id="table-b"></table>
   </div>
   <h2>Schéma électrique</h2>
-  <svg viewBox="0 0 190 66" width="190mm" height="66mm" font-size="3.6" font-family="Arial">
+  <svg viewBox="0 0 190 84" width="190mm" height="84mm" font-size="3.2" font-family="Arial">
     <g fill="none" stroke="#1a1a1a" stroke-width=".5">
       <!-- pile -->
-      <line x1="20" y1="8" x2="20" y2="28"/><line x1="14" y1="28" x2="26" y2="28"/>
-      <line x1="17" y1="33" x2="23" y2="33"/><line x1="20" y1="33" x2="20" y2="54"/>
-      <line x1="20" y1="8" x2="60" y2="8"/><line x1="20" y1="54" x2="175" y2="54"/>
+      <line x1="12" y1="6" x2="12" y2="38"/><line x1="6" y1="38" x2="18" y2="38"/>
+      <line x1="9" y1="43" x2="15" y2="43"/><line x1="12" y1="43" x2="12" y2="72"/>
+      <line x1="12" y1="72" x2="182" y2="72"/>
+      <!-- bouton poussoir VALIDER -->
+      <line x1="12" y1="6" x2="24" y2="6"/>
+      <circle cx="25" cy="6" r=".9"/><circle cx="37" cy="6" r=".9"/>
+      <line x1="23" y1="2.5" x2="39" y2="2.5"/><line x1="31" y1="2.5" x2="31" y2="0"/>
+      <line x1="38" y1="6" x2="182" y2="6"/>
       <!-- panneau entre les deux sondes -->
-      <rect x="60" y="2" width="40" height="18" stroke-dasharray="1.5 1"/>
-      <line x1="100" y1="8" x2="175" y2="8"/>
-      <!-- branche 1 : résistance + LED -->
-      <line x1="140" y1="8" x2="140" y2="13"/>
-      <rect x="137.5" y="13" width="5" height="12"/>
-      <line x1="140" y1="25" x2="140" y2="31"/>
-      <polygon points="135,31 145,31 140,38"/><line x1="135" y1="38" x2="145" y2="38"/>
-      <line x1="140" y1="38" x2="140" y2="54"/>
-      <line x1="146" y1="32" x2="149" y2="29"/><line x1="147" y1="35" x2="150" y2="32"/>
-      <!-- branche 2 : buzzer, en parallèle sur la branche LED -->
-      <line x1="175" y1="8" x2="175" y2="26"/>
-      <rect x="170" y="26" width="10" height="10"/>
-      <line x1="175" y1="36" x2="175" y2="54"/>
+      <line x1="48" y1="6" x2="48" y2="22"/><line x1="48" y1="22" x2="55" y2="22"/>
+      <rect x="55" y="14" width="40" height="16" stroke-dasharray="1.5 1"/>
+      <line x1="95" y1="22" x2="145" y2="22"/>
+      <!-- LED verte : R1 + LED -->
+      <line x1="112" y1="22" x2="112" y2="26"/><rect x="110" y="26" width="4" height="10"/>
+      <line x1="112" y1="36" x2="112" y2="42"/>
+      <polygon points="107,42 117,42 112,49" fill="#1e8449"/><line x1="107" y1="49" x2="117" y2="49"/>
+      <line x1="112" y1="49" x2="112" y2="72"/>
+      <line x1="118" y1="43" x2="121" y2="40"/><line x1="119" y1="46" x2="122" y2="43"/>
+      <!-- buzzer -->
+      <line x1="130" y1="22" x2="130" y2="44"/><rect x="125" y="44" width="10" height="10"/>
+      <line x1="130" y1="54" x2="130" y2="72"/>
+      <!-- R3 vers la base, R4 de rappel à la masse -->
+      <line x1="145" y1="22" x2="145" y2="26"/><rect x="143" y="26" width="4" height="10"/>
+      <line x1="145" y1="36" x2="145" y2="40"/><line x1="145" y1="40" x2="157" y2="40"/>
+      <line x1="150" y1="40" x2="150" y2="54"/><rect x="148" y="54" width="4" height="10"/>
+      <line x1="150" y1="64" x2="150" y2="72"/>
+      <!-- transistor Q1 -->
+      <circle cx="162" cy="40" r="6.5"/>
+      <line x1="158" y1="35" x2="158" y2="45" stroke-width=".9"/>
+      <line x1="158" y1="38" x2="164" y2="34"/><line x1="164" y1="34" x2="164" y2="28"/>
+      <line x1="158" y1="42" x2="164" y2="46"/><line x1="164" y1="46" x2="164" y2="72"/>
+      <polygon points="164,46 161.2,45.6 162.6,43.6" fill="#1a1a1a"/>
+      <!-- LED rouge : R2 + LED, court-circuitée par Q1 -->
+      <line x1="182" y1="6" x2="182" y2="12"/><rect x="180" y="12" width="4" height="10"/>
+      <line x1="182" y1="22" x2="182" y2="34"/><line x1="164" y1="28" x2="182" y2="28"/>
+      <polygon points="177,34 187,34 182,41" fill="#c0392b"/><line x1="177" y1="41" x2="187" y2="41"/>
+      <line x1="182" y1="41" x2="182" y2="72"/>
     </g>
     <g fill="#1a1a1a">
-      <text x="8" y="29">+</text><text x="8" y="35">−</text>
-      <text x="0" y="45">Pile 4,5 V</text><text x="0" y="49">(3 × AA)</text>
-      <text x="62" y="9">Sonde A → P</text><text x="62" y="15">Sonde B → C</text>
-      <text x="58" y="26">panneau : contact seulement</text><text x="58" y="30">si bonne paire</text>
-      <text x="118" y="21">150 Ω</text>
-      <text x="113" y="36">LED</text><text x="105" y="41">patte longue</text><text x="105" y="45">vers le haut (+)</text>
-      <text x="168" y="25">+</text>
-      <text x="175" y="60" text-anchor="middle">Buzzer actif</text><text x="175" y="64" text-anchor="middle">(+ vers le haut)</text>
+      <circle cx="48" cy="6" r=".8"/><circle cx="112" cy="22" r=".8"/><circle cx="130" cy="22" r=".8"/>
+      <circle cx="150" cy="40" r=".8"/><circle cx="182" cy="28" r=".8"/>
+      <circle cx="112" cy="72" r=".8"/><circle cx="130" cy="72" r=".8"/><circle cx="150" cy="72" r=".8"/><circle cx="164" cy="72" r=".8"/>
+      <text x="2" y="37">+</text><text x="2" y="46">−</text>
+      <text x="1" y="78">Pile 4,5 V (3 × AA)</text>
+      <text x="22" y="12">bouton VALIDER</text>
+      <text x="57" y="20">Sonde A → P</text><text x="57" y="27">Sonde B → C</text>
+      <text x="55" y="35">contact seulement</text><text x="55" y="39">si bonne paire</text>
+      <text x="97" y="20">B</text>
+      <text x="98" y="32">R1</text><text x="96" y="36">150 Ω</text>
+      <text x="96" y="57">LED</text><text x="96" y="61">verte</text>
+      <text x="137" y="60" text-anchor="middle">buzzer</text>
+      <text x="138" y="31">R3</text>
+      <text x="153" y="58">R4</text>
+      <text x="166" y="62">Q1</text><text x="166" y="66">BC547</text>
+      <text x="185.5" y="18">R2</text>
+      <text x="166" y="52">LED rouge</text>
+      <text x="1" y="83">R1 = R2 = 150 Ω · R3 = 4,7 kΩ · R4 = 100 kΩ · LED : patte longue (+) vers le haut · buzzer actif : + vers le haut</text>
     </g>
   </svg>
   <h2>Tests avant de fermer la boîte</h2>
   <ol>
-    <li><b>Sondes l'une contre l'autre</b> : la LED s'allume et le buzzer sonne. Sinon, problème dans le circuit pile / résistance / LED (LED à l'envers ?).</li>
-    <li><b>Les 20 bonnes paires</b> (tableau ci-dessus) : chacune doit allumer. Sinon, fil mal serré ou coupé.</li>
-    <li><b>Les voisins</b> : sonde A sur P1 et sonde B sur P2, puis P2–P3, …, P19–P20, puis C1–C2, …, C19–C20. Tout doit rester <b>éteint</b>.
-        Une lumière ici veut dire que deux fils voisins se touchent (brin de cuivre qui dépasse, écrou qui touche le voisin).</li>
-    <li><b>Quelques mauvaises paires</b> au hasard (ex. P1–C1, P5–C6) : éteint.</li>
+    <li><b>Sans appuyer sur le bouton</b> : rien ne s'allume, quoi que fassent les sondes.</li>
+    <li><b>Bouton appuyé, sondes en l'air</b> : LED rouge allumée. Sinon : LED rouge à l'envers, ou transistor mal branché.</li>
+    <li><b>Bouton appuyé, sondes l'une contre l'autre</b> : LED verte + buzzer, rouge <b>éteinte</b>. Si la rouge reste allumée : R3 ou transistor mal branché (vérifier l'ordre des pattes).</li>
+    <li><b>Les 20 bonnes paires</b> (tableau ci-dessus) : vert à chaque fois. Sinon, fil mal serré ou coupé.</li>
+    <li><b>Les voisins</b> : sonde A sur P1 et sonde B sur P2, puis P2–P3, …, P19–P20, puis C1–C2, …, C19–C20 : <b>rouge</b> à chaque fois.
+        Du vert ici veut dire que deux fils voisins se touchent (brin de cuivre qui dépasse, écrou qui touche le voisin).</li>
+    <li><b>Quelques mauvaises paires</b> au hasard (ex. P1–C1, P5–C6) : rouge.</li>
   </ol>
 </section>
 
@@ -185,8 +217,10 @@ function drawFront() {
   // Sorties des sondes, LED, buzzer
   drillMark(g, 60, 42, 3);   el(g, "text", { x: 60, y: 50, "font-size": 3, "text-anchor": "middle" }, "sortie sonde A (Ø 6)");
   drillMark(g, 237, 42, 3);  el(g, "text", { x: 237, y: 50, "font-size": 3, "text-anchor": "middle" }, "sortie sonde B (Ø 6)");
-  drillMark(g, 133, 42, 2.5); el(g, "text", { x: 133, y: 50, "font-size": 3, "text-anchor": "middle" }, "LED (Ø 5)");
-  drillMark(g, 164, 42, 1.5); el(g, "text", { x: 164, y: 50, "font-size": 3, "text-anchor": "middle" }, "son (Ø 3)");
+  drillMark(g, 106, 42, 2.5); el(g, "text", { x: 106, y: 50, "font-size": 3, "text-anchor": "middle" }, "LED verte (Ø 5)");
+  drillMark(g, 132, 42, 2.5); el(g, "text", { x: 132, y: 50, "font-size": 3, "text-anchor": "middle" }, "LED rouge (Ø 5)");
+  drillMark(g, 156, 42, 1.5); el(g, "text", { x: 156, y: 50, "font-size": 3, "text-anchor": "middle" }, "son (Ø 3)");
+  drillMark(g, 190, 42, 6);   el(g, "text", { x: 190, y: 53, "font-size": 3, "text-anchor": "middle" }, "bouton VALIDER (Ø du bouton)");
   el(g, "text", { x: 70, y: 64, "font-size": 6, "font-weight": "bold", "text-anchor": "middle" }, "PAYS");
   el(g, "text", { x: 227, y: 64, "font-size": 6, "font-weight": "bold", "text-anchor": "middle" }, "CAPITALES");
   for (let i = 0; i < 20; i++) {
