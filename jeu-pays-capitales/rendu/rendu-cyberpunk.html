@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Rendu cyberpunk</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; background: #04050c; }
+  #scene { display: block; width: 1200px; height: 1600px; }
+</style>
+</head>
+<body>
+<svg id="scene" viewBox="0 0 1200 1600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="38%" r="75%">
+      <stop offset="0" stop-color="#1a1240"/><stop offset=".55" stop-color="#0a0a1f"/><stop offset="1" stop-color="#030308"/>
+    </radialGradient>
+    <linearGradient id="face" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#121a36"/><stop offset=".5" stop-color="#0b1024"/><stop offset="1" stop-color="#080b19"/>
+    </linearGradient>
+    <linearGradient id="floorFade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ff2bd6" stop-opacity="0"/><stop offset="1" stop-color="#ff2bd6" stop-opacity=".9"/>
+    </linearGradient>
+    <radialGradient id="bulb" cx="45%" cy="40%" r="60%">
+      <stop offset="0" stop-color="#ffffff"/><stop offset=".35" stop-color="#fff3b0"/><stop offset=".75" stop-color="#ffc23d"/><stop offset="1" stop-color="#ff8a00"/>
+    </radialGradient>
+    <radialGradient id="halo" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#ffd76a" stop-opacity=".75"/><stop offset=".4" stop-color="#ffb02e" stop-opacity=".28"/><stop offset="1" stop-color="#ff7a00" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="stud" cx="38%" cy="35%" r="70%">
+      <stop offset="0" stop-color="#ffffff"/><stop offset=".35" stop-color="#c9d3e6"/><stop offset=".8" stop-color="#5d6a85"/><stop offset="1" stop-color="#2a3145"/>
+    </radialGradient>
+    <linearGradient id="metal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4f7ff"/><stop offset=".45" stop-color="#a9b4c9"/><stop offset=".55" stop-color="#6c7891"/><stop offset="1" stop-color="#d7deec"/>
+    </linearGradient>
+    <linearGradient id="bootA" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ff7ae6"/><stop offset=".5" stop-color="#d1009e"/><stop offset="1" stop-color="#6a0052"/>
+    </linearGradient>
+    <linearGradient id="bootB" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8ffbff"/><stop offset=".5" stop-color="#00b8d4"/><stop offset="1" stop-color="#005466"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glowSoft" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="1" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="bigGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="14"/>
+    </filter>
+    <pattern id="hex" width="10" height="17.32" patternUnits="userSpaceOnUse">
+      <path d="M5 0 L10 2.89 L10 8.66 L5 11.55 L0 8.66 L0 2.89 Z M5 11.55 L5 17.32" fill="none" stroke="#2de2ff" stroke-width=".18"/>
+    </pattern>
+    <pattern id="scan" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect width="4" height="2" fill="#000" opacity=".18"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="1600" fill="url(#bg)"/>
+  <g id="sky"></g>
+  <g id="floor"></g>
+  <g id="hudTop"></g>
+  <ellipse cx="600" cy="1395" rx="520" ry="60" fill="#ff2bd6" opacity=".35" filter="url(#bigGlow)"/>
+  <g id="board" transform="translate(180 220) scale(2.8)"></g>
+  <g id="hudBottom"></g>
+  <rect width="1200" height="1600" fill="url(#scan)"/>
+</svg>
+
+<script>
+const WIRING = [17, 11, 15, 20, 10, 13, 19, 12, 16, 1, 7, 4, 18, 6, 2, 8, 3, 14, 5, 9];
+const PAIRS = [
+  ["France","Paris"],["Algérie","Alger"],["Maroc","Rabat"],["Tunisie","Tunis"],["Espagne","Madrid"],
+  ["Italie","Rome"],["Allemagne","Berlin"],["Royaume-Uni","Londres"],["Portugal","Lisbonne"],["Suisse","Berne"],
+  ["Égypte","Le Caire"],["Sénégal","Dakar"],["États-Unis","Washington"],["Canada","Ottawa"],["Brésil","Brasília"],
+  ["Argentine","Buenos Aires"],["Japon","Tokyo"],["Chine","Pékin"],["Turquie","Ankara"],["Australie","Canberra"]];
+const CAPS = []; PAIRS.forEach((p, i) => { CAPS[WIRING[i] - 1] = p[1]; });
+const ACTIVE_P = 1, ACTIVE_C = WIRING[ACTIVE_P] - 1;  // Algérie (P2) → Alger
+const ROW_Y = i => 76 + i * 16.5, X_P = 28, X_C = 269;
+const CYAN = "#2de2ff", MAGENTA = "#ff2bd6", GREEN = "#39ff88", AMBER = "#ffc23d";
+const NS = "http://www.w3.org/2000/svg";
+function el(parent, tag, a, text) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in a) e.setAttribute(k, a[k]);
+  if (text != null) e.textContent = text;
+  parent.appendChild(e); return e;
+}
+const chamfer = (x, y, w, h, c) => `M${x + c} ${y} H${x + w - c} L${x + w} ${y + c} V${y + h - c} L${x + w - c} ${y + h} H${x + c} L${x} ${y + h - c} V${y + c} Z`;
+
+// ---------- Décor : ville au loin + sol en grille ----------
+const sky = document.getElementById("sky");
+let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+for (let layer = 0; layer < 2; layer++) {
+  let x = -20;
+  while (x < 1220) {
+    const w = 30 + rnd() * 70, h = (layer ? 260 : 380) * (0.35 + rnd() * 0.65), base = 1250;
+    el(sky, "rect", { x, y: base - h, width: w, height: h, fill: layer ? "#0d0b24" : "#090818", opacity: layer ? 1 : .9 });
+    for (let wy = base - h + 10; wy < base - 8; wy += 14) for (let wx = x + 6; wx < x + w - 6; wx += 11)
+      if (rnd() < .12) el(sky, "rect", { x: wx, y: wy, width: 4, height: 6, fill: rnd() < .5 ? CYAN : MAGENTA, opacity: .35 + rnd() * .4 });
+    x += w + 4;
+  }
+}
+const floor = document.getElementById("floor");
+el(floor, "rect", { x: 0, y: 1250, width: 1200, height: 350, fill: "#07051a" });
+for (let i = -14; i <= 14; i++) el(floor, "line", { x1: 600 + i * 30, y1: 1250, x2: 600 + i * 190, y2: 1600, stroke: MAGENTA, "stroke-width": 1.2, opacity: .45 });
+for (let k = 0; k < 9; k++) { const y = 1250 + Math.pow(k / 8, 1.9) * 350; el(floor, "line", { x1: 0, y1: y, x2: 1200, y2: y, stroke: MAGENTA, "stroke-width": 1.2, opacity: .2 + k * .05 }); }
+el(floor, "line", { x1: 0, y1: 1250, x2: 1200, y2: 1250, stroke: MAGENTA, "stroke-width": 2, filter: "url(#glow)" });
+
+// ---------- HUD ----------
+const hudT = document.getElementById("hudTop");
+el(hudT, "text", { x: 60, y: 80, fill: CYAN, "font-family": "Orbitron", "font-weight": 900, "font-size": 46, filter: "url(#glowSoft)", "letter-spacing": 3 }, "GEO//LINK");
+el(hudT, "text", { x: 62, y: 112, fill: MAGENTA, "font-family": "Share Tech Mono", "font-size": 20, "letter-spacing": 2 }, "MODULE PAYS ⟷ CAPITALES · 40 NODES · 9V");
+el(hudT, "path", { d: chamfer(800, 48, 340, 74, 12), fill: "rgba(57,255,136,.08)", stroke: GREEN, "stroke-width": 2, filter: "url(#glowSoft)" });
+el(hudT, "text", { x: 822, y: 78, fill: GREEN, "font-family": "Share Tech Mono", "font-size": 18 }, "CIRCUIT ............ FERMÉ");
+el(hudT, "text", { x: 822, y: 104, fill: GREEN, "font-family": "Share Tech Mono", "font-size": 18 }, "LAMPES L1·L2·L3 ..... ON");
+el(hudT, "line", { x1: 60, y1: 130, x2: 1140, y2: 130, stroke: CYAN, "stroke-width": 1, opacity: .4 });
+
+// ---------- Planche ----------
+const B = document.getElementById("board");
+el(B, "path", { d: chamfer(5, 7, 300, 400, 12), fill: "#020308" });
+el(B, "path", { d: chamfer(0, 0, 300, 400, 12), fill: "none", stroke: CYAN, "stroke-width": 3, opacity: .5, filter: "url(#bigGlow)" });
+el(B, "path", { d: chamfer(0, 0, 300, 400, 12), fill: "url(#face)" });
+el(B, "path", { d: chamfer(0, 0, 300, 400, 12), fill: "url(#hex)", opacity: .22 });
+el(B, "path", { d: chamfer(0, 0, 300, 400, 12), fill: "none", stroke: CYAN, "stroke-width": 1.1, filter: "url(#glowSoft)" });
+el(B, "path", { d: chamfer(5, 5, 290, 390, 9), fill: "none", stroke: MAGENTA, "stroke-width": .35, "stroke-dasharray": "6 2 1 2", opacity: .8 });
+// Vis de coin
+for (const [x, y] of [[12, 12], [288, 12], [12, 388], [288, 388]]) {
+  el(B, "circle", { cx: x, cy: y, r: 2.4, fill: "url(#stud)" });
+  el(B, "line", { x1: x - 1.6, y1: y, x2: x + 1.6, y2: y, stroke: "#20263a", "stroke-width": .5 });
+}
+// Titre
+el(B, "text", { x: 150, y: 18, fill: "#e8fdff", "font-family": "Orbitron", "font-weight": 700, "font-size": 10.5, "text-anchor": "middle", "letter-spacing": 1.2, filter: "url(#glowSoft)" }, "PAYS ⟷ CAPITALES");
+
+// Faisceau lumineux : le circuit fermé (sous les étiquettes)
+const beam = `M${X_P} ${ROW_Y(ACTIVE_P)} C 120 ${ROW_Y(ACTIVE_P) + 10}, 150 ${ROW_Y(ACTIVE_C) - 60}, ${X_C} ${ROW_Y(ACTIVE_C)}`;
+el(B, "path", { d: beam, fill: "none", stroke: GREEN, "stroke-width": 3, opacity: .35, filter: "url(#bigGlow)" });
+el(B, "path", { d: beam, fill: "none", stroke: GREEN, "stroke-width": .8, "stroke-dasharray": "3 2", filter: "url(#glowSoft)" });
+
+// Globe central
+const G = el(B, "g", { transform: "translate(148.5 232)", opacity: .75, filter: "url(#glowSoft)" });
+el(G, "circle", { r: 23, fill: "rgba(45,226,255,.05)", stroke: CYAN, "stroke-width": .6 });
+for (const rx of [6, 13, 19]) el(G, "ellipse", { rx, ry: 23, fill: "none", stroke: CYAN, "stroke-width": .3 });
+for (const y of [-15, -7.5, 0, 7.5, 15]) { const half = Math.sqrt(23 * 23 - y * y); el(G, "line", { x1: -half, y1: y, x2: half, y2: y, stroke: CYAN, "stroke-width": .3 }); }
+el(G, "circle", { r: 29, fill: "none", stroke: MAGENTA, "stroke-width": .4, "stroke-dasharray": "2 3" });
+el(G, "circle", { cx: 3, cy: -10, r: 1.4, fill: GREEN });
+el(G, "text", { y: 40, fill: CYAN, "font-family": "Share Tech Mono", "font-size": 4.2, "text-anchor": "middle" }, "SYNC 20/20");
+el(B, "text", { x: 148.5, y: 120, fill: MAGENTA, "font-family": "Share Tech Mono", "font-size": 3.6, "text-anchor": "middle", opacity: .8 }, "// TROUVE LA CAPITALE //");
+
+// En-tête : sorties de câbles, lampes allumées, interrupteur
+for (const x of [40, 235]) {
+  el(B, "circle", { cx: x, cy: 38, r: 4.2, fill: "#05060c", stroke: "url(#metal)", "stroke-width": 1.4 });
+}
+el(B, "text", { x: 40, y: 50, fill: MAGENTA, "font-family": "Share Tech Mono", "font-size": 3.6, "text-anchor": "middle" }, "CÂBLE A");
+el(B, "text", { x: 235, y: 50, fill: CYAN, "font-family": "Share Tech Mono", "font-size": 3.6, "text-anchor": "middle" }, "CÂBLE B");
+[110, 150, 190].forEach((x, k) => {
+  el(B, "circle", { cx: x, cy: 38, r: 26, fill: "url(#halo)" });
+  el(B, "path", { d: chamfer(x - 12, 26, 24, 24, 5), fill: "#0a0d1a", stroke: AMBER, "stroke-width": .6, filter: "url(#glowSoft)" });
+  el(B, "circle", { cx: x, cy: 38, r: 9.5, fill: "none", stroke: "url(#metal)", "stroke-width": 1.6 });
+  el(B, "circle", { cx: x, cy: 38, r: 8, fill: "url(#bulb)", filter: "url(#glowSoft)" });
+  el(B, "path", { d: `M${x - 3.5} 39 l1.2 -2 l1.2 2 l1.2 -2 l1.2 2 l1.2 -2 l1.2 2`, fill: "none", stroke: "#fff", "stroke-width": .5, opacity: .9 });
+  el(B, "text", { x, y: 56, fill: AMBER, "font-family": "Share Tech Mono", "font-size": 3.6, "text-anchor": "middle" }, `L${k + 1} · 3,5V`);
+});
+// Interrupteur
+el(B, "path", { d: chamfer(265, 27, 14, 22, 3), fill: "#06080f", stroke: GREEN, "stroke-width": .7, filter: "url(#glowSoft)" });
+el(B, "rect", { x: 269, y: 30, width: 6, height: 16, rx: 1.5, fill: "#11162a", stroke: "#2b3350", "stroke-width": .4 });
+el(B, "rect", { x: 269.6, y: 30.6, width: 4.8, height: 7.5, rx: 1.2, fill: GREEN, filter: "url(#glowSoft)" });
+el(B, "text", { x: 272, y: 55, fill: GREEN, "font-family": "Share Tech Mono", "font-size": 3.6, "text-anchor": "middle" }, "ON · 9V");
+
+// Colonnes
+el(B, "text", { x: 86, y: 67, fill: CYAN, "font-family": "Orbitron", "font-weight": 700, "font-size": 6, "text-anchor": "middle", "letter-spacing": 1.5, filter: "url(#glowSoft)" }, "PAYS");
+el(B, "text", { x: 211, y: 67, fill: MAGENTA, "font-family": "Orbitron", "font-weight": 700, "font-size": 6, "text-anchor": "middle", "letter-spacing": 1.5, filter: "url(#glowSoft)" }, "CAPITALES");
+
+function node(x, y, active, color) {
+  const c = active ? GREEN : color;
+  el(B, "circle", { cx: x, cy: y, r: 5, fill: "none", stroke: c, "stroke-width": active ? .9 : .4, opacity: active ? 1 : .7, filter: "url(#glowSoft)" });
+  el(B, "polygon", { points: [0, 60, 120, 180, 240, 300].map(a => `${x + 3.6 * Math.cos(a * Math.PI / 180)},${y + 3.6 * Math.sin(a * Math.PI / 180)}`).join(" "), fill: "#3a4560", stroke: "#8995b0", "stroke-width": .3 });
+  el(B, "circle", { cx: x, cy: y, r: 2.2, fill: "url(#stud)" });
+}
+function label(x, y, text, active, color, code) {
+  const c = active ? GREEN : color;
+  el(B, "path", { d: chamfer(x, y - 5.6, 66, 11.2, 2.6), fill: active ? "rgba(57,255,136,.16)" : "rgba(8,12,28,.88)", stroke: c, "stroke-width": active ? .8 : .35, filter: active ? "url(#glowSoft)" : null });
+  el(B, "text", { x: x + 33, y: y + 1.6, fill: active ? "#d9ffe9" : c, "font-family": "Orbitron", "font-weight": 500, "font-size": text.length > 11 ? 3.7 : 4.3, "text-anchor": "middle", "letter-spacing": .2 }, text.toUpperCase());
+  el(B, "text", { x: x + 1.6, y: y - 3.2, fill: c, "font-family": "Share Tech Mono", "font-size": 1.9, opacity: .8 }, code);
+}
+for (let i = 0; i < 20; i++) {
+  const y = ROW_Y(i);
+  el(B, "line", { x1: X_P + 5, y1: y, x2: 53, y2: y, stroke: i === ACTIVE_P ? GREEN : CYAN, "stroke-width": .3, opacity: .6 });
+  el(B, "line", { x1: 244, y1: y, x2: X_C - 5, y2: y, stroke: i === ACTIVE_C ? GREEN : MAGENTA, "stroke-width": .3, opacity: .6 });
+  label(53, y, PAIRS[i][0], i === ACTIVE_P, CYAN, "P" + String(i + 1).padStart(2, "0"));
+  label(178, y, CAPS[i], i === ACTIVE_C, MAGENTA, "C" + String(i + 1).padStart(2, "0"));
+  node(X_P, y, i === ACTIVE_P, CYAN);
+  node(X_C, y, i === ACTIVE_C, MAGENTA);
+}
+
+// ---------- Câbles et pinces crocodile ----------
+function cable(d, color) {
+  el(B, "path", { d, fill: "none", stroke: color, "stroke-width": 6, opacity: .35, filter: "url(#bigGlow)" });
+  el(B, "path", { d, fill: "none", stroke: "#0b0d16", "stroke-width": 4.2, "stroke-linecap": "round" });
+  el(B, "path", { d, fill: "none", stroke: color, "stroke-width": 1.1, "stroke-linecap": "round", filter: "url(#glowSoft)" });
+}
+function clip(x, y, angle, boot, color) {
+  // Pince dessinée pointe en (0,0), corps vers les x négatifs.
+  const g = el(B, "g", { transform: `translate(${x} ${y}) rotate(${angle}) scale(1.3)` });
+  el(g, "path", { d: "M-44 -5 H-22 L-18 -6 L-18 6 L-22 5 H-44 Q-47 0 -44 -5 Z", fill: `url(#${boot})`, stroke: color, "stroke-width": .4, filter: "url(#glowSoft)" });
+  for (let k = -40; k < -24; k += 3) el(g, "line", { x1: k, y1: -4.6, x2: k, y2: 4.6, stroke: "#000", "stroke-width": .35, opacity: .35 });
+  el(g, "path", { d: "M-19 -5.5 L-4 -3.4 L1.5 -1.4 L1.5 -0.3 L-6 -0.8 L-19 -1.5 Z", fill: "url(#metal)", stroke: "#4b5670", "stroke-width": .25 });
+  el(g, "path", { d: "M-19 5.5 L-4 3.4 L1.5 1.4 L1.5 0.3 L-6 0.8 L-19 1.5 Z", fill: "url(#metal)", stroke: "#4b5670", "stroke-width": .25 });
+  el(g, "path", { d: "M-12 -1.1 l1 1 l1 -1 l1 1 l1 -1 l1 1 l1 -1 l1 1 l1 -1 l1 1 l1 -1", fill: "none", stroke: "#3a4258", "stroke-width": .3 });
+  el(g, "path", { d: "M-12 1.1 l1 -1 l1 1 l1 -1 l1 1 l1 -1 l1 1 l1 -1 l1 1 l1 -1 l1 1", fill: "none", stroke: "#3a4258", "stroke-width": .3 });
+  el(g, "circle", { cx: -17, cy: 0, r: 1.6, fill: "url(#stud)", stroke: "#4b5670", "stroke-width": .2 });
+  el(g, "circle", { cx: 0, cy: 0, r: 4, fill: "none", stroke: GREEN, "stroke-width": .5, filter: "url(#glowSoft)" });
+}
+const pA = [X_P, ROW_Y(ACTIVE_P)], pC = [X_C, ROW_Y(ACTIVE_C)];
+cable(`M40 38 C 30 14, -26 22, -34 54 S -64 ${pA[1]}, ${pA[0] - 59} ${pA[1]}`, MAGENTA);
+cable(`M235 38 C 252 10, 330 22, 336 80 S 358 ${pC[1]}, ${pC[0] + 59} ${pC[1]}`, CYAN);
+clip(pA[0], pA[1], 0, "bootA", MAGENTA);
+clip(pC[0], pC[1], 180, "bootB", CYAN);
+el(B, "text", { x: -12, y: pA[1] - 11, fill: MAGENTA, "font-family": "Share Tech Mono", "font-size": 3.4, "text-anchor": "middle" }, "PINCE A");
+el(B, "text", { x: 312, y: pC[1] - 11, fill: CYAN, "font-family": "Share Tech Mono", "font-size": 3.4, "text-anchor": "middle" }, "PINCE B");
+
+// ---------- Bandeau bas ----------
+const hudB = document.getElementById("hudBottom");
+el(hudB, "path", { d: chamfer(250, 1450, 700, 90, 18), fill: "rgba(4,20,14,.85)", stroke: GREEN, "stroke-width": 2.5, filter: "url(#glow)" });
+el(hudB, "text", { x: 600, y: 1488, fill: GREEN, "font-family": "Orbitron", "font-weight": 900, "font-size": 30, "text-anchor": "middle", "letter-spacing": 4, filter: "url(#glowSoft)" }, "BONNE RÉPONSE");
+el(hudB, "text", { x: 600, y: 1522, fill: "#c9ffe0", "font-family": "Share Tech Mono", "font-size": 22, "text-anchor": "middle", "letter-spacing": 2 }, `${PAIRS[ACTIVE_P][0].toUpperCase()}  ⟶  ${PAIRS[ACTIVE_P][1].toUpperCase()}`);
+document.fonts.ready.then(() => document.body.dataset.ready = "1");
+</script>
+</body>
+</html>
