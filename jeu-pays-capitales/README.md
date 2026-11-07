@@ -10,8 +10,9 @@ sur le bouton **VALIDER** : LED verte + buzzer si la capitale est la bonne, LED 
 | Fichier | Contenu |
 |---|---|
 | `gabarit.html` | Outil à ouvrir dans un navigateur : choix du thème, nouvelle grille d'étiquettes, impression |
-| `gabarits-A3.pdf` | Gabarit de perçage face avant + plan de câblage face arrière, échelle 1:1, format A3 |
-| `cablage-etiquettes-A4.pdf` | Tableau de câblage, schéma électrique, tests, étiquettes de la grille « Monde » n° 0 |
+| `gabarits-A3.pdf` | Gabarit de perçage face avant (version 9 V : tiges, lampes, interrupteur, sorties A/B, zones d'étiquettes) + plan de câblage face arrière avec les 4 pieds, échelle 1:1, format A3 |
+| `cablage-etiquettes-A4.pdf` | Tableau de câblage, schéma 9 V, tests, plan de pose et étiquettes de la grille « Monde » n° 0 |
+| `etiquettes-FR.pdf` / `etiquettes-AR.pdf` | **Étiquettes à imprimer** à 100 % : plan de pose + titre 180 × 16 mm, en-têtes 63 × 8 mm, 40 noms 63 × 14 mm (style néon) |
 | `notice-montage.html` / `notice-montage.pdf` | **Notice de montage illustrée** de la version 9 V, de la planche nue aux tests (13 pages) |
 | `notice-montage-ar.html` / `notice-montage-ar.pdf` | Même notice **en arabe** (mise en page de droite à gauche, image de couverture `rendu/rendu-cyberpunk-ar.png`) |
 | `schema-9V.html` / `schema-9V.pdf` | **Version simple** : pile 9 V, interrupteur, 3 lampes en série, 40 tiges, planche 30 × 40 cm |
@@ -28,9 +29,11 @@ tige pays → câble A → − pile. Points clés :
 - 3 ampoules **identiques** de 3,5 V (culot E10) : en série, chacune reçoit ≈ 3 V sur les 9 V.
 - Une ampoule dévissée ou grillée éteint les trois.
 - Les tiges sont des vis M4 × 35 passées depuis l'arrière ; les câbles se terminent par des pinces crocodile.
+- La planche repose sur 4 pieds 20 × 20 × 30 mm collés dans les coins : des tasseaux le long des bords passeraient sous la colonne des pays et sous les deux dernières rangées.
+- Étiquettes : `etiquettes-FR.pdf` ou `etiquettes-AR.pdf`, à poser selon le plan de pose (page 1). Le titre occupe le haut (y = 5 à 21 mm), la ligne des lampes y = 38 mm, les en-têtes y = 58 à 66 mm, les noms à partir de y = 69 mm.
 - Mêmes positions de tiges et même câblage (`WIRING`) que les gabarits A3 : les étiquettes de `gabarit.html` restent utilisables.
 
-Le reste de ce document décrit la version avec LED verte, LED rouge et bouton VALIDER.
+Le reste de ce document décrit la version avec LED verte, LED rouge et bouton VALIDER. Pour cette variante, les trous du haut sont aux cotes de la section « Cotes » (le gabarit A3 montre ceux de la version 9 V), et son schéma est le bloc ci-dessous.
 
 ## Le principe électrique
 
@@ -127,7 +130,7 @@ Panneau 297 × 420 mm, origine en haut à gauche, vue de face.
 5. **Câbler les 20 fils** un par un en suivant le tableau de câblage (`cablage-etiquettes-A4.pdf`, page 1).
    Dénuder 1 cm, enrouler le cuivre dans le sens de serrage sous l'écrou ou la cosse, serrer, couper les brins qui dépassent.
    Cocher la case du fil dans le tableau.
-6. **Circuit des lampes** (dans le cadre, à l'arrière), en suivant le schéma du PDF A4 :
+6. **Circuit des lampes** (dans le cadre, à l'arrière), en suivant le schéma de la section « Le principe électrique » :
    - fil + du boîtier de piles → une patte du bouton ; l'autre patte du bouton → sonde A **et** R2 (fil en Y) ;
    - sonde B → point B sur la plaque d'essai ; de B partent R1, le + du buzzer et R3 ;
    - R1 → patte **longue** de la LED verte ; patte courte → ligne − ;

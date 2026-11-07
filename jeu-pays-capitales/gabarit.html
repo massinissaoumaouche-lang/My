@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Circuit Capital</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Cairo:wght@700;900&display=swap" rel="stylesheet">
 <style>
   :root { --ink: #1a1a1a; --muted: #777; --line: #bbb; --accent: #c0392b; }
   * { box-sizing: border-box; }
@@ -23,11 +24,29 @@
   table.cablage th, table.cablage td { border: 1px solid #999; padding: 1.2mm 2mm; text-align: center; }
   table.cablage td.ok { width: 18mm; }
   .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; }
-  .cards { display: grid; grid-template-columns: repeat(3, 63mm); grid-auto-rows: 14mm; gap: 1mm; justify-content: center; }
-  .card { position: relative; border: 1px dashed #888; display: flex; align-items: center; justify-content: center;
-    font-size: 14pt; font-weight: bold; text-align: center; padding: 0 6mm; overflow: hidden; }
-  .card .code { position: absolute; top: .8mm; left: 1.2mm; font-size: 6.5pt; font-weight: normal; color: var(--muted); }
-  .card.cap { font-style: italic; }
+  /* Étiquettes à taille réelle : 63 × 14 mm (noms), 63 × 8 mm (en-têtes), 180 × 16 mm (titre) */
+  .labels { display: flex; flex-direction: column; align-items: center; gap: 1.6mm; }
+  .heads { display: flex; gap: 1.6mm; }
+  .cards { display: grid; grid-template-columns: repeat(3, 63mm); grid-auto-rows: 14mm; gap: 1.6mm; justify-content: center; }
+  .card { position: relative; display: flex; align-items: center; justify-content: center; text-align: center;
+    padding: 0 5mm; overflow: hidden; font-weight: bold; font-size: 13.5pt; line-height: 1.05; }
+  .card .code { position: absolute; top: .7mm; left: 1.2mm; font-size: 6pt; font-weight: normal; font-family: Arial, sans-serif; letter-spacing: 0; }
+  .card.title { width: 180mm; height: 16mm; font-size: 24pt; }
+  .card.head { width: 63mm; height: 8mm; font-size: 12pt; }
+  .card .ar { font-family: Cairo, Arial, sans-serif; font-size: 1.12em; }
+  .card.long { font-size: 11pt; }
+  .clair .card { border: 1px dashed #888; color: #111; }
+  .clair .card .code { color: #888; }
+  .clair .card.cap { font-style: italic; }
+  .neon .card { background: #0b1024; color: #6ff3ff; font-family: Orbitron, Arial, sans-serif; letter-spacing: .3px;
+    border: .5mm solid #2de2ff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .neon .card.cap, .neon .card.head.cap { color: #ff7ae6; border-color: #ff2bd6; }
+  .neon .card.title { color: #e8fdff; border-color: #2de2ff; letter-spacing: 3px; text-shadow: 0 0 2px #2de2ff; }
+  .neon .card .code { color: #8a93a8; }
+  .neon .card .ar { letter-spacing: 0; }
+  table.cotes { border-collapse: collapse; width: 100%; font-size: 9.5pt; margin-top: 3mm; }
+  table.cotes th, table.cotes td { border: 1px solid #999; padding: 1mm 2mm; text-align: left; }
+  .plan { display: block; width: 150mm; height: 200mm; margin: 0 auto; }
 
   @page a3 { size: A3 portrait; margin: 0; }
   @page a4 { size: A4 portrait; margin: 0; }
@@ -38,7 +57,8 @@
     .sheet.a3 { page: a3; width: 297mm; height: 420mm; }
     .sheet.a3 svg { width: 297mm; height: 420mm; }
     .sheet.a4 { page: a4; width: 210mm; height: 297mm; }
-    body[data-print="a3"] .sheet.a4, body[data-print="a4"] .sheet.a3 { display: none; }
+    body[data-print="a3"] .sheet.a4, body[data-print="a4"] .sheet.a3,
+    body[data-print="labels"] .sheet.a3, body[data-print="labels"] .sheet.wiring { display: none; }
   }
 </style>
 </head>
@@ -47,16 +67,20 @@
   <label>Thème
     <select id="theme"></select>
   </label>
+  <label>Style
+    <select id="style"><option value="neon">Néon (fond noir)</option><option value="clair">Clair (fond blanc)</option></select>
+  </label>
   <button id="shuffle">Nouvelle grille</button>
   <button data-print="a3">Imprimer les gabarits (A3)</button>
-  <button data-print="a4">Imprimer câblage + étiquettes (A4)</button>
+  <button data-print="labels">Imprimer plan de pose + étiquettes (A4)</button>
+  <button data-print="a4">Imprimer câblage + plan + étiquettes (A4)</button>
   <span class="info" id="info"></span>
 </div>
 
 <section class="sheet a3"><svg id="front" viewBox="0 0 297 420" width="297mm" height="420mm"></svg></section>
 <section class="sheet a3"><svg id="back" viewBox="0 0 297 420" width="297mm" height="420mm"></svg></section>
 
-<section class="sheet a4">
+<section class="sheet a4 wiring">
   <h1>Tableau de câblage</h1>
   <p>Ce câblage est <b>fixe</b> : il ne change jamais, quel que soit le thème ou la grille d'étiquettes.
      Chaque fil relie une seule douille P à une seule douille C. Coche la case après avoir testé le fil.</p>
@@ -64,86 +88,64 @@
     <table class="cablage" id="table-a"></table>
     <table class="cablage" id="table-b"></table>
   </div>
-  <h2>Schéma électrique</h2>
-  <svg viewBox="0 0 190 84" width="190mm" height="84mm" font-size="3.2" font-family="Arial">
-    <g fill="none" stroke="#1a1a1a" stroke-width=".5">
-      <!-- pile -->
-      <line x1="12" y1="6" x2="12" y2="38"/><line x1="6" y1="38" x2="18" y2="38"/>
-      <line x1="9" y1="43" x2="15" y2="43"/><line x1="12" y1="43" x2="12" y2="72"/>
-      <line x1="12" y1="72" x2="182" y2="72"/>
-      <!-- bouton poussoir VALIDER -->
-      <line x1="12" y1="6" x2="24" y2="6"/>
-      <circle cx="25" cy="6" r=".9"/><circle cx="37" cy="6" r=".9"/>
-      <line x1="23" y1="2.5" x2="39" y2="2.5"/><line x1="31" y1="2.5" x2="31" y2="0"/>
-      <line x1="38" y1="6" x2="182" y2="6"/>
-      <!-- panneau entre les deux sondes -->
-      <line x1="48" y1="6" x2="48" y2="22"/><line x1="48" y1="22" x2="55" y2="22"/>
-      <rect x="55" y="14" width="40" height="16" stroke-dasharray="1.5 1"/>
-      <line x1="95" y1="22" x2="145" y2="22"/>
-      <!-- LED verte : R1 + LED -->
-      <line x1="112" y1="22" x2="112" y2="26"/><rect x="110" y="26" width="4" height="10"/>
-      <line x1="112" y1="36" x2="112" y2="42"/>
-      <polygon points="107,42 117,42 112,49" fill="#1e8449"/><line x1="107" y1="49" x2="117" y2="49"/>
-      <line x1="112" y1="49" x2="112" y2="72"/>
-      <line x1="118" y1="43" x2="121" y2="40"/><line x1="119" y1="46" x2="122" y2="43"/>
-      <!-- buzzer -->
-      <line x1="130" y1="22" x2="130" y2="44"/><rect x="125" y="44" width="10" height="10"/>
-      <line x1="130" y1="54" x2="130" y2="72"/>
-      <!-- R3 vers la base, R4 de rappel à la masse -->
-      <line x1="145" y1="22" x2="145" y2="26"/><rect x="143" y="26" width="4" height="10"/>
-      <line x1="145" y1="36" x2="145" y2="40"/><line x1="145" y1="40" x2="157" y2="40"/>
-      <line x1="150" y1="40" x2="150" y2="54"/><rect x="148" y="54" width="4" height="10"/>
-      <line x1="150" y1="64" x2="150" y2="72"/>
-      <!-- transistor Q1 -->
-      <circle cx="162" cy="40" r="6.5"/>
-      <line x1="158" y1="35" x2="158" y2="45" stroke-width=".9"/>
-      <line x1="158" y1="38" x2="164" y2="34"/><line x1="164" y1="34" x2="164" y2="28"/>
-      <line x1="158" y1="42" x2="164" y2="46"/><line x1="164" y1="46" x2="164" y2="72"/>
-      <polygon points="164,46 161.2,45.6 162.6,43.6" fill="#1a1a1a"/>
-      <!-- LED rouge : R2 + LED, court-circuitée par Q1 -->
-      <line x1="182" y1="6" x2="182" y2="12"/><rect x="180" y="12" width="4" height="10"/>
-      <line x1="182" y1="22" x2="182" y2="34"/><line x1="164" y1="28" x2="182" y2="28"/>
-      <polygon points="177,34 187,34 182,41" fill="#c0392b"/><line x1="177" y1="41" x2="187" y2="41"/>
-      <line x1="182" y1="41" x2="182" y2="72"/>
-    </g>
-    <g fill="#1a1a1a">
-      <circle cx="48" cy="6" r=".8"/><circle cx="112" cy="22" r=".8"/><circle cx="130" cy="22" r=".8"/>
-      <circle cx="150" cy="40" r=".8"/><circle cx="182" cy="28" r=".8"/>
-      <circle cx="112" cy="72" r=".8"/><circle cx="130" cy="72" r=".8"/><circle cx="150" cy="72" r=".8"/><circle cx="164" cy="72" r=".8"/>
-      <text x="2" y="37">+</text><text x="2" y="46">−</text>
-      <text x="1" y="78">Pile 4,5 V (3 × AA)</text>
-      <text x="22" y="12">bouton VALIDER</text>
-      <text x="57" y="20">Sonde A → P</text><text x="57" y="27">Sonde B → C</text>
-      <text x="55" y="35">contact seulement</text><text x="55" y="39">si bonne paire</text>
-      <text x="97" y="20">B</text>
-      <text x="98" y="32">R1</text><text x="96" y="36">150 Ω</text>
-      <text x="96" y="57">LED</text><text x="96" y="61">verte</text>
-      <text x="137" y="60" text-anchor="middle">buzzer</text>
-      <text x="138" y="31">R3</text>
-      <text x="153" y="58">R4</text>
-      <text x="166" y="62">Q1</text><text x="166" y="66">BC547</text>
-      <text x="185.5" y="18">R2</text>
-      <text x="166" y="52">LED rouge</text>
-      <text x="1" y="83">R1 = R2 = 150 Ω · R3 = 4,7 kΩ · R4 = 100 kΩ · LED : patte longue (+) vers le haut · buzzer actif : + vers le haut</text>
-    </g>
-  </svg>
-  <h2>Tests avant de fermer la boîte</h2>
+  <h2>Schéma électrique (version 9 V, 3 lampes en série)</h2>
+  <svg viewBox="0 0 180 62">
+      <defs><marker id="arw" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#13a35a"/></marker></defs>
+      <g fill="none" stroke="#161824" stroke-width=".6">
+        <line x1="12" y1="12" x2="12" y2="27"/><line x1="7" y1="27" x2="17" y2="27"/><line x1="9.5" y1="31" x2="14.5" y2="31"/><line x1="12" y1="31" x2="12" y2="52"/>
+        <line x1="12" y1="12" x2="26" y2="12"/><line x1="27" y1="12" x2="36" y2="7"/><line x1="38" y1="12" x2="52" y2="12"/>
+        <circle cx="58" cy="12" r="5"/><path d="M54.5 8.5 L61.5 15.5 M61.5 8.5 L54.5 15.5"/>
+        <line x1="63" y1="12" x2="73" y2="12"/>
+        <circle cx="78" cy="12" r="5"/><path d="M74.5 8.5 L81.5 15.5 M81.5 8.5 L74.5 15.5"/>
+        <line x1="83" y1="12" x2="93" y2="12"/>
+        <circle cx="98" cy="12" r="5"/><path d="M94.5 8.5 L101.5 15.5 M101.5 8.5 L94.5 15.5"/>
+        <line x1="103" y1="12" x2="168" y2="12"/><line x1="168" y1="12" x2="168" y2="38"/><line x1="168" y1="38" x2="150" y2="38"/>
+        <line x1="12" y1="52" x2="40" y2="52"/><line x1="40" y1="52" x2="40" y2="30"/><line x1="40" y1="30" x2="58" y2="30"/>
+        <rect x="62" y="22" width="84" height="34" rx="2" stroke-dasharray="2 1.2"/>
+        <line x1="70" y1="30" x2="142" y2="38" stroke="#13a35a" stroke-width="1"/>
+      </g>
+      <path d="M40 46 L40 34" stroke="#13a35a" stroke-width=".8" marker-end="url(#arw)"/>
+      <path d="M120 15 L135 15" stroke="#13a35a" stroke-width=".8" marker-end="url(#arw)"/>
+      <g fill="#161824" font-size="3.6">
+        <circle cx="68" cy="30" r="2" fill="#8a93a8"/><circle cx="144" cy="38" r="2" fill="#8a93a8"/>
+        <polygon points="58,28 62,30 58,32" fill="#d4169f"/><polygon points="150,36 146,38 150,40" fill="#00a9c7"/>
+        <text x="2" y="22">+</text><text x="2" y="36">−</text><text x="1" y="58">pile 9 V</text>
+        <text x="25" y="20">interrupteur</text>
+        <text x="78" y="4.5" text-anchor="middle" font-size="3.2">3 lampes 3,5 V en série</text>
+        <text x="72" y="28" font-size="3.2">un pays</text><text x="140" y="44" text-anchor="end" font-size="3.2">sa capitale</text>
+        <text x="104" y="52" text-anchor="middle" font-size="3.2" fill="#5d6275">planche : 20 fils cachés, un par paire</text>
+        <text x="44" y="58" font-size="3.2" fill="#d4169f">pince A</text><text x="150" y="46" font-size="3.2" fill="#00a9c7">pince B</text>
+        <text x="122" y="10" font-size="3.2" fill="#13a35a">courant</text>
+      </g>
+    </svg>
+  <h2>Tests avant de fermer</h2>
   <ol>
-    <li><b>Sans appuyer sur le bouton</b> : rien ne s'allume, quoi que fassent les sondes.</li>
-    <li><b>Bouton appuyé, sondes en l'air</b> : LED rouge allumée. Sinon : LED rouge à l'envers, ou transistor mal branché.</li>
-    <li><b>Bouton appuyé, sondes l'une contre l'autre</b> : LED verte + buzzer, rouge <b>éteinte</b>. Si la rouge reste allumée : R3 ou transistor mal branché (vérifier l'ordre des pattes).</li>
-    <li><b>Les 20 bonnes paires</b> (tableau ci-dessus) : vert à chaque fois. Sinon, fil mal serré ou coupé.</li>
-    <li><b>Les voisins</b> : sonde A sur P1 et sonde B sur P2, puis P2–P3, …, P19–P20, puis C1–C2, …, C19–C20 : <b>rouge</b> à chaque fois.
-        Du vert ici veut dire que deux fils voisins se touchent (brin de cuivre qui dépasse, écrou qui touche le voisin).</li>
-    <li><b>Quelques mauvaises paires</b> au hasard (ex. P1–C1, P5–C6) : rouge.</li>
+    <li><b>Pince A contre pince B</b>, interrupteur sur marche : les 3 lampes s'allument. Sinon : ampoule dévissée, pile vide, domino desserré.</li>
+    <li><b>Les 20 bonnes paires</b> (tableau ci-dessus) : allumé à chaque fois. Sinon : fil mal serré ou mauvais trou.</li>
+    <li><b>Les voisins</b> : P1–P2, P2–P3, …, P19–P20, puis C1–C2, …, C19–C20 : <b>éteint</b>. Sinon : deux œillets ou deux fils nus se touchent.</li>
+    <li><b>Interrupteur sur arrêt</b>, pinces ensemble : éteint.</li>
   </ol>
 </section>
 
 <section class="sheet a4">
+  <h1>Plan de pose des étiquettes</h1>
+  <p>Planche 300 × 400 mm vue de face, dessin à l'échelle 1:2. Cotes en mm depuis le coin <b>haut gauche</b>. Les étiquettes laissent libres le titre,
+     les 3 lampes, l'interrupteur, les sorties A et B, et 5 mm autour de chaque tige pour la pince.</p>
+  <svg class="plan" id="plan" viewBox="-6 -6 312 412"></svg>
+  <table class="cotes">
+    <tr><th>Élément</th><th>Taille</th><th>Coin haut gauche</th></tr>
+    <tr><td>Bandeau titre</td><td>180 × 16 mm</td><td>x = 60, y = 5</td></tr>
+    <tr><td>En-têtes « PAYS » / « CAPITALES »</td><td>63 × 8 mm</td><td>x = 38 / x = 196, y = 58</td></tr>
+    <tr><td>Étiquette pays n° k (k = 1…20)</td><td>63 × 14 mm</td><td>x = 38, y = 69 + (k − 1) × 16,5</td></tr>
+    <tr><td>Étiquette capitale n° k</td><td>63 × 14 mm</td><td>x = 196, y = 69 + (k − 1) × 16,5</td></tr>
+  </table>
+</section>
+
+<section class="sheet a4">
   <h1 id="cards-title">Étiquettes</h1>
-  <p>Découpe sur les pointillés, colle chaque étiquette (pâte adhésive) dans la case qui porte le même code (P… / C…) sur le panneau.
-     Pour une nouvelle partie : clique « Nouvelle grille », imprime cette page, remplace les étiquettes. Le câblage ne change pas.</p>
-  <div class="cards" id="cards"></div>
+  <p>Imprimer à <b>100 %</b> (taille réelle, pas « ajuster »). Contrôle : une étiquette de nom mesure 63 mm de large. Découpe, puis colle à la pâte adhésive
+     selon le plan de pose : le code P… / C… dans le coin indique la tige.</p>
+  <div class="labels" id="labels"></div>
 </section>
 
 <script>
@@ -184,7 +186,10 @@ const THEMES = {
 };
 
 const ROW_Y = i => 76 + i * 16.5;         // i = 0..19, en mm
-const X_P = 28, X_C = 269;               // centres des douilles (vue de face)
+const X_P = 28, X_C = 269;               // centres des tiges (vue de face)
+const HEADER_Y = 38;                      // ligne des lampes, de l'interrupteur et des sorties
+const HEADER = [[40, 3, "sortie A (Ø 6)"], [110, 4, "L1 (Ø 8)"], [150, 4, "L2 (Ø 8)"], [190, 4, "L3 (Ø 8)"],
+                [235, 3, "sortie B (Ø 6)"], [272, 3, "interrupteur (Ø 6)"]];
 const COLORS = ["#c0392b","#2471a3","#1e8449","#b9770e","#7d3c98","#117a65","#a04000","#2e4053","#d4ac0d","#922b21"];
 
 const svgNS = "http://www.w3.org/2000/svg";
@@ -217,18 +222,20 @@ function drawFront() {
   svg.innerHTML = "";
   const g = el(svg, "g", { "font-family": "Arial, Helvetica, sans-serif" });
   cornerMarks(g);
-  el(g, "text", { x: 148.5, y: 22, "font-size": 11, "font-weight": "bold", "text-anchor": "middle" }, "CIRCUIT CAPITAL");
-  el(g, "text", { x: 148.5, y: 29, "font-size": 3.2, "text-anchor": "middle", fill: "#555" },
-     "GABARIT FACE AVANT — imprimer à 100 % (taille réelle), coller sur le panneau, percer aux croix");
-  // Sorties des sondes, LED, buzzer
-  drillMark(g, 60, 42, 3);   el(g, "text", { x: 60, y: 50, "font-size": 3, "text-anchor": "middle" }, "sortie sonde A (Ø 6)");
-  drillMark(g, 237, 42, 3);  el(g, "text", { x: 237, y: 50, "font-size": 3, "text-anchor": "middle" }, "sortie sonde B (Ø 6)");
-  drillMark(g, 106, 42, 2.5); el(g, "text", { x: 106, y: 50, "font-size": 3, "text-anchor": "middle" }, "LED verte (Ø 5)");
-  drillMark(g, 132, 42, 2.5); el(g, "text", { x: 132, y: 50, "font-size": 3, "text-anchor": "middle" }, "LED rouge (Ø 5)");
-  drillMark(g, 156, 42, 1.5); el(g, "text", { x: 156, y: 50, "font-size": 3, "text-anchor": "middle" }, "son (Ø 3)");
-  drillMark(g, 190, 42, 6);   el(g, "text", { x: 190, y: 53, "font-size": 3, "text-anchor": "middle" }, "bouton VALIDER (Ø du bouton)");
-  el(g, "text", { x: 70, y: 64, "font-size": 6, "font-weight": "bold", "text-anchor": "middle" }, "PAYS");
-  el(g, "text", { x: 227, y: 64, "font-size": 6, "font-weight": "bold", "text-anchor": "middle" }, "CAPITALES");
+  // Zones réservées aux étiquettes : titre et en-têtes de colonnes
+  el(g, "rect", { x: 60, y: 5, width: 180, height: 16, fill: "none", stroke: "#999", "stroke-width": .3, "stroke-dasharray": "1.5 1" });
+  el(g, "text", { x: 150, y: 15.2, "font-size": 8, "font-weight": "bold", "text-anchor": "middle", fill: "#bbb" }, "CIRCUIT CAPITAL");
+  el(g, "text", { x: 150, y: 27, "font-size": 2.9, "text-anchor": "middle", fill: "#555" },
+     "GABARIT FACE AVANT — imprimer à 100 %, aligner sur les bords GAUCHE et HAUT de la planche, percer aux croix");
+  for (const [x, label] of [[38, "PAYS"], [196, "CAPITALES"]]) {
+    el(g, "rect", { x, y: 58, width: 63, height: 8, fill: "none", stroke: "#999", "stroke-width": .3, "stroke-dasharray": "1.5 1" });
+    el(g, "text", { x: x + 31.5, y: 63.6, "font-size": 4.5, "font-weight": "bold", "text-anchor": "middle", fill: "#bbb" }, label);
+  }
+  // Sorties des câbles, lampes, interrupteur (version 9 V)
+  for (const [x, r, label] of HEADER) {
+    drillMark(g, x, HEADER_Y, r);
+    el(g, "text", { x, y: HEADER_Y + r + 5, "font-size": 2.9, "text-anchor": "middle" }, label);
+  }
   for (let i = 0; i < 20; i++) {
     const y = ROW_Y(i);
     drillMark(g, X_P, y, 3);
@@ -238,6 +245,8 @@ function drawFront() {
     el(g, "rect", { x: 38, y: y - 7, width: 63, height: 14, fill: "none", stroke: "#bbb", "stroke-width": .3, "stroke-dasharray": "1.5 1" });
     el(g, "rect", { x: 196, y: y - 7, width: 63, height: 14, fill: "none", stroke: "#bbb", "stroke-width": .3, "stroke-dasharray": "1.5 1" });
   }
+  el(g, "line", { x1: 0, y1: 400, x2: 297, y2: 400, stroke: "#c0392b", "stroke-width": .3, "stroke-dasharray": "3 1.5" });
+  el(g, "text", { x: 148.5, y: 404, "font-size": 2.9, "text-anchor": "middle", fill: "#c0392b" }, "bord bas de la planche (400 mm) — couper le papier ici");
   scaleBar(g, "cette barre doit mesurer 100 mm — sinon l'impression n'est pas à l'échelle");
 }
 
@@ -246,11 +255,11 @@ function drawBack() {
   const svg = document.getElementById("back");
   svg.innerHTML = "";
   const g = el(svg, "g", { "font-family": "Arial, Helvetica, sans-serif" });
-  const xP = 297 - X_P, xC = 297 - X_C;
+  const M = x => 300 - x, xP = M(X_P), xC = M(X_C);   // planche de 300 mm vue de dos
   cornerMarks(g);
   el(g, "text", { x: 148.5, y: 20, "font-size": 9, "font-weight": "bold", "text-anchor": "middle" }, "FACE ARRIÈRE — CÂBLAGE");
   el(g, "text", { x: 148.5, y: 27, "font-size": 3.2, "text-anchor": "middle", fill: "#555" },
-     "Vue de derrière : les pays sont à DROITE, les capitales à GAUCHE. Un fil par trait.");
+     "Vue de derrière (aligner sur les bords GAUCHE et HAUT du dos) : pays à DROITE, capitales à GAUCHE. Un fil par trait.");
   el(g, "text", { x: xC, y: 64, "font-size": 5, "font-weight": "bold", "text-anchor": "middle" }, "C (capitales)");
   el(g, "text", { x: xP, y: 64, "font-size": 5, "font-weight": "bold", "text-anchor": "middle" }, "P (pays)");
   for (let i = 0; i < 20; i++) {
@@ -266,8 +275,15 @@ function drawBack() {
     el(g, "text", { x: xP + 6, y: y + 1.3, "font-size": 3.6, "font-weight": "bold" }, `P${i + 1} → C${WIRING[i]}`);
     el(g, "text", { x: xC - 6, y: y + 1.3, "font-size": 3.6, "font-weight": "bold", "text-anchor": "end" }, `C${i + 1} ← P${back}`);
   }
-  el(g, "text", { x: xP, y: 42, "font-size": 3, "text-anchor": "middle" }, "sonde A");
-  el(g, "text", { x: xC, y: 42, "font-size": 3, "text-anchor": "middle" }, "sonde B");
+  for (const [x, r, label] of HEADER) {
+    drillMark(g, M(x), HEADER_Y, r);
+    el(g, "text", { x: M(x), y: HEADER_Y + r + 5, "font-size": 2.9, "text-anchor": "middle" }, label.replace(/ \(.*\)/, ""));
+  }
+  // 4 pieds 20 × 20 mm dans les coins, loin des tiges
+  for (const [x, y] of [[0, 0], [280, 0], [0, 380], [280, 380]]) {
+    el(g, "rect", { x, y, width: Math.min(20, 297 - x), height: 20, fill: "#e5c79a", stroke: "#7a5b2e", "stroke-width": .4 });
+    el(g, "text", { x: x + 10, y: y + 11, "font-size": 2.8, "text-anchor": "middle" }, "pied");
+  }
   scaleBar(g, "barre de contrôle : 100 mm");
 }
 
@@ -298,37 +314,93 @@ function grid(themeKey, seed) {
   return pairs.slice(0, 20);
 }
 
-function drawCards(themeKey, seed) {
+const UI = {
+  fr: { title: "CIRCUIT CAPITAL", p: "PAYS", c: "CAPITALES" },
+  ar: { title: "دائرة العواصم", p: "البلدان", c: "العواصم" },
+};
+const isArabic = t => /[؀-ۿ]/.test(t);
+
+function drawCards(themeKey, seed, style) {
   const pairs = grid(themeKey, seed);
   const caps = new Array(20);
   pairs.forEach((p, i) => { caps[WIRING[i] - 1] = p[1]; });
-  const card = (code, name, cls) => `<div class="card ${cls}"><span class="code">${code}</span><span dir="auto">${name}</span></div>`;
-  document.getElementById("cards").innerHTML =
-    pairs.map((p, i) => card("P" + (i + 1), p[0], "")).join("") +
-    caps.map((c, i) => card("C" + (i + 1), c, "cap")).join("");
+  const ui = UI[themeKey === "monde_ar" ? "ar" : "fr"];
+  const txt = t => isArabic(t) ? `<span class="ar" dir="rtl">${t}</span>` : (style === "neon" ? t.toUpperCase() : t);
+  const card = (code, name, cls) => `<div class="card ${cls}${name.length > 12 && !/title|head/.test(cls) ? " long" : ""}">${code ? `<span class="code">${code}</span>` : ""}${txt(name)}</div>`;
+  const root = document.getElementById("labels");
+  root.className = "labels " + style;
+  root.innerHTML =
+    card("", ui.title, "title") +
+    `<div class="heads">${card("", ui.p, "head")}${card("", ui.c, "head cap")}</div>` +
+    `<div class="cards">${pairs.map((p, i) => card("P" + (i + 1), p[0], "")).join("")}${caps.map((c, i) => card("C" + (i + 1), c, "cap")).join("")}</div>`;
   const label = `${THEMES[themeKey].name} — grille n° ${seed}`;
   document.getElementById("cards-title").textContent = "Étiquettes · " + label;
   document.getElementById("info").textContent = label;
+}
+
+// Plan de pose (vue de face, coordonnées en mm de la planche 300 × 400)
+function drawPlan() {
+  const svg = document.getElementById("plan");
+  svg.innerHTML = "";
+  const g = el(svg, "g", { "font-family": "Arial, Helvetica, sans-serif" });
+  const red = "#c0392b";
+  el(g, "rect", { x: 0, y: 0, width: 300, height: 400, fill: "#15171f", stroke: "#000", "stroke-width": .8 });
+  for (const [x, y] of [[0, 0], [280, 0], [0, 380], [280, 380]])
+    el(g, "rect", { x, y, width: 20, height: 20, fill: "none", stroke: "#7a6a4f", "stroke-width": .5, "stroke-dasharray": "2 1.5" });
+  const zone = (x, y, w, h, c, t, fs) => {
+    el(g, "rect", { x, y, width: w, height: h, fill: "#0b1024", stroke: c, "stroke-width": .7 });
+    el(g, "text", { x: x + w / 2, y: y + h / 2 + fs * .36, "font-size": fs, "font-weight": "bold", "text-anchor": "middle", fill: c }, t);
+  };
+  zone(60, 5, 180, 16, "#6ff3ff", "CIRCUIT CAPITAL", 9);
+  for (const [x, r, label] of HEADER) {
+    const lamp = label[0] === "L";
+    el(g, "circle", { cx: x, cy: HEADER_Y, r: lamp ? 9 : r + 1, fill: lamp ? "#ffe680" : "#fff", stroke: "#999", "stroke-width": .5 });
+    const end = x > 260;
+    el(g, "text", { x: end ? 298 : x, y: HEADER_Y + (lamp ? 15 : 10), "font-size": 4.2, "text-anchor": end ? "end" : "middle", fill: "#fff" }, label.replace(/ \(.*\)/, ""));
+  }
+  zone(38, 58, 63, 8, "#6ff3ff", "PAYS", 4.5);
+  zone(196, 58, 63, 8, "#ff7ae6", "CAPITALES", 4.5);
+  for (let i = 0; i < 20; i++) {
+    const y = ROW_Y(i);
+    zone(38, y - 7, 63, 14, "#2de2ff", "", 1);
+    zone(196, y - 7, 63, 14, "#ff2bd6", "", 1);
+    el(g, "circle", { cx: X_P, cy: y, r: 4.5, fill: "#9aa3b5" });
+    el(g, "circle", { cx: X_C, cy: y, r: 4.5, fill: "#9aa3b5" });
+    el(g, "text", { x: 69.5, y: y + 1.6, "font-size": 4.4, "text-anchor": "middle", fill: "#6ff3ff" }, "P" + (i + 1));
+    el(g, "text", { x: 227.5, y: y + 1.6, "font-size": 4.4, "text-anchor": "middle", fill: "#ff7ae6" }, "C" + (i + 1));
+  }
+  // Cotes
+  const vline = (x, t) => el(g, "text", { x, y: 56.6, "font-size": 3.4, "text-anchor": "middle", fill: red }, t);
+  [[38, "38"], [101, "101"], [196, "196"], [259, "259"]].forEach(([x, t]) => vline(x, t));
+  el(g, "text", { x: 150, y: 74, "font-size": 4, "text-anchor": "middle", fill: red }, "1re étiquette : y = 69");
+  el(g, "text", { x: 150, y: 80, "font-size": 4, "text-anchor": "middle", fill: red }, "puis tous les 16,5 mm");
+  el(g, "text", { x: 150, y: 230, "font-size": 4, "text-anchor": "middle", fill: "#8a93a8" }, "zone libre");
+  el(g, "text", { x: 150, y: 393, "font-size": 4, "text-anchor": "middle", fill: red }, "dernière étiquette : bas à y = 396,5");
+  el(g, "text", { x: 150, y: -1.5, "font-size": 4.5, "text-anchor": "middle" }, "300 mm");
+  el(g, "text", { x: -2, y: 200, "font-size": 4.5, "text-anchor": "middle", transform: "rotate(-90 -2 200)" }, "400 mm");
+  el(g, "text", { x: 10, y: 28, "font-size": 3, "text-anchor": "middle", fill: "#a89470" }, "pied");
 }
 
 function readState() {
   const h = new URLSearchParams(location.hash.slice(1));
   const theme = THEMES[h.get("theme")] ? h.get("theme") : "monde";
   const seed = Number.isInteger(+h.get("grille")) && h.get("grille") !== null ? +h.get("grille") : 0;
-  return { theme, seed };
+  const style = h.get("style") === "clair" ? "clair" : "neon";
+  return { theme, seed, style };
 }
+const setState = st => { location.hash = `theme=${st.theme}&grille=${st.seed}&style=${st.style}`; };
 function render() {
-  const { theme, seed } = readState();
+  const { theme, seed, style } = readState();
   document.getElementById("theme").value = theme;
-  drawCards(theme, seed);
+  document.getElementById("style").value = style;
+  drawCards(theme, seed, style);
 }
 
 const sel = document.getElementById("theme");
 for (const k in THEMES) sel.add(new Option(THEMES[k].name, k));
-sel.onchange = () => { location.hash = `theme=${sel.value}&grille=0`; };
-document.getElementById("shuffle").onclick = () => {
-  location.hash = `theme=${sel.value}&grille=${1 + Math.floor(Math.random() * 9999)}`;
-};
+sel.onchange = () => setState({ ...readState(), theme: sel.value, seed: 0 });
+document.getElementById("style").onchange = e => setState({ ...readState(), style: e.target.value });
+document.getElementById("shuffle").onclick = () => setState({ ...readState(), seed: 1 + Math.floor(Math.random() * 9999) });
 document.querySelectorAll("button[data-print]").forEach(b => b.onclick = () => {
   document.body.dataset.print = b.dataset.print;
   window.print();
@@ -339,6 +411,7 @@ window.onhashchange = render;
 drawFront();
 drawBack();
 drawTables();
+drawPlan();
 render();
 </script>
 </body>
