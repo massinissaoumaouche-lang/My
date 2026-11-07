@@ -69,23 +69,23 @@
 <script>
 const WIRING = [17, 11, 15, 20, 10, 13, 19, 12, 16, 1, 7, 4, 18, 6, 2, 8, 3, 14, 5, 9];
 const PAIRS = [
-  ["France","Paris"],["Algérie","Alger"],["Maroc","Rabat"],["Tunisie","Tunis"],["Espagne","Madrid"],
+  ["France","Paris"],["Nigeria","Abuja"],["Maroc","Rabat"],["Pakistan","Islamabad"],["Espagne","Madrid"],
   ["Italie","Rome"],["Allemagne","Berlin"],["Royaume-Uni","Londres"],["Portugal","Lisbonne"],["Suisse","Berne"],
-  ["Égypte","Le Caire"],["Sénégal","Dakar"],["États-Unis","Washington"],["Canada","Ottawa"],["Brésil","Brasília"],
+  ["Égypte","Le Caire"],["Sénégal","Dakar"],["États-Unis","Washington"],["Canada","Ottawa"],["Nouvelle-Zélande","Wellington"],
   ["Argentine","Buenos Aires"],["Japon","Tokyo"],["Chine","Pékin"],["Turquie","Ankara"],["Australie","Canberra"]];
 // ?lang=ar : version arabe (mêmes positions, mêmes fils)
 const AR = new URLSearchParams(location.search).get("lang") === "ar";
 const PAIRS_AR = [
-  ["فرنسا","باريس"],["الجزائر","الجزائر العاصمة"],["المغرب","الرباط"],["تونس","تونس العاصمة"],["إسبانيا","مدريد"],
+  ["فرنسا","باريس"],["نيجيريا","أبوجا"],["المغرب","الرباط"],["باكستان","إسلام آباد"],["إسبانيا","مدريد"],
   ["إيطاليا","روما"],["ألمانيا","برلين"],["المملكة المتحدة","لندن"],["البرتغال","لشبونة"],["سويسرا","برن"],
-  ["مصر","القاهرة"],["السنغال","داكار"],["الولايات المتحدة","واشنطن"],["كندا","أوتاوا"],["البرازيل","برازيليا"],
+  ["مصر","القاهرة"],["السنغال","داكار"],["الولايات المتحدة","واشنطن"],["كندا","أوتاوا"],["نيوزيلندا","ولينغتون"],
   ["الأرجنتين","بوينس آيرس"],["اليابان","طوكيو"],["الصين","بكين"],["تركيا","أنقرة"],["أستراليا","كانبرا"]];
 if (AR) PAIRS.splice(0, 20, ...PAIRS_AR);
 const FT = AR ? "Cairo" : "Orbitron", FM = AR ? "Cairo" : "Share Tech Mono";
 const tx = (fr, ar) => AR ? ar : fr;
 const LS = v => AR ? 0 : v;   // l'espacement des lettres casse les liaisons de l'arabe
 const CAPS = []; PAIRS.forEach((p, i) => { CAPS[WIRING[i] - 1] = p[1]; });
-const ACTIVE_P = 1, ACTIVE_C = WIRING[ACTIVE_P] - 1;  // Algérie (P2) → Alger
+const ACTIVE_P = 1, ACTIVE_C = WIRING[ACTIVE_P] - 1;  // Nigeria (P2) → Abuja
 const ROW_Y = i => 76 + i * 16.5, X_P = 28, X_C = 269;
 const CYAN = "#2de2ff", MAGENTA = "#ff2bd6", GREEN = "#39ff88", AMBER = "#ffc23d";
 const NS = "http://www.w3.org/2000/svg";
