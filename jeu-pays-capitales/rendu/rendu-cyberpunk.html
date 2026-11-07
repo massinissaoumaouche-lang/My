@@ -118,8 +118,8 @@ el(floor, "line", { x1: 0, y1: 1250, x2: 1200, y2: 1250, stroke: MAGENTA, "strok
 
 // ---------- HUD ----------
 const hudT = document.getElementById("hudTop");
-el(hudT, "text", { x: 60, y: 80, fill: CYAN, "font-family": FT, "font-weight": 900, "font-size": 46, filter: "url(#glowSoft)", "letter-spacing": LS(3) }, "GEO//LINK");
-el(hudT, "text", { x: 62, y: 112, fill: MAGENTA, "font-family": FM, "font-size": 20, "letter-spacing": LS(2), direction: tx("ltr", "rtl"), "text-anchor": tx("start", "end") }, tx("MODULE PAYS ⟷ CAPITALES · 40 NODES · 9V", "وحدة البلدان ⟷ العواصم · 40 نقطة · 9 فولت"));
+el(hudT, "text", { x: 60, y: 80, fill: CYAN, "font-family": FT, "font-weight": 900, "font-size": 46, filter: "url(#glowSoft)", "letter-spacing": LS(3) }, tx("CIRCUIT CAPITAL", "دائرة العواصم"));
+el(hudT, "text", { x: 62, y: 112, fill: MAGENTA, "font-family": FM, "font-size": 20, "letter-spacing": LS(2), direction: tx("ltr", "rtl"), "text-anchor": tx("start", "end") }, tx("JEU PAYS ⟷ CAPITALES · 40 NODES · 9V", "لعبة البلدان والعواصم · 40 نقطة · 9 فولت"));
 el(hudT, "path", { d: chamfer(800, 48, 340, 74, 12), fill: "rgba(57,255,136,.08)", stroke: GREEN, "stroke-width": 2, filter: "url(#glowSoft)" });
 el(hudT, "text", { x: tx(822, 1118), y: 78, fill: GREEN, "font-family": FM, "font-size": tx(18, 20), direction: tx("ltr", "rtl") }, tx("CIRCUIT ............ FERMÉ", "الدائرة ............ مغلقة"));
 el(hudT, "text", { x: tx(822, 1118), y: 104, fill: GREEN, "font-family": FM, "font-size": tx(18, 20), direction: tx("ltr", "rtl") }, tx("LAMPES L1·L2·L3 ..... ON", "المصابيح L1·L2·L3 ..... تعمل"));
@@ -139,7 +139,7 @@ for (const [x, y] of [[12, 12], [288, 12], [12, 388], [288, 388]]) {
   el(B, "line", { x1: x - 1.6, y1: y, x2: x + 1.6, y2: y, stroke: "#20263a", "stroke-width": .5 });
 }
 // Titre
-el(B, "text", { x: 150, y: 18, fill: "#e8fdff", "font-family": FT, "font-weight": 700, "font-size": 10.5, "text-anchor": "middle", "letter-spacing": LS(1.2), filter: "url(#glowSoft)" }, tx("PAYS ⟷ CAPITALES", "بلدان ⟷ عواصم"));
+el(B, "text", { x: 150, y: 18, fill: "#e8fdff", "font-family": FT, "font-weight": 700, "font-size": 10.5, "text-anchor": "middle", "letter-spacing": LS(1.2), filter: "url(#glowSoft)" }, tx("CIRCUIT CAPITAL", "دائرة العواصم"));
 
 // Faisceau lumineux : le circuit fermé (sous les étiquettes)
 const beam = `M${X_P} ${ROW_Y(ACTIVE_P)} C 120 ${ROW_Y(ACTIVE_P) + 10}, 150 ${ROW_Y(ACTIVE_C) - 60}, ${X_C} ${ROW_Y(ACTIVE_C)}`;

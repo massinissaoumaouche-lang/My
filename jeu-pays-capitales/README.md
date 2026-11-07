@@ -1,4 +1,6 @@
-# Jeu électrique Pays ↔ Capitales
+# Circuit Capital (دائرة العواصم)
+
+Jeu électrique pays ↔ capitales.
 
 Panneau de 20 pays et 20 capitales. L'enfant branche une sonde sur un pays, l'autre sur une capitale, puis appuie
 sur le bouton **VALIDER** : LED verte + buzzer si la capitale est la bonne, LED rouge sinon.
