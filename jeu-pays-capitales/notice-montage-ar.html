@@ -1,0 +1,757 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>دليل التركيب</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root { --ink: #161824; --muted: #5d6275; --cyan: #00a9c7; --mag: #d4169f; --green: #13a35a; --dark: #0b0e1d; --line: #c9cdd8; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #d9dbe2; font-family: Cairo, "DejaVu Sans", sans-serif; color: var(--ink); }
+  .page { position: relative; width: 210mm; height: 297mm; margin: 12px auto; background: #fff; padding: 22mm 14mm 14mm; overflow: hidden; box-shadow: 0 1px 6px rgba(0,0,0,.25); }
+  .band { position: absolute; top: 0; left: 0; right: 0; height: 14mm; background: var(--dark); color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 14mm; }
+  .band b { font-weight: 700; font-size: 11pt; color: #6ff3ff; }
+  .band span { font-size: 9pt; color: #ff7ae6; }
+  .foot { position: absolute; bottom: 6mm; left: 14mm; right: 14mm; font-size: 8pt; color: var(--muted); display: flex; justify-content: space-between; border-top: 1px solid var(--line); padding-top: 1.5mm; }
+  h1 { font-size: 19pt; font-weight: 900; margin: 0 0 2mm; }
+  h2 { font-size: 13.5pt; font-weight: 700; margin: 0 0 2mm; display: flex; align-items: center; gap: 3mm; }
+  h3 { font-size: 11pt; margin: 2.5mm 0 1mm; }
+  p, li, td, th { font-size: 9.6pt; line-height: 1.5; }
+  p { margin: 1mm 0; }
+  ul, ol { margin: 1mm 0; padding-inline-start: 6mm; padding-inline-end: 0; }
+  li { margin: .4mm 0; }
+  code { direction: ltr; unicode-bidi: embed; font-size: 8.8pt; }
+  .num { flex: none; width: 10mm; height: 10mm; border-radius: 2mm; background: var(--dark); color: #6ff3ff; display: inline-flex; align-items: center; justify-content: center; font-family: Orbitron, sans-serif; font-weight: 900; font-size: 13pt; }
+  .step { margin-bottom: 5mm; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; align-items: start; }
+  .fig { border: 1px solid var(--line); border-radius: 2mm; padding: 2mm; background: #fafbfd; }
+  .fig svg { display: block; width: 100%; height: auto; direction: ltr; }
+  .cap { font-size: 8.2pt; color: var(--muted); text-align: center; margin-top: 1mm; }
+  .tip, .warn, .check { border-radius: 2mm; padding: 1.6mm 3mm; margin: 2mm 0; font-size: 9.2pt; line-height: 1.5; }
+  .tip { background: #e6f8fb; border-inline-start: 3px solid var(--cyan); }
+  .warn { background: #fdecef; border-inline-start: 3px solid #d33; }
+  .check { background: #e8f7ee; border-inline-start: 3px solid var(--green); }
+  .tip > b:first-child, .warn > b:first-child, .check > b:first-child { font-size: 9pt; }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { border: 1px solid var(--line); padding: .8mm 2mm; text-align: start; vertical-align: top; }
+  th { background: #eef0f5; }
+  td.c, th.c { text-align: center; white-space: nowrap; }
+  .items { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3mm; }
+  .item { border: 1px solid var(--line); border-radius: 2mm; padding: 1.5mm 2mm; text-align: center; font-size: 8.4pt; line-height: 1.35; }
+  .item svg { width: 100%; height: 22mm; display: block; direction: ltr; }
+  .item .q { font-weight: 900; color: var(--mag); font-size: 10.5pt; direction: ltr; unicode-bidi: isolate; }
+  .cover { background: #05060f; color: #fff; padding: 12mm 14mm; }
+  .cover h1 { font-size: 34pt; color: #6ff3ff; font-weight: 900; text-shadow: 0 0 6px rgba(45,226,255,.6); margin: 0; line-height: 1.3; }
+  .cover .sub { color: #ff7ae6; font-size: 15pt; font-weight: 700; margin: 0 0 4mm; }
+  .cover img { display: block; width: 126mm; margin: 0 auto; border: 1px solid #2de2ff; border-radius: 2mm; }
+  .cover .facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3mm; margin-top: 5mm; }
+  .cover .fact { border: 1px solid #2de2ff; border-radius: 2mm; padding: 2mm; text-align: center; }
+  .cover .fact b { display: block; color: #6ff3ff; font-size: 13pt; font-weight: 900; }
+  .cover .fact span { font-size: 8.5pt; color: #c9cde0; }
+  .toc { columns: 2; column-gap: 8mm; }
+  .toc li { break-inside: avoid; }
+  .ltr, bdi.n { direction: ltr; unicode-bidi: isolate; white-space: nowrap; }
+  svg text { font-family: Cairo, "DejaVu Sans", sans-serif; }
+  @page { size: A4 portrait; margin: 0; }
+  @media print { body { background: #fff; } .page { margin: 0; box-shadow: none; break-after: page; } }
+</style>
+</head>
+<body>
+
+<!-- ============ الغلاف ============ -->
+<section class="page cover">
+  <h1>بلدان ⟷ عواصم</h1>
+  <div class="sub">دليل التركيب · نسخة 9 فولت</div>
+  <img src="rendu/rendu-cyberpunk-ar.png" alt="صورة اللوح بعد الانتهاء">
+  <div class="facts">
+    <div class="fact"><b>≈ 8 ساعات</b><span>عطلتا نهاية أسبوع، مع وقت الجفاف</span></div>
+    <div class="fact"><b>≈ 40 €</b><span>ثمن المواد، دون الأدوات</span></div>
+    <div class="fact"><b>+12 سنة</b><span>مع شخص بالغ للثقب</span></div>
+    <div class="fact"><b>★★☆</b><span>صعوبة متوسطة، بدون لحام</span></div>
+  </div>
+</section>
+
+<!-- ============ المبدأ والسلامة ============ -->
+<section class="page">
+  <div class="band"><b>قبل البدء</b><span>بلدان ⟷ عواصم</span></div>
+  <h1>كيف تعمل اللعبة؟</h1>
+  <p>يحمل اللوح 20 قضيبًا معدنيًا للبلدان و20 قضيبًا للعواصم. في الخلف، يُوصَل كل بلد بعاصمته <b>هو</b> بسلك واحد، ولا شيء غير ذلك.
+     يخرج من اللوح كابلان ينتهيان بـ<b>ملقطَي تمساح</b>. عندما نمسك بلدًا وعاصمته الصحيحة، يدور التيار في الدائرة <b>فتضيء المصابيح الثلاثة</b>.
+     أما إذا كان الزوج خاطئًا فلا يوجد طريق للتيار، وتبقى المصابيح مطفأة.</p>
+  <div class="fig">
+    <svg viewBox="0 0 180 62">
+      <defs><marker id="ar" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#13a35a"/></marker></defs>
+      <g fill="none" stroke="#161824" stroke-width=".6">
+        <line x1="12" y1="12" x2="12" y2="27"/><line x1="7" y1="27" x2="17" y2="27"/><line x1="9.5" y1="31" x2="14.5" y2="31"/><line x1="12" y1="31" x2="12" y2="52"/>
+        <line x1="12" y1="12" x2="26" y2="12"/><line x1="27" y1="12" x2="36" y2="7"/><line x1="38" y1="12" x2="52" y2="12"/>
+        <circle cx="58" cy="12" r="5"/><path d="M54.5 8.5 L61.5 15.5 M61.5 8.5 L54.5 15.5"/>
+        <line x1="63" y1="12" x2="73" y2="12"/>
+        <circle cx="78" cy="12" r="5"/><path d="M74.5 8.5 L81.5 15.5 M81.5 8.5 L74.5 15.5"/>
+        <line x1="83" y1="12" x2="93" y2="12"/>
+        <circle cx="98" cy="12" r="5"/><path d="M94.5 8.5 L101.5 15.5 M101.5 8.5 L94.5 15.5"/>
+        <line x1="103" y1="12" x2="168" y2="12"/><line x1="168" y1="12" x2="168" y2="38"/><line x1="168" y1="38" x2="150" y2="38"/>
+        <line x1="12" y1="52" x2="40" y2="52"/><line x1="40" y1="52" x2="40" y2="30"/><line x1="40" y1="30" x2="58" y2="30"/>
+        <rect x="62" y="22" width="84" height="34" rx="2" stroke-dasharray="2 1.2"/>
+        <line x1="70" y1="30" x2="142" y2="38" stroke="#13a35a" stroke-width="1"/>
+      </g>
+      <path d="M40 46 L40 34" stroke="#13a35a" stroke-width=".8" marker-end="url(#ar)"/>
+      <path d="M120 15 L135 15" stroke="#13a35a" stroke-width=".8" marker-end="url(#ar)"/>
+      <g fill="#161824" font-size="3.6">
+        <circle cx="68" cy="30" r="2" fill="#8a93a8"/><circle cx="144" cy="38" r="2" fill="#8a93a8"/>
+        <polygon points="58,28 62,30 58,32" fill="#d4169f"/><polygon points="150,36 146,38 150,40" fill="#00a9c7"/>
+        <text x="2" y="22">+</text><text x="2" y="36">−</text><text x="8" y="58" text-anchor="middle" direction="rtl">بطارية 9V</text>
+        <text x="32" y="20" text-anchor="middle">القاطع</text>
+        <text x="78" y="4.5" text-anchor="middle" font-size="3.2" direction="rtl">3 مصابيح 3,5V على التوالي</text>
+        <text x="78" y="28" text-anchor="middle" font-size="3.2">الجزائر</text><text x="132" y="44" text-anchor="middle" font-size="3.2">الجزائر العاصمة</text>
+        <text x="104" y="52" text-anchor="middle" font-size="3.2" fill="#5d6275" direction="rtl">اللوح: 20 سلكًا مخفيًا، سلك لكل زوج</text>
+        <text x="50" y="58" font-size="3.2" fill="#d4169f" text-anchor="middle" direction="rtl">الملقط A</text><text x="158" y="47" font-size="3.2" fill="#00a9c7" text-anchor="middle" direction="rtl">الملقط B</text>
+        <text x="127" y="10" font-size="3.2" fill="#13a35a" text-anchor="middle">التيار</text>
+      </g>
+    </svg>
+    <div class="cap">حلقة واحدة: الموجب + للبطارية ← القاطع ← L1 ← L2 ← L3 ← الملقط B ← قضيب العاصمة ← السلك المخفي ← قضيب البلد ← الملقط A ← السالب − للبطارية.</div>
+  </div>
+
+  <h3>المراحل</h3>
+  <ol class="toc">
+    <li>قصّ اللوح وصنفرته</li><li>الطلاء</li><li>تحديد أماكن الثقوب</li><li>الثقب</li>
+    <li>تركيب الأرجل</li><li>تركيب المصابيح والقاطع</li><li>تحضير الأسلاك العشرين</li><li>تركيب القضبان وربط الأزواج</li>
+    <li>توصيل المصابيح والبطارية</li><li>تركيب الكابلين والملقطين</li><li>الاختبار</li><li>البطاقات واللمسات الأخيرة</li>
+  </ol>
+
+  <h3>السلامة</h3>
+  <div class="warn"><b>قواعد</b>
+    <ul>
+      <li>المثقاب والمنشار يستعملهما شخص بالغ فقط، مع نظارات واقية. تُثبَّت القطعة بملزمة، ولا تُمسك باليد أبدًا.</li>
+      <li>البطارية 9 فولت فقط: <b>أبدًا</b> لا محوّل كهربائي ولا مقبس الكهرباء المنزلية.</li>
+      <li>لا تصل قطبَي البطارية مباشرة ببعضهما (دون المرور بالمصابيح): تسخن البطارية والأسلاك.</li>
+      <li>المصابيح المضاءة تسخن قليلًا: لا تلمسها بعد استعمال طويل.</li>
+    </ul>
+  </div>
+  <div class="tip"><b>من يفعل ماذا؟</b> الشخص البالغ: النشر والثقب والتجويف. ويستطيع ابنك أن يقوم بـ: الصنفرة، الطلاء، تعرية الأسلاك، تركيب القضبان، توصيل الأزواج العشرين، الاختبارات، البطاقات.</div>
+  <div class="foot"><span>دليل التركيب · بلدان ⟷ عواصم</span><span>2</span></div>
+</section>
+
+<!-- ============ المواد ============ -->
+<section class="page">
+  <div class="band"><b>المواد والأدوات</b><span>بلدان ⟷ عواصم</span></div>
+  <h1>المواد</h1>
+  <div class="items" id="items"></div>
+  <h3>الأدوات</h3>
+  <table>
+    <tr><th>الأداة</th><th>الاستعمال</th><th>الأداة</th><th>الاستعمال</th></tr>
+    <tr><td>مثقاب كهربائي + ريش خشب 3 و4 و6 و8 مم</td><td>كل الثقوب</td><td>ريشة فورستنر 25 مم</td><td>تجويف القاطع</td></tr>
+    <tr><td>منشار (أو القصّ في المتجر)</td><td>اللوح والعوارض</td><td>مفتاح ربط 7 مم (أو كمّاشة)</td><td>صواميل M4</td></tr>
+    <tr><td>مفكّ مسطّح ومفكّ صليبي</td><td>القضبان، القواعد، الملاقط</td><td>كمّاشة تعرية + قطّاعة</td><td>الأسلاك</td></tr>
+    <tr><td>مسطرة 50 سم، زاوية قائمة، قلم رصاص</td><td>التخطيط</td><td>ورق صنفرة 120، فرشاة</td><td>التشطيب</td></tr>
+    <tr><td>ملزمة + قطعة خشب زائدة</td><td>ثقب نظيف</td><td>غراء خشب، براغي خشب 3 × 30</td><td>الأرجل</td></tr>
+  </table>
+  <div class="tip"><b>نصيحة للشراء</b> محلات أدوات البناء والنجارة تقصّ اللوح والعوارض على المقاس مجانًا أو بثمن رمزي. اشترِ المصابيح والقواعد والقاطع والملاقط والبطارية من محل إلكترونيات أو عبر الإنترنت.</div>
+  <div class="warn"><b>تحقّق عند الشراء</b> يجب أن تكون المصابيح الثلاثة <b>متطابقة، 3,5 فولت</b>، بقاعدة E10. على التوالي مع 9 فولت، يحصل كل مصباح على نحو 3 فولت. المصابيح ذات 6 أو 9 فولت تبقى شبه مطفأة.</div>
+  <div class="foot"><span>دليل التركيب · بلدان ⟷ عواصم</span><span>3</span></div>
+</section>
+
+<!-- ============ المرحلتان 1-2 ============ -->
+<section class="page">
+  <div class="band"><b>المرحلتان 1 – 2 · اللوح</b><span>بلدان ⟷ عواصم</span></div>
+  <div class="step">
+    <h2><span class="num">1</span>قصّ اللوح وصنفرته</h2>
+    <div class="grid2">
+      <div class="fig"><svg viewBox="0 0 100 92">
+        <polygon points="20,14 26,9 86,9 80,14" fill="#e5c79a" stroke="#7a5b2e" stroke-width=".4"/>
+        <polygon points="80,14 86,9 86,84 80,89" fill="#c9a46c" stroke="#7a5b2e" stroke-width=".4"/>
+        <rect x="20" y="14" width="60" height="75" fill="#f0d8ae" stroke="#7a5b2e" stroke-width=".5"/>
+        <g stroke="#d4b680" stroke-width=".3" fill="none"><path d="M24 22 q20 -3 52 2"/><path d="M24 40 q25 4 52 -1"/><path d="M24 62 q18 -4 52 1"/><path d="M24 78 q22 3 52 -2"/></g>
+        <g stroke="#d4169f" stroke-width=".4" fill="#d4169f" font-size="4">
+          <line x1="20" y1="5" x2="80" y2="5"/><line x1="20" y1="3" x2="20" y2="7"/><line x1="80" y1="3" x2="80" y2="7"/>
+          <text x="50" y="3.6" text-anchor="middle" stroke="none">300 mm</text>
+          <line x1="13" y1="14" x2="13" y2="89"/><line x1="11" y1="14" x2="15" y2="14"/><line x1="11" y1="89" x2="15" y2="89"/>
+          <text x="9" y="52" text-anchor="middle" stroke="none" transform="rotate(-90 9 52)">400 mm</text>
+          <text x="89" y="50" stroke="none">10 mm</text>
+        </g>
+      </svg><div class="cap">خشب رقائقي سمكه 10 مم، 300 × 400 مم</div></div>
+      <div>
+        <ol>
+          <li>اطلب قصّ اللوح على مقاس <b>300 × 400 مم</b>، و4 عوارض 27 × 27 مم: اثنتان بطول 400 مم واثنتان بطول 246 مم.</li>
+          <li>صنفر الوجهين والحواف بورق 120، دائمًا في اتجاه ألياف الخشب.</li>
+          <li>دوّر الزوايا الأربع قليلًا بورق الصنفرة (حتى لا تجرح الأيدي).</li>
+          <li>أزل الغبار بقطعة قماش جافة.</li>
+        </ol>
+        <div class="check"><b>تحقّق:</b> اللوح مستوٍ، بلا شظايا، ومقاسه 300 × 400 مم.</div>
+      </div>
+    </div>
+  </div>
+  <div class="step">
+    <h2><span class="num">2</span>الطلاء</h2>
+    <div class="grid2">
+      <div class="fig"><svg viewBox="0 0 100 80">
+        <rect x="10" y="8" width="54" height="68" fill="#14161f" stroke="#000" stroke-width=".5"/>
+        <rect x="10" y="8" width="54" height="68" fill="none" stroke="#2de2ff" stroke-width=".6" stroke-dasharray="3 2" opacity=".7"/>
+        <g transform="rotate(35 76 30)">
+          <rect x="72" y="2" width="8" height="30" rx="2" fill="#ffb347" stroke="#8a5a14" stroke-width=".4"/>
+          <rect x="71" y="32" width="10" height="8" fill="#b8bfcc" stroke="#555" stroke-width=".4"/>
+          <path d="M71 40 h10 l-1 10 h-8 Z" fill="#14161f"/>
+        </g>
+        <text x="37" y="45" fill="#6ff3ff" font-size="6" font-weight="700" text-anchor="middle">أسود غير لامع</text>
+      </svg><div class="cap">الوجه الأمامي والحواف بالأسود غير اللامع</div></div>
+      <div>
+        <ol>
+          <li>اطلِ الوجه الأمامي والحواف الأربع <b>بالأسود غير اللامع</b> (طلاء أكريليك للخشب، بالبخاخ أو بالفرشاة).</li>
+          <li>اتركه يجفّ ساعتين، صنفر بخفة شديدة، ثم ضع طبقة ثانية.</li>
+          <li>اتركه يجفّ ليلة كاملة قبل التخطيط.</li>
+        </ol>
+        <div class="tip"><b>مظهر «سايبربانك»:</b> شريط لاصق فوسفوري أزرق على بعد 5 مم من الحافة (يُلصق في المرحلة 12) يعطي مظهر النيون كما في الصورة، دون كهرباء.</div>
+        <div class="check"><b>تحقّق:</b> الطلاء جافّ عند اللمس، واللون متجانس.</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>دليل التركيب · بلدان ⟷ عواصم</span><span>4</span></div>
+</section>
+
+<!-- ============ المرحلتان 3-4 ============ -->
+<section class="page">
+  <div class="band"><b>المرحلتان 3 – 4 · التخطيط والثقب</b><span>بلدان ⟷ عواصم</span></div>
+  <div class="step">
+    <h2><span class="num">3</span>تحديد أماكن الثقوب</h2>
+    <div class="grid2">
+      <div class="fig"><svg viewBox="0 0 100 128" id="fig-trace"></svg><div class="cap">المقاسات بالمليمتر من الزاوية العليا اليسرى (منظر أمامي)</div></div>
+      <div>
+        <p><b>الطريقة أ، بالقالب:</b> اطبع الصفحة 1 من <code>gabarits-A3.pdf</code> بنسبة 100% (مقاس A3، في محل نسخ)، وتأكّد أن شريط المراقبة طوله 100 مم، ثم ألصقها على اللوح وعلّم كل علامة + بضربة مسمار. تجاهل ثقوب LED والزر في أعلى هذا القالب.</p>
+        <p><b>الطريقة ب، بالمسطرة:</b></p>
+        <ul>
+          <li>خط البلدان العمودي على <b><bdi dir="ltr" class="n">x = 28 mm</bdi></b>، وخط العواصم على <b><bdi dir="ltr" class="n">x = 269 mm</bdi></b>.</li>
+          <li>الصف الأول على <b><bdi dir="ltr" class="n">y = 76 mm</bdi></b>، ثم صفّ كل <b>16,5 مم</b> (20 صفًا؛ الأخير على <bdi dir="ltr" class="n">y = 389,5</bdi>).</li>
+          <li>في الأعلى، على الخط <bdi dir="ltr" class="n">y = 38 mm</bdi>: الكابل A عند <bdi dir="ltr" class="n">x = 40</bdi>، المصابيح عند <bdi dir="ltr" class="n">x = 110</bdi> و150 و190، الكابل B عند <bdi dir="ltr" class="n">x = 235</bdi>، القاطع عند <bdi dir="ltr" class="n">x = 272</bdi>.</li>
+        </ul>
+        <div class="check"><b>تحقّق:</b> 46 علامة: 40 قضيبًا + 3 مصابيح + كابلان + قاطع. الصفوف اليسرى واليمنى على نفس الارتفاع.</div>
+      </div>
+    </div>
+  </div>
+  <div class="step">
+    <h2><span class="num">4</span>الثقب</h2>
+    <div class="grid2">
+      <div class="fig"><svg viewBox="0 0 100 70">
+        <rect x="8" y="40" width="84" height="7" fill="#14161f"/>
+        <rect x="8" y="47" width="84" height="10" fill="#e5c79a" stroke="#7a5b2e" stroke-width=".4"/>
+        <rect x="4" y="57" width="92" height="4" fill="#9aa3b5"/>
+        <rect x="44" y="4" width="12" height="16" rx="2" fill="#3b82c4"/>
+        <rect x="47" y="20" width="6" height="5" fill="#666"/>
+        <path d="M49 25 h2 v15 l-1 3 l-1 -3 Z" fill="#b8bfcc" stroke="#555" stroke-width=".3"/>
+        <path d="M58 26 a6 3 0 1 1 -16 0" fill="none" stroke="#d4169f" stroke-width=".6"/>
+        <text x="78" y="37" font-size="3.4" text-anchor="middle">اللوح، الوجه المطلي للأعلى</text>
+        <text x="72" y="54" font-size="3.6" text-anchor="middle">قطعة خشب زائدة</text>
+        <text x="50" y="68" font-size="3.6" fill="#5d6275" text-anchor="middle">طاولة العمل</text>
+        <text x="78" y="14" font-size="3.6" fill="#d4169f" text-anchor="middle">المثقاب عمودي تمامًا</text>
+      </svg><div class="cap">قطعة الخشب في الأسفل تمنع تشقّق الوجه الخلفي</div></div>
+      <div>
+        <table>
+          <tr><th>الثقب</th><th class="c">العدد</th><th class="c">القطر</th></tr>
+          <tr><td>قضبان البلدان والعواصم</td><td class="c">40</td><td class="c">4 مم</td></tr>
+          <tr><td>مرور أسلاك المصابيح (تحت كل قاعدة)</td><td class="c">3</td><td class="c">8 مم</td></tr>
+          <tr><td>مخرجا الكابلين A وB</td><td class="c">2</td><td class="c">6 مم</td></tr>
+          <tr><td>القاطع</td><td class="c">1</td><td class="c">*6 مم</td></tr>
+        </table>
+        <ol>
+          <li>ثبّت اللوح فوق قطعة خشب زائدة بملزمة.</li>
+          <li>اثقب أولًا كل الثقوب بقطر 3 مم (ثقوب تمهيدية)، ثم بالقطر النهائي.</li>
+          <li>* في الخلف، مكان القاطع، احفر <b>تجويفًا</b> قطره 25 مم وعمقه 7 مم (ريشة فورستنر): يبقى 3 مم فقط من الخشب، فيستطيع اللولب القصير للقاطع أن يبرز من الأمام.</li>
+        </ol>
+        <div class="tip"><b>القاطع:</b> تحقّق من القطر في بطاقته التقنية (غالبًا 6 مم للقاطع ذي الذراع الصغير، و12 مم لبعض الأنواع).</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>دليل التركيب · بلدان ⟷ عواصم</span><span>5</span></div>
+</section>
+
+<!-- ============ المرحلتان 5-6 ============ -->
+<section class="page">
+  <div class="band"><b>المرحلتان 5 – 6 · الأرجل، المصابيح، القاطع</b><span>بلدان ⟷ عواصم</span></div>
+  <div class="step">
+    <h2><span class="num">5</span>تركيب الأرجل (العوارض)</h2>
+    <div class="grid2">
+      <div class="fig"><svg viewBox="0 0 100 120" id="fig-pieds"></svg><div class="cap">اللوح مقلوب: منظر <b>خلفي</b></div></div>
+      <div>
+        <ol>
+          <li>اقلب اللوح، والوجه المطلي على قطعة قماش.</li>
+          <li>الصق وثبّت بالبراغي العارضتين بطول 400 مم على الجانبين الطويلين، ثم العارضتين بطول 246 مم في الأعلى والأسفل (براغي خشب 3 × 30، ثلاثة لكل عارضة، ثقب تمهيدي 2 مم).</li>
+          <li>يجب ألّا تخترق البراغي الوجه الأمامي: 27 مم للعارضة + 10 مم للوح = 37 مم، فالبراغي ذات 30 مم مناسبة.</li>
+        </ol>
+        <div class="warn"><b>انتبه، منظر خلفي:</b> عندما يكون اللوح مقلوبًا، يتبادل اليمين واليسار: قضبان <b>البلدان</b> على <b>اليمين</b>، و<b>العواصم</b> على <b>اليسار</b>.</div>
+        <div class="check"><b>تحقّق:</b> اللوح ثابت على أرجله ولا يتأرجح، ويترك 27 مم من الفراغ تحته للأسلاك والبطارية.</div>
+      </div>
+    </div>
+  </div>
+  <div class="step">
+    <h2><span class="num">6</span>تركيب قواعد المصابيح الثلاث والقاطع</h2>
+    <div class="grid2">
+      <div class="fig"><svg viewBox="0 0 100 76">
+        <g id="sockets"></g>
+        <rect x="4" y="52" width="92" height="8" fill="#14161f"/>
+        <rect x="76" y="55" width="14" height="5" fill="#fafbfd"/>
+        <rect x="81" y="40" width="4" height="17" fill="#b8bfcc" stroke="#555" stroke-width=".3"/>
+        <rect x="78.5" y="48" width="9" height="3" fill="#8a93a8"/>
+        <rect x="82" y="30" width="2" height="10" rx="1" fill="#555" transform="rotate(-15 83 40)"/>
+        <rect x="79" y="55" width="8" height="7" fill="#3a3f52"/>
+        <text x="80" y="70" font-size="3.4" fill="#d4169f" text-anchor="middle">تجويف في الخلف</text>
+        <text x="83" y="27" font-size="3.4" text-anchor="middle">القاطع</text>
+        <text x="16" y="74" font-size="3.4" fill="#5d6275" text-anchor="middle">مقطع اللوح</text>
+      </svg><div class="cap">القواعد مثبّتة من الأمام، والقاطع داخل تجويفه</div></div>
+      <div>
+        <ol>
+          <li>ثبّت كل قاعدة E10 فوق ثقبها ذي القطر 8 مم (برغيا خشب صغيران). يُستعمل الثقب لتمرير الأسلاك نحو الخلف.</li>
+          <li>لا تركّب المصابيح الآن.</li>
+          <li>أدخل القاطع من الخلف، داخل التجويف. اربط صامولته من الأمام، والذراع إلى الأعلى = تشغيل.</li>
+        </ol>
+        <div class="tip"><b>نصيحة:</b> اكتب بقلم الرصاص في الخلف L1 (اليسار، في المنظر الأمامي) ثم L2 وL3: في المنظر الخلفي يكون L1 على اليمين.</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>دليل التركيب · بلدان ⟷ عواصم</span><span>6</span></div>
+</section>
+
+<!-- ============ المرحلة 7 ============ -->
+<section class="page">
+  <div class="band"><b>المرحلة 7 · تحضير الأسلاك والقضبان</b><span>بلدان ⟷ عواصم</span></div>
+  <div class="step">
+    <h2><span class="num">7</span>تحضير الأسلاك العشرين</h2>
+    <div class="fig"><svg viewBox="0 0 180 44">
+      <g transform="translate(0 4)">
+        <text x="29" y="6" font-size="3.8" font-weight="bold" text-anchor="middle" direction="rtl">أ. القصّ</text>
+        <path d="M6 18 C 20 10, 34 26, 52 18" fill="none" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round"/>
+        <text x="29" y="30" font-size="3.4" text-anchor="middle">45 سم</text>
+        <text x="85" y="6" font-size="3.8" font-weight="bold" text-anchor="middle" direction="rtl">ب. التعرية 1 سم</text>
+        <line x1="64" y1="18" x2="96" y2="18" stroke="#2563eb" stroke-width="2.2"/>
+        <g stroke="#c87533" stroke-width=".35"><line x1="96" y1="17.3" x2="106" y2="17.3"/><line x1="96" y1="18" x2="106" y2="18.1"/><line x1="96" y1="18.7" x2="106" y2="18.7"/></g>
+        <text x="101" y="26" font-size="3.4" text-anchor="middle">1 سم</text>
+        <text x="145" y="6" font-size="3.8" font-weight="bold" text-anchor="middle" direction="rtl">ج. البرم ثم صنع العروة</text>
+        <line x1="120" y1="18" x2="150" y2="18" stroke="#2563eb" stroke-width="2.2"/>
+        <path d="M150 18 h4 a4 4 0 1 1 0.1 0" fill="none" stroke="#c87533" stroke-width="1"/>
+        <text x="158" y="30" font-size="3.4" text-anchor="middle" direction="rtl">عروة 4–5 مم</text>
+      </g>
+    </svg><div class="cap">اصنع العروة حول مفكّ قطره 4 مم، في اتجاه عقارب الساعة</div></div>
+    <ol>
+      <li>اقطع <b>20 سلكًا طول كل منها 45 سم</b>، وهذا يكفي لربط أي بلد بأي عاصمة.</li>
+      <li>عرِّ <b>1 سم</b> من كل طرف، ابرم أسلاك النحاس الرفيعة، ثم اصنع عروة صغيرة.</li>
+      <li>تُركّب العروة <b>في اتجاه عقارب الساعة</b> حول البرغي: عند الشدّ تنغلق بدل أن تنفتح.</li>
+    </ol>
+  </div>
+  <div class="step">
+    <h2><span class="num">i</span>كيف يُصنع القضيب؟</h2>
+    <div class="fig"><svg viewBox="0 0 180 66" id="fig-tige"></svg>
+      <div class="cap">مقطع لقضيب: البرغي يخترق اللوح من الخلف، والسلك مشدود تحت رأسه</div></div>
+    <div class="tip"><b>لماذا من الخلف؟</b> رأس البرغي يشدّ السلك في الخلف؛ وفي الأمام لا يبقى إلا الجزء الملولب الذي يعضّه ملقط التمساح جيدًا.</div>
+  </div>
+  <div class="foot"><span>دليل التركيب · بلدان ⟷ عواصم</span><span>7</span></div>
+</section>
+
+<!-- ============ المرحلة 8 ============ -->
+<section class="page">
+  <div class="band"><b>المرحلة 8 · تركيب القضبان وربط الأزواج</b><span>بلدان ⟷ عواصم</span></div>
+  <h2><span class="num">8</span>تركيب القضبان وربط الأزواج</h2>
+  <div class="grid2">
+    <div class="fig"><svg viewBox="0 0 100 134" id="fig-dos"></svg><div class="cap">منظر <b>خلفي</b>. رُسمت الأسلاك الثلاثة الأولى من الجدول</div></div>
+    <div>
+      <p>تُركّب القضبان <b>زوجًا زوجًا</b>، باتباع الجدول سطرًا بسطر. مثال، السلك 1: يربط <bdi dir="ltr" class="n">P1</bdi> بـ<bdi dir="ltr" class="n">C17</bdi>.</p>
+      <ol>
+        <li>أدخل عروة السلك في برغي M4، مع حلقة معدنية من كل جانب للعروة.</li>
+        <li>أدخل البرغي من الخلف في الثقب <b><bdi dir="ltr" class="n">P1</bdi></b>.</li>
+        <li>في الأمام: حلقة + صامولة. أمسك الرأس بالمفكّ من الخلف، واشدد الصامولة بمفتاح 7.</li>
+        <li>افعل الشيء نفسه بالطرف الآخر للسلك في الثقب <b><bdi dir="ltr" class="n">C17</bdi></b>.</li>
+        <li>ضع علامة على سطر الجدول، وانتقل إلى السلك التالي.</li>
+      </ol>
+      <div class="warn"><b>الفخّ:</b> في المنظر الخلفي، البلدان (P) على <b>اليمين</b>. تحقّق من رقم الثقب مرتين قبل الشدّ.</div>
+      <div class="tip"><b>أسلاك مرتّبة:</b> اترك الأسلاك تمرّ بحرية بين العوارض. يجب ألّا يلمس أي نحاس عارٍ برغيًا آخر.</div>
+      <p style="font-size:8.5pt;color:#5d6275">P = بلد، C = عاصمة. هذه الرموز مكتوبة على القالب وعلى البطاقات.</p>
+    </div>
+  </div>
+  <table style="margin-top:3mm" id="table-cablage"></table>
+  <div class="foot"><span>دليل التركيب · بلدان ⟷ عواصم</span><span>8</span></div>
+</section>
+
+<!-- ============ المرحلة 9 ============ -->
+<section class="page">
+  <div class="band"><b>المرحلة 9 · دائرة المصابيح</b><span>بلدان ⟷ عواصم</span></div>
+  <h2><span class="num">9</span>توصيل المصابيح والقاطع والبطارية</h2>
+  <div class="fig"><svg viewBox="0 0 182 96" id="fig-lampes"></svg>
+    <div class="cap">منظر خلفي للجزء العلوي (L1 على اليمين والقاطع على اليسار؛ القضبان الأربعون في الأسفل غير مرسومة). بالترتيب: من ① إلى ⑥</div></div>
+  <div class="grid2" style="margin-top:3mm">
+    <div>
+      <ol>
+        <li>① السلك <b>الأحمر (+)</b> لمشبك البطارية ← أحد طرفَي القاطع (بموصّل دومينو عند الحاجة).</li>
+        <li>② الطرف الآخر للقاطع ← أحد برغيَي القاعدة <b>L1</b>.</li>
+        <li>③ البرغي الآخر لـL1 ← أحد برغيَي <b>L2</b>.</li>
+        <li>④ البرغي الآخر لـL2 ← أحد برغيَي <b>L3</b>.</li>
+        <li>⑤ البرغي الآخر لـL3 ← <b>الكابل B</b> (دومينو، بجانب المخرج B).</li>
+        <li>⑥ السلك <b>الأسود (−)</b> للمشبك ← <b>الكابل A</b> (دومينو، بجانب المخرج A).</li>
+      </ol>
+    </div>
+    <div>
+      <div class="tip"><b>المصابيح ليس لها اتجاه:</b> يمكن توصيل برغيَي القاعدة بأي ترتيب.</div>
+      <div class="tip"><b>قاطع بأطراف للّحام:</b> بدون كاوية لحام، استعمل أطرافًا أنثوية 4,8 مم تُكبس، أو اطلب من شخص بالغ أن يلحمها.</div>
+      <div class="warn"><b>لا تركّب البطارية الآن:</b> لا تضع البطارية إلا في المرحلة 11، والقاطع على وضع الإيقاف.</div>
+      <p>ثبّت البطارية في الخلف بقطعة «فيلكرو» لاصقة، بعيدًا عن براغي القضبان.</p>
+    </div>
+  </div>
+  <div class="foot"><span>دليل التركيب · بلدان ⟷ عواصم</span><span>9</span></div>
+</section>
+
+<!-- ============ المرحلة 10 ============ -->
+<section class="page">
+  <div class="band"><b>المرحلة 10 · الكابلان وملقطا التمساح</b><span>بلدان ⟷ عواصم</span></div>
+  <h2><span class="num">10</span>تركيب الكابلين A وB والملقطين</h2>
+  <div class="fig"><svg viewBox="0 0 180 70" id="fig-pinces"></svg>
+    <div class="cap">أ. عقدة توقيف خلف المخرج · ب. التعرية · ج. تثبيت الملقط · د. إعادة الغلاف</div></div>
+  <div class="grid2" style="margin-top:3mm">
+    <div>
+      <ol>
+        <li>اقطع كابلين مرنين طول كل منهما <b>1 م</b>: A (وردي أو أحمر) وB (أزرق).</li>
+        <li>مرّر كل كابل في مخرجه ذي القطر 6 مم، من الأمام نحو الخلف.</li>
+        <li>اعقد <b>عقدة</b> في الكابل خلف اللوح مباشرة: إذا شدّ ابنك الملقط، تتحمّل العقدة القوة لا الدومينو.</li>
+        <li>صِل الطرف الخلفي بالدومينو الخاص به (المرحلة 9: A مع الأسود −، وB مع مخرج L3).</li>
+        <li>من جهة الأمام: أدخل أولًا الغلاف العازل للملقط في الكابل.</li>
+        <li>عرِّ 1 سم، ابرم النحاس، واشدده تحت برغي الملقط (أو في اللسان المعدني الذي يُكبس بالكمّاشة).</li>
+        <li>اسحب الغلاف فوق الملقط.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="tip"><b>الألوان:</b> غلاف وردي على A وأزرق على B، كما في الصورة. سيعرف ابنك بسرعة أي ملقط يذهب إلى جهة البلدان وأيّهما إلى جهة العواصم (في الحقيقة، الاتجاهان يعملان).</div>
+      <div class="check"><b>تحقّق:</b> اسحب كل ملقط بقوة: لا شيء يتحرك خلف اللوح. الملقط ينفتح وينغلق على القضيب دون أن ينزلق.</div>
+    </div>
+  </div>
+  <div class="foot"><span>دليل التركيب · بلدان ⟷ عواصم</span><span>10</span></div>
+</section>
+
+<!-- ============ المرحلتان 11-12 ============ -->
+<section class="page">
+  <div class="band"><b>المرحلتان 11 – 12 · الاختبارات واللمسات الأخيرة</b><span>بلدان ⟷ عواصم</span></div>
+  <div class="step">
+    <h2><span class="num">11</span>الاختبار</h2>
+    <p>ركّب المصابيح الثلاثة. ضع البطارية في مشبكها، والقاطع على <b>التشغيل</b>. قم بالاختبارات بالترتيب:</p>
+    <div class="fig"><svg viewBox="0 0 180 62" id="fig-tests"></svg></div>
+    <table style="margin-top:2mm">
+      <tr><th class="c">الاختبار</th><th>ماذا تفعل</th><th>النتيجة المنتظرة</th><th>وإلا</th></tr>
+      <tr><td class="c">1</td><td>الملقط A على الملقط B</td><td>تضيء المصابيح الثلاثة</td><td>مصباح غير مشدود، القاطع على الإيقاف، بطارية فارغة، دومينو مرتخٍ</td></tr>
+      <tr><td class="c">2</td><td>الأزواج الصحيحة العشرون في الجدول</td><td>إضاءة في كل مرة</td><td>سلك غير مشدود في هذا الزوج، ثقب خاطئ</td></tr>
+      <tr><td class="c">3</td><td><bdi dir="ltr" class="n">P1–P2, P2–P3, …, P19–P20</bdi>، ثم <bdi dir="ltr" class="n">C1–C2, …, C19–C20</bdi></td><td>مطفأة في كل مرة</td><td>عروتان أو سلكان عاريان يتلامسان في الخلف</td></tr>
+      <tr><td class="c">4</td><td>القاطع على الإيقاف، والملقطان معًا</td><td>مطفأة</td><td>القاطع موصول بشكل خاطئ</td></tr>
+    </table>
+  </div>
+  <div class="step">
+    <h2><span class="num">12</span>البطاقات واللمسات الأخيرة</h2>
+    <div class="grid2">
+      <div class="fig"><svg viewBox="0 0 100 46">
+        <rect x="0" y="0" width="100" height="46" fill="#14161f"/>
+        <circle cx="10" cy="14" r="3" fill="#b8bfcc" stroke="#2de2ff" stroke-width=".5"/>
+        <path d="M18 9 h40 l3 3 v5 l-3 3 h-40 l-3 -3 v-5 Z" fill="#0b1024" stroke="#2de2ff" stroke-width=".5"/>
+        <text x="38" y="16.8" fill="#6ff3ff" font-size="5.5" font-weight="700" text-anchor="middle">الجزائر</text>
+        <circle cx="90" cy="32" r="3" fill="#b8bfcc" stroke="#ff2bd6" stroke-width=".5"/>
+        <path d="M42 27 h40 l3 3 v5 l-3 3 h-40 l-3 -3 v-5 Z" fill="#0b1024" stroke="#ff2bd6" stroke-width=".5"/>
+        <text x="62" y="34.8" fill="#ff7ae6" font-size="5.5" font-weight="700" text-anchor="middle">الجزائر العاصمة</text>
+        <rect x="3" y="3" width="94" height="40" fill="none" stroke="#2de2ff" stroke-width=".4" stroke-dasharray="4 2" opacity=".6"/>
+      </svg><div class="cap">بطاقات نيون على خلفية سوداء، وشريط فوسفوري</div></div>
+      <div>
+        <ol>
+          <li>افتح <code>gabarit.html</code>، اختر الموضوع «العالم (بالعربية)»، واطبع صفحة البطاقات (الشبكة رقم 0 أو شبكة جديدة).</li>
+          <li>قصّها، ثم غلّفها بالبلاستيك أو بشريط لاصق شفاف.</li>
+          <li>ألصق كل بطاقة بجانب قضيبها بعجينة لاصقة: الرمز P… / C… في زاوية البطاقة يدلّ على القضيب.</li>
+          <li>ألصق الشريط الفوسفوري على بعد 5 مم من الحافة.</li>
+        </ol>
+        <div class="tip"><b>اللعب من جديد دون غشّ:</b> شبكة بطاقات جديدة تغيّر أماكن الأسماء دون لمس الأسلاك.</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>دليل التركيب · بلدان ⟷ عواصم</span><span>11</span></div>
+</section>
+
+<!-- ============ اللعب وحلّ الأعطال ============ -->
+<section class="page">
+  <div class="band"><b>اللعب وحلّ الأعطال</b><span>بلدان ⟷ عواصم</span></div>
+  <h1>قواعد اللعبة</h1>
+  <ol>
+    <li>القاطع على التشغيل. يمسك اللاعب بلدًا بالملقط A.</li>
+    <li>يقول اسم العاصمة <b>بصوت عالٍ</b>، ثم يمسك البطاقة المناسبة بالملقط B.</li>
+    <li>إذا أضاءت المصابيح وكان قد قال العاصمة قبلها: <b>نقطة واحدة</b>. إذا بقيت مطفأة: ينتقل الدور.</li>
+    <li>تنتهي الجولة عندما تُكتشف البلدان العشرون. الفائز صاحب أكبر عدد من النقاط.</li>
+    <li>نسخة بالتوقيت: إيجاد الأزواج العشرين في أسرع وقت.</li>
+  </ol>
+  <div class="tip"><b>لماذا نقول الجواب أولًا؟</b> بدون هذه القاعدة، يمكن إيجاد كل شيء بتجربة العواصم واحدة تلو الأخرى. قول الجواب أولًا يجبر اللاعب على أن يعرف.</div>
+  <p>بعد اللعب: القاطع على <b>الإيقاف</b>، والملقطان منفصلان، حتى لا تفرغ البطارية.</p>
+
+  <h1 style="margin-top:5mm">حلّ الأعطال</h1>
+  <table>
+    <tr><th>العَرَض</th><th>السبب المحتمل</th><th>الحلّ</th></tr>
+    <tr><td>لا شيء يضيء، حتى مع الملقطين معًا</td><td>مصباح غير مشدود أو محترق (على التوالي، يكفي مصباح واحد لإطفاء الكل)، بطارية فارغة، القاطع على الإيقاف</td><td>أعد شدّ المصابيح الثلاثة، جرّب كل مصباح على البطارية، غيّر البطارية</td></tr>
+    <tr><td>المصابيح ضعيفة جدًا</td><td>بطارية مستهلكة، أو مصابيح 6 أو 9 فولت بدل 3,5 فولت</td><td>غيّر البطارية، تحقّق من الكتابة على المصابيح</td></tr>
+    <tr><td>مصباح يضيء والآخران لا</td><td>مستحيل على التوالي: تحقّق أنه لا يوجد سلك يقصر قاعدتين</td><td>اتبع التوصيل من ① إلى ⑥ في المرحلة 9</td></tr>
+    <tr><td>زوج صحيح يبقى مطفأ</td><td>سلك مرتخٍ، عروة غير مشدودة، ثقب خاطئ</td><td>أعد شدّ صامولتَي الزوج، راجع الجدول</td></tr>
+    <tr><td>زوج خاطئ يضيء</td><td>سلكان أو عروتان تتلامس في الخلف</td><td>ابحث عن النحاس العاري البارز بين القضيبين المعنيّين</td></tr>
+    <tr><td>يعمل أحيانًا فقط</td><td>دومينو أو ملقط غير مشدود</td><td>أعد الشدّ، وأعد تعرية السلك</td></tr>
+    <tr><td>البطارية تفرغ بسرعة</td><td>الملقطان بقيا متلامسين والقاطع على التشغيل</td><td>ضع القاطع على الإيقاف بعد اللعب؛ أو استعمل علبة 6 بطاريات AA (9 فولت، تدوم نحو 5 مرات أكثر)</td></tr>
+  </table>
+  <div class="foot"><span>دليل التركيب · بلدان ⟷ عواصم</span><span>12</span></div>
+</section>
+
+<!-- ============ الملحق ============ -->
+<section class="page">
+  <div class="band"><b>ملحق · خاص بالأولياء</b><span>بلدان ⟷ عواصم</span></div>
+  <h1>التوصيل والشبكة رقم 0</h1>
+  <p>هذا الجدول يكشف الأجوبة: احتفظ بهذه الصفحة بعيدًا عن نظر اللاعب. التوصيل لا يتغيّر أبدًا؛ البطاقات وحدها تتغيّر من شبكة إلى أخرى.</p>
+  <table id="annexe"></table>
+  <div class="foot"><span>دليل التركيب · بلدان ⟷ عواصم</span><span>13</span></div>
+</section>
+
+<script>
+const WIRING = [17, 11, 15, 20, 10, 13, 19, 12, 16, 1, 7, 4, 18, 6, 2, 8, 3, 14, 5, 9];
+const PAIRS = [
+  ["فرنسا","باريس"],["الجزائر","الجزائر العاصمة"],["المغرب","الرباط"],["تونس","تونس العاصمة"],["إسبانيا","مدريد"],
+  ["إيطاليا","روما"],["ألمانيا","برلين"],["المملكة المتحدة","لندن"],["البرتغال","لشبونة"],["سويسرا","برن"],
+  ["مصر","القاهرة"],["السنغال","داكار"],["الولايات المتحدة","واشنطن"],["كندا","أوتاوا"],["البرازيل","برازيليا"],
+  ["الأرجنتين","بوينس آيرس"],["اليابان","طوكيو"],["الصين","بكين"],["تركيا","أنقرة"],["أستراليا","كانبرا"]];
+const ROW_Y = i => 76 + i * 16.5;
+const set = (id, html) => { document.getElementById(id).innerHTML = html; };
+
+// ---- المواد ----
+const ICONS = {
+  planche: `<svg viewBox="0 0 60 40"><polygon points="12,8 16,5 50,5 46,8" fill="#e5c79a"/><polygon points="46,8 50,5 50,33 46,36" fill="#c9a46c"/><rect x="12" y="8" width="34" height="28" fill="#f0d8ae" stroke="#7a5b2e" stroke-width=".4"/></svg>`,
+  tasseau: `<svg viewBox="0 0 60 40"><g fill="#f0d8ae" stroke="#7a5b2e" stroke-width=".4"><rect x="6" y="8" width="48" height="5"/><rect x="6" y="16" width="48" height="5"/><rect x="12" y="24" width="36" height="5"/><rect x="12" y="32" width="36" height="5"/></g></svg>`,
+  vis: `<svg viewBox="0 0 60 40"><rect x="8" y="14" width="5" height="12" rx="1" fill="#9aa3b5"/><rect x="13" y="17.5" width="38" height="5" fill="#c9d1df"/><g stroke="#7d8698" stroke-width=".5">${Array.from({length: 12}, (_, k) => `<line x1="${15 + k * 3}" y1="17.5" x2="${16.5 + k * 3}" y2="22.5"/>`).join("")}</g></svg>`,
+  ecrou: `<svg viewBox="0 0 60 40"><polygon points="20,12 28,12 32,20 28,28 20,28 16,20" fill="#c9d1df" stroke="#6c7891" stroke-width=".6"/><circle cx="24" cy="20" r="3.5" fill="#fff" stroke="#6c7891" stroke-width=".5"/><circle cx="44" cy="20" r="8" fill="#c9d1df" stroke="#6c7891" stroke-width=".6"/><circle cx="44" cy="20" r="3" fill="#fff" stroke="#6c7891" stroke-width=".5"/></svg>`,
+  ampoule: `<svg viewBox="0 0 60 40"><circle cx="30" cy="15" r="9" fill="#fff6c8" stroke="#c99500" stroke-width=".6"/><path d="M26 15 l1.3 -2 l1.3 2 l1.3 -2 l1.3 2 l1.3 -2" fill="none" stroke="#c99500" stroke-width=".5"/><rect x="26" y="23" width="8" height="8" fill="#c9d1df" stroke="#6c7891" stroke-width=".4"/><g stroke="#6c7891" stroke-width=".4"><line x1="26" y1="25.5" x2="34" y2="25.5"/><line x1="26" y1="28" x2="34" y2="28"/></g><text x="30" y="38" font-size="5" text-anchor="middle" fill="#c99500">3,5 V</text></svg>`,
+  douille: `<svg viewBox="0 0 60 40"><rect x="14" y="26" width="32" height="8" rx="2" fill="#2a2f40"/><rect x="23" y="12" width="14" height="14" fill="#c9d1df" stroke="#6c7891" stroke-width=".4"/><circle cx="18" cy="30" r="1.6" fill="#c9d1df"/><circle cx="42" cy="30" r="1.6" fill="#c9d1df"/></svg>`,
+  inter: `<svg viewBox="0 0 60 40"><rect x="20" y="20" width="20" height="14" rx="2" fill="#2a2f40"/><rect x="26" y="15" width="8" height="5" fill="#c9d1df"/><rect x="29" y="4" width="2.5" height="12" rx="1.2" fill="#9aa3b5" transform="rotate(-15 30 16)"/><rect x="23" y="34" width="3" height="5" fill="#c9a46c"/><rect x="34" y="34" width="3" height="5" fill="#c9a46c"/></svg>`,
+  pile: `<svg viewBox="0 0 60 40"><rect x="16" y="12" width="18" height="26" rx="2" fill="#2a2f40"/><rect x="16" y="22" width="18" height="6" fill="#e39b00"/><text x="25" y="27" font-size="5" fill="#000" text-anchor="middle" font-weight="bold">9V</text><rect x="18" y="7" width="5" height="5" fill="#c9d1df"/><polygon points="28,7 32,7 33,9.5 32,12 28,12 27,9.5" fill="#c9d1df"/><path d="M40 10 q8 0 8 10 t8 10" fill="none" stroke="#d33" stroke-width="1.2"/><path d="M40 14 q6 0 6 10 t8 10" fill="none" stroke="#111" stroke-width="1.2"/></svg>`,
+  fil: `<svg viewBox="0 0 60 40"><ellipse cx="22" cy="20" rx="10" ry="14" fill="#2563eb"/><ellipse cx="22" cy="20" rx="4" ry="6" fill="#fff"/><ellipse cx="42" cy="20" rx="10" ry="14" fill="#d33"/><ellipse cx="42" cy="20" rx="4" ry="6" fill="#fff"/></svg>`,
+  pince: `<svg viewBox="0 0 60 40"><g transform="translate(46 13)"><path d="M-30 -3.5 H-16 L-13 -4 V4 L-16 3.5 H-30 Q-32 0 -30 -3.5Z" fill="#d4169f"/><path d="M-13 -4 L-2 -2 L1 -.8 V-.2 L-13 -1Z M-13 4 L-2 2 L1 .8 V.2 L-13 1Z" fill="#c9d1df" stroke="#6c7891" stroke-width=".3"/></g><g transform="translate(46 29)"><path d="M-30 -3.5 H-16 L-13 -4 V4 L-16 3.5 H-30 Q-32 0 -30 -3.5Z" fill="#00a9c7"/><path d="M-13 -4 L-2 -2 L1 -.8 V-.2 L-13 -1Z M-13 4 L-2 2 L1 .8 V.2 L-13 1Z" fill="#c9d1df" stroke="#6c7891" stroke-width=".3"/></g></svg>`,
+  cable: `<svg viewBox="0 0 60 40"><path d="M8 14 C 20 2, 30 26, 52 12" fill="none" stroke="#d4169f" stroke-width="2.4" stroke-linecap="round"/><path d="M8 28 C 20 16, 30 40, 52 26" fill="none" stroke="#00a9c7" stroke-width="2.4" stroke-linecap="round"/></svg>`,
+  domino: `<svg viewBox="0 0 60 40"><rect x="10" y="14" width="40" height="12" rx="1" fill="#f2f2f2" stroke="#888" stroke-width=".5"/>${[0,1,2,3].map(k => `<circle cx="${15 + k * 10}" cy="20" r="2.2" fill="#c9d1df" stroke="#6c7891" stroke-width=".4"/>`).join("")}</svg>`,
+};
+const ITEMS = [
+  ["planche", "1", "خشب رقائقي 300 × 400 مم، سمك 10 مم"],
+  ["tasseau", "4", "عوارض 27 × 27 مم: اثنتان 400 مم واثنتان 246 مم"],
+  ["vis", "40", "براغي <bdi dir='ltr' class='n'>M4 × 35</bdi> مم (القضبان)"],
+  ["ecrou", "40 + 120", "صواميل M4 + حلقات M4"],
+  ["ampoule", "3", "مصابيح 3,5 فولت 0,2 أمبير، قاعدة E10، متطابقة"],
+  ["douille", "3", "قواعد E10 على حامل، ببراغي"],
+  ["inter", "1", "قاطع تشغيل/إيقاف (طرفان)"],
+  ["pile", "1", "بطارية 9 فولت + مشبك"],
+  ["fil", "12 m", "سلك توصيل 0,5 مم²، بلونين"],
+  ["pince", "2", "ملقطا تمساح معزولان (وردي، أزرق)"],
+  ["cable", "2 × 1 m", "كابل مرن 0,75 مم² (الكابلان A وB)"],
+  ["domino", "1", "شريط موصّلات «دومينو» (3 خانات مستعملة)"],
+];
+set("items", ITEMS.map(([k, q, t]) => `<div class="item">${ICONS[k]}<div class="q">× ${q}</div>${t}</div>`).join(""));
+
+// ---- رسم التخطيط (منظر أمامي، مقياس 1/3) ----
+(() => {
+  const k = 1 / 3;
+  let s = `<rect x="0" y="0" width="${300 * k}" height="${400 * k}" fill="#14161f"/>`;
+  for (let i = 0; i < 20; i++) {
+    const y = ROW_Y(i) * k;
+    s += `<path d="M${28 * k - 2} ${y} h4 M${28 * k} ${y - 2} v4 M${269 * k - 2} ${y} h4 M${269 * k} ${y - 2} v4" stroke="#6ff3ff" stroke-width=".35"/>`;
+  }
+  for (const [x, c] of [[40, "#ff7ae6"], [110, "#ffd76a"], [150, "#ffd76a"], [190, "#ffd76a"], [235, "#6ff3ff"], [272, "#39ff88"]])
+    s += `<circle cx="${x * k}" cy="${38 * k}" r="1.6" fill="none" stroke="${c}" stroke-width=".5"/>`;
+  s += `<g font-size="3" fill="#ff7ae6"><text x="${28 * k + 2}" y="${ROW_Y(0) * k + 1}">P1</text><text x="${269 * k - 2}" y="${ROW_Y(0) * k + 1}" text-anchor="end">C1</text>
+        <text x="${28 * k + 2}" y="${ROW_Y(19) * k + 1}">P20</text><text x="${269 * k - 2}" y="${ROW_Y(19) * k + 1}" text-anchor="end">C20</text></g>
+        <g font-size="3" fill="#ffffff">
+        <text x="50" y="${38 * k + 6}" text-anchor="middle" direction="rtl">المصابيح · y = 38</text>
+        <text x="${28 * k + 2}" y="60">x = 28</text><text x="${269 * k - 2}" y="60" text-anchor="end">x = 269</text>
+        <text x="50" y="${ROW_Y(0) * k + 1}" text-anchor="middle" direction="rtl">الصف الأول y = 76</text>
+        <text x="50" y="${ROW_Y(1) * k + 1.4}" text-anchor="middle" direction="rtl">ثم كل 16,5</text></g>`;
+  set("fig-trace", s);
+})();
+
+// ---- الأرجل (منظر خلفي) ----
+(() => {
+  const k = 0.3, W = 300 * k, H = 400 * k;
+  let s = `<g transform="translate(5 0)"><rect x="0" y="0" width="${W}" height="${H}" fill="#e5c79a" stroke="#7a5b2e" stroke-width=".4"/>`;
+  s += `<g fill="#c9a46c" stroke="#7a5b2e" stroke-width=".4"><rect x="0" y="0" width="${27 * k}" height="${H}"/><rect x="${W - 27 * k}" y="0" width="${27 * k}" height="${H}"/>
+        <rect x="${27 * k}" y="0" width="${W - 54 * k}" height="${27 * k}"/><rect x="${27 * k}" y="${H - 27 * k}" width="${W - 54 * k}" height="${27 * k}"/></g>`;
+  for (let i = 0; i < 20; i++) {
+    const y = ROW_Y(i) * k;
+    s += `<circle cx="${(300 - 28) * k}" cy="${y}" r=".9" fill="#555"/><circle cx="${(300 - 269) * k}" cy="${y}" r=".9" fill="#555"/>`;
+  }
+  s += `<g font-size="3.6" font-weight="bold"><text x="${(300 - 28) * k - 2}" y="${ROW_Y(5) * k}" text-anchor="end" fill="#d4169f">P</text>
+        <text x="${(300 - 269) * k + 2}" y="${ROW_Y(5) * k}" fill="#00a9c7">C</text></g>
+        <text x="${W / 2}" y="${H / 2}" font-size="4.2" text-anchor="middle" fill="#5d6275" font-weight="bold">الخلف</text>
+        <text x="${W / 2}" y="${H / 2 + 6}" font-size="3.2" text-anchor="middle" fill="#5d6275" direction="rtl">عوارض 27 × 27</text></g>`;
+  set("fig-pieds", s);
+})();
+
+// ---- القواعد (المرحلة 6) ----
+set("sockets", [14, 34, 54].map((x, i) => `
+  <rect x="${x - 7}" y="46" width="14" height="6" rx="1.5" fill="#2a2f40"/>
+  <rect x="${x - 3.5}" y="38" width="7" height="8" fill="#c9d1df" stroke="#6c7891" stroke-width=".3"/>
+  <circle cx="${x}" cy="31" r="6" fill="#fff6c8" stroke="#c99500" stroke-width=".5" opacity=".5"/>
+  <rect x="${x - 2}" y="52" width="4" height="8" fill="#fafbfd"/>
+  <path d="M${x - 1} 46 v14 M${x + 1} 46 v14" stroke="#d33" stroke-width=".5"/>
+  <text x="${x}" y="23.5" font-size="3.4" text-anchor="middle">L${i + 1}</text>`).join("") +
+  `<text x="40" y="67" font-size="3.4" text-anchor="middle" direction="rtl">ثقب 8 مم: لمرور الأسلاك</text>`);
+
+// ---- مقطع القضيب ----
+set("fig-tige", (() => {
+  const thread = (x1, x2) => Array.from({ length: Math.floor((x2 - x1) / 2.5) }, (_, k) => `<line x1="${x1 + k * 2.5}" y1="29" x2="${x1 + 1.2 + k * 2.5}" y2="33" stroke="#7d8698" stroke-width=".35"/>`).join("");
+  return `
+  <text x="14" y="8" font-size="4.4" font-weight="bold" fill="#00a9c7" text-anchor="middle">الأمام</text>
+  <text x="166" y="8" font-size="4.4" font-weight="bold" fill="#d4169f" text-anchor="middle">الخلف</text>
+  <rect x="96" y="4" width="20" height="56" fill="#e5c79a" stroke="#7a5b2e" stroke-width=".4"/>
+  <rect x="96" y="4" width="1.5" height="56" fill="#14161f"/>
+  <rect x="96" y="29" width="20" height="4" fill="#fafbfd"/>
+  <rect x="48" y="29" width="76" height="4" fill="#c9d1df" stroke="#6c7891" stroke-width=".3"/>
+  ${thread(49, 123)}
+  <rect x="94" y="23" width="1.6" height="16" fill="#8a93a8"/>
+  <rect x="88" y="24.5" width="6" height="13" fill="#9aa3b5" stroke="#6c7891" stroke-width=".3"/>
+  <rect x="116.2" y="23" width="1.6" height="16" fill="#8a93a8"/>
+  <rect x="118" y="27.5" width="1.6" height="7" fill="#c87533"/>
+  <path d="M119 34.5 C 122 44, 132 48, 150 50" fill="none" stroke="#2563eb" stroke-width="2"/>
+  <rect x="119.8" y="23" width="1.6" height="16" fill="#8a93a8"/>
+  <rect x="121.6" y="25" width="5" height="12" rx="1" fill="#9aa3b5" stroke="#6c7891" stroke-width=".3"/>
+  <g opacity=".55" transform="translate(54 31)"><path d="M-40 -4 H-22 L-19 -5 V5 L-22 4 H-40 Q-42 0 -40 -4Z" fill="#d4169f"/>
+    <path d="M-19 -5 L-4 -2.6 L1 -1 V-.2 L-19 -1.4Z M-19 5 L-4 2.6 L1 1 V.2 L-19 1.4Z" fill="#c9d1df" stroke="#6c7891" stroke-width=".3"/></g>
+  <g font-size="3.4">
+    <text x="86" y="47" text-anchor="middle">صامولة</text><text x="86" y="51.5" text-anchor="middle">+ حلقة</text>
+    <text x="106" y="64.5" text-anchor="middle" fill="#5d6275" direction="rtl">اللوح 10 مم</text>
+    <text x="132" y="20" text-anchor="middle">رأس البرغي</text>
+    <text x="164" y="46" text-anchor="middle">السلك (العروة بين</text><text x="164" y="50.5" text-anchor="middle">حلقتين معدنيتين)</text>
+    <text x="70" y="25" text-anchor="middle" fill="#00a9c7" direction="rtl">≈ 20 مم من القضيب</text>
+    <text x="30" y="44" text-anchor="middle" fill="#d4169f">ملقط التمساح</text>
+  </g>`;
+})());
+
+// ---- المنظر الخلفي: ربط الأزواج ----
+(() => {
+  const k = 0.32, W = 300 * k, H = 400 * k, xP = (300 - 28) * k, xC = (300 - 269) * k;
+  let s = `<g transform="translate(2 2)"><rect x="0" y="0" width="${W}" height="${H}" fill="#f0d8ae" stroke="#7a5b2e" stroke-width=".4"/>`;
+  const colors = ["#d33", "#2563eb", "#13a35a"];
+  for (let i = 0; i < 3; i++) {
+    const y1 = ROW_Y(i) * k, y2 = ROW_Y(WIRING[i] - 1) * k;
+    s += `<path d="M${xP} ${y1} C ${xP - 30} ${y1 + 4}, ${xC + 30} ${y2 - 4}, ${xC} ${y2}" fill="none" stroke="${colors[i]}" stroke-width=".9"/>`;
+  }
+  for (let i = 0; i < 20; i++) {
+    const y = ROW_Y(i) * k;
+    s += `<circle cx="${xP}" cy="${y}" r="1.4" fill="#9aa3b5" stroke="#555" stroke-width=".2"/><circle cx="${xC}" cy="${y}" r="1.4" fill="#9aa3b5" stroke="#555" stroke-width=".2"/>
+          <text x="${xP + 2.5}" y="${y + 1}" font-size="2.4" fill="#d4169f">P${i + 1}</text><text x="${xC - 2.5}" y="${y + 1}" font-size="2.4" fill="#00a9c7" text-anchor="end">C${i + 1}</text>`;
+  }
+  s += `<text x="${W / 2}" y="9" font-size="4" text-anchor="middle" font-weight="bold">منظر خلفي</text>
+        <text x="${xC + 1}" y="${ROW_Y(0) * k - 5}" font-size="3" text-anchor="middle" fill="#00a9c7">العواصم</text>
+        <text x="${xP - 1}" y="${ROW_Y(0) * k - 5}" font-size="3" text-anchor="middle" fill="#d4169f">البلدان</text></g>`;
+  set("fig-dos", s);
+})();
+(() => {
+  let s = "<tr>" + [0, 1].map(() => "<th class='c'>السلك</th><th class='c'>البلد</th><th class='c'>العاصمة</th><th class='c'>✓</th>").join("") + "</tr>";
+  for (let r = 0; r < 10; r++) {
+    s += "<tr>" + [r, r + 10].map(i => `<td class="c">${i + 1}</td><td class="c">P${i + 1}</td><td class="c">C${WIRING[i]}</td><td class="c">☐</td>`).join("") + "</tr>";
+  }
+  set("table-cablage", s);
+})();
+
+// ---- دائرة المصابيح (منظر خلفي، الجزء العلوي) ----
+(() => {
+  const X = x => (300 - x) * 0.58 + 4, Y = y => y * 0.95 + 4, W = 300 * 0.58;
+  const yl = Y(40), sw = X(272), bx = X(150), by = Y(82), dA = X(40), dB = X(235), dy = Y(62);
+  let s = `<rect x="4" y="4" width="${W}" height="${Y(96) - 4}" fill="#f0d8ae" stroke="#7a5b2e" stroke-width=".4"/>
+           <rect x="4" y="4" width="${W}" height="${27 * .95}" fill="#c9a46c" opacity=".7"/>
+           <text x="${4 + W / 2}" y="${Y(16)}" font-size="3.4" text-anchor="middle" fill="#5d6275">العارضة العليا</text>`;
+  const t = x => [X(x) + 3.5, X(x) - 3.5];
+  const [l1r, l1l] = t(110), [l2r, l2l] = t(150), [l3r, l3l] = t(190);
+  const wire = (pts, c, n, tx, ty) => `<polyline points="${pts.map(p => p.join(",")).join(" ")}" fill="none" stroke="${c}" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/>` +
+    `<circle cx="${tx}" cy="${ty}" r="2.5" fill="#fff" stroke="${c}" stroke-width=".5"/><text x="${tx}" y="${ty + 1.15}" font-size="3" text-anchor="middle" fill="${c}" font-weight="bold">${n}</text>`;
+  s += wire([[bx - 4, by - 5], [bx - 4, Y(74)], [sw + 6, Y(74)], [sw + 6, yl + 2.5], [sw, yl + 2.5]], "#d33", "①", (bx + sw) / 2, Y(74));
+  s += wire([[sw, yl - 2.5], [sw - 2, yl - 2.5], [sw - 2, Y(33)], [l1r, Y(33)], [l1r, yl]], "#2563eb", "②", (sw + l1r) / 2, Y(33));
+  s += wire([[l1l, yl], [l1l, Y(49)], [l2r, Y(49)], [l2r, yl]], "#2563eb", "③", (l1l + l2r) / 2, Y(49));
+  s += wire([[l2l, yl], [l2l, Y(49)], [l3r, Y(49)], [l3r, yl]], "#2563eb", "④", (l2l + l3r) / 2, Y(49));
+  s += wire([[l3l, yl], [l3l, dy], [dB + 3, dy]], "#2563eb", "⑤", (l3l + dB) / 2 + 2, dy);
+  s += wire([[bx + 4, by - 5], [bx + 4, Y(74)], [dA, Y(74)], [dA, dy + 2.5]], "#111", "⑥", (bx + dA) / 2, Y(74));
+  for (const [x, n] of [[110, 1], [150, 2], [190, 3]]) s += `<rect x="${X(x) - 6}" y="${yl - 4}" width="12" height="8" rx="1.5" fill="#2a2f40"/>
+       <circle cx="${X(x) - 3.5}" cy="${yl}" r="1.3" fill="#c9d1df"/><circle cx="${X(x) + 3.5}" cy="${yl}" r="1.3" fill="#c9d1df"/>
+       <text x="${X(x)}" y="${yl + 1.1}" font-size="2.8" text-anchor="middle" fill="#ffd76a" font-weight="bold">L${n}</text>`;
+  s += `<rect x="${sw - 3.5}" y="${yl - 5}" width="7" height="10" rx="1" fill="#2a2f40"/>
+        <circle cx="${sw}" cy="${yl - 2.5}" r="1" fill="#c9a46c"/><circle cx="${sw}" cy="${yl + 2.5}" r="1" fill="#c9a46c"/>`;
+  for (const [x, c] of [[dA, "#d4169f"], [dB, "#00a9c7"]]) {
+    s += `<circle cx="${x}" cy="${yl}" r="2.2" fill="#fff" stroke="#555" stroke-width=".4"/>
+          <path d="M${x} ${dy - 2.5} V${yl + 2.2}" stroke="${c}" stroke-width="1.8"/>
+          <rect x="${x - 3}" y="${dy - 2.5}" width="6" height="5" fill="#f2f2f2" stroke="#888" stroke-width=".4"/>`;
+  }
+  s += `<rect x="${bx - 9}" y="${by - 5}" width="18" height="12" rx="1.5" fill="#2a2f40"/><rect x="${bx - 3}" y="${by - 5}" width="6" height="12" fill="#e39b00"/>
+        <text x="${bx}" y="${by + 2.4}" font-size="3.4" text-anchor="middle" font-weight="bold">9V</text>
+        <text x="${bx - 8}" y="${by - 6}" font-size="3" fill="#d33" font-weight="bold">+</text><text x="${bx + 6}" y="${by - 6}" font-size="3" font-weight="bold">−</text>`;
+  s += `<g font-size="3.1">
+     <text x="${sw}" y="${yl + 9.5}" text-anchor="middle">القاطع</text>
+     <text x="${dB + 22}" y="${dy + 7}" text-anchor="middle" fill="#00a9c7" direction="rtl">دومينو ← الكابل B</text>
+     <text x="${dA - 20}" y="${dy - 4}" text-anchor="middle" fill="#d4169f" direction="rtl">دومينو ← الكابل A</text>
+     <text x="${dB}" y="${yl - 3.5}" text-anchor="middle" fill="#00a9c7" direction="rtl">المخرج B</text>
+     <text x="${dA}" y="${yl - 3.5}" text-anchor="middle" fill="#d4169f" direction="rtl">المخرج A</text>
+     <text x="${bx + 26}" y="${by + 3}" text-anchor="middle" direction="rtl">بطارية 9V (فيلكرو)</text>
+  </g>`;
+  set("fig-lampes", s);
+})();
+
+// ---- الملاقط ----
+set("fig-pinces", `
+  <g>
+    <text x="21" y="6" font-size="3.8" font-weight="bold" text-anchor="middle" direction="rtl">أ. عقدة توقيف</text>
+    <rect x="18" y="12" width="8" height="44" fill="#e5c79a" stroke="#7a5b2e" stroke-width=".4"/><rect x="18" y="12" width="1.2" height="44" fill="#14161f"/>
+    <rect x="18" y="31" width="8" height="4" fill="#fafbfd"/>
+    <path d="M2 33 H40" stroke="#d4169f" stroke-width="2.2"/>
+    <circle cx="31" cy="33" r="3" fill="none" stroke="#d4169f" stroke-width="2"/>
+    <text x="9" y="62" font-size="3.2" text-anchor="middle">الأمام</text><text x="34" y="62" font-size="3.2" text-anchor="middle">الخلف</text>
+    <text x="31" y="26" font-size="3.2" text-anchor="middle">عقدة</text>
+  </g>
+  <g transform="translate(48 0)">
+    <text x="16" y="6" font-size="3.8" font-weight="bold" text-anchor="middle" direction="rtl">ب. الغلاف ثم التعرية</text>
+    <path d="M0 33 H24" stroke="#d4169f" stroke-width="2.2"/>
+    <path d="M6 28 H18 L20 29 V37 L18 38 H6 Q4 33 6 28Z" fill="#d4169f" opacity=".6"/>
+    <g stroke="#c87533" stroke-width=".4"><line x1="24" y1="32.3" x2="31" y2="32.3"/><line x1="24" y1="33" x2="31" y2="33"/><line x1="24" y1="33.7" x2="31" y2="33.7"/></g>
+    <text x="27" y="43" font-size="3.2" text-anchor="middle">1 سم</text>
+    <text x="13" y="25" font-size="3.2" text-anchor="middle">الغلاف في الكابل</text>
+  </g>
+  <g transform="translate(92 0)">
+    <text x="22" y="6" font-size="3.8" font-weight="bold" text-anchor="middle" direction="rtl">ج. الشدّ تحت البرغي</text>
+    <path d="M0 33 H12" stroke="#d4169f" stroke-width="2.2"/>
+    <path d="M12 30 L38 31.5 L44 32.6 V33.4 L38 34.5 L12 36 Z" fill="#c9d1df" stroke="#6c7891" stroke-width=".3"/>
+    <circle cx="17" cy="33" r="2" fill="#9aa3b5" stroke="#555" stroke-width=".3"/><line x1="15.6" y1="33" x2="18.4" y2="33" stroke="#555" stroke-width=".4"/>
+    <text x="17" y="26" font-size="3.2" text-anchor="middle">برغي الملقط</text>
+  </g>
+  <g transform="translate(140 0)">
+    <text x="19" y="6" font-size="3.8" font-weight="bold" text-anchor="middle" direction="rtl">د. إعادة الغلاف</text>
+    <path d="M0 33 H6" stroke="#d4169f" stroke-width="2.2"/>
+    <path d="M6 28 H22 L26 27 V39 L22 38 H6 Q4 33 6 28Z" fill="#d4169f"/>
+    <path d="M26 30 L34 31.5 L38 32.6 V33.4 L34 34.5 L26 36 Z" fill="#c9d1df" stroke="#6c7891" stroke-width=".3"/>
+  </g>
+`);
+
+// ---- الاختبارات ----
+(() => {
+  const panel = (ox, title, on, pa, pb, note) => {
+    let s = `<g transform="translate(${ox} 0)"><text x="27" y="5" font-size="3.8" text-anchor="middle" font-weight="bold" direction="rtl">${title}</text>
+      <rect x="2" y="8" width="50" height="46" rx="1.5" fill="#14161f"/>`;
+    [16, 27, 38].forEach(x => {
+      if (on) s += `<circle cx="${x}" cy="15" r="6" fill="#ffd76a" opacity=".35"/>`;
+      s += `<circle cx="${x}" cy="15" r="3.2" fill="${on ? "#ffe680" : "#3a3f52"}" stroke="#9aa3b5" stroke-width=".4"/>`;
+    });
+    for (let r = 0; r < 4; r++) {
+      s += `<circle cx="9" cy="${26 + r * 7}" r="1.4" fill="#9aa3b5"/><circle cx="45" cy="${26 + r * 7}" r="1.4" fill="#9aa3b5"/>
+            <rect x="12" y="${24.5 + r * 7}" width="12" height="3" fill="none" stroke="#2de2ff" stroke-width=".3"/>
+            <rect x="30" y="${24.5 + r * 7}" width="12" height="3" fill="none" stroke="#ff2bd6" stroke-width=".3"/>`;
+    }
+    const clipAt = (x, y, dir, c) => `<g transform="translate(${x} ${y}) scale(${dir} 1)"><path d="M-10 -1.6 H-4 L-3 -2 V2 L-4 1.6 H-10Z" fill="${c}"/><path d="M-3 -2 L0 -.5 V.5 L-3 2Z" fill="#c9d1df"/></g>`;
+    s += clipAt(pa[0], pa[1], 1, "#d4169f") + clipAt(pb[0], pb[1], -1, "#00a9c7");
+    s += `<text x="27" y="60" font-size="3.4" text-anchor="middle" fill="${on ? "#13a35a" : "#d33"}" font-weight="bold">${note}</text></g>`;
+    return s;
+  };
+  set("fig-tests",
+    panel(0, "1 · الملقطان معًا", true, [26, 47], [28, 47], "المصابيح الثلاثة تضيء") +
+    panel(63, "2 · زوج صحيح", true, [9, 33], [45, 47], "يضيء") +
+    panel(126, "3 · قضيبان متجاوران", false, [9, 26], [9, 33], "مطفأ"));
+})();
+
+// ---- الملحق ----
+(() => {
+  let s = "<tr><th class='c'>السلك</th><th>قضيب البلد</th><th>البلد (الشبكة 0)</th><th>قضيب العاصمة</th><th>العاصمة (الشبكة 0)</th><th class='c'>مختبَر</th></tr>";
+  PAIRS.forEach((p, i) => { s += `<tr><td class="c">${i + 1}</td><td class="ltr" style="text-align:right">P${i + 1}</td><td>${p[0]}</td><td style="text-align:right">C${WIRING[i]}</td><td>${p[1]}</td><td class="c">☐</td></tr>`; });
+  set("annexe", s);
+})();
+document.fonts.ready.then(() => document.body.dataset.ready = "1");
+</script>
+</body>
+</html>

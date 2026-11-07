@@ -169,6 +169,12 @@ const THEMES = {
     ["Ghana","Accra"],["Cameroun","Yaoundé"],["Kenya","Nairobi"],["Éthiopie","Addis-Abeba"],["Madagascar","Antananarivo"],
     ["Tanzanie","Dodoma"],["Rwanda","Kigali"],["Gabon","Libreville"],["Angola","Luanda"],["RD Congo","Kinshasa"],
     ["Congo","Brazzaville"],["Burkina Faso","Ouagadougou"],["Guinée","Conakry"],["Soudan","Khartoum"],["Tchad","N'Djaména"]]},
+  // Mêmes paires et même ordre que « monde » : la grille n° 0 arabe occupe les mêmes tiges.
+  monde_ar: { name: "العالم (بالعربية)", pairs: [
+    ["فرنسا","باريس"],["الجزائر","الجزائر العاصمة"],["المغرب","الرباط"],["تونس","تونس العاصمة"],["إسبانيا","مدريد"],
+    ["إيطاليا","روما"],["ألمانيا","برلين"],["المملكة المتحدة","لندن"],["البرتغال","لشبونة"],["سويسرا","برن"],
+    ["مصر","القاهرة"],["السنغال","داكار"],["الولايات المتحدة","واشنطن"],["كندا","أوتاوا"],["البرازيل","برازيليا"],
+    ["الأرجنتين","بوينس آيرس"],["اليابان","طوكيو"],["الصين","بكين"],["تركيا","أنقرة"],["أستراليا","كانبرا"]]},
   ameriques_asie: { name: "Amériques, Asie, Océanie", pairs: [
     ["États-Unis","Washington"],["Canada","Ottawa"],["Mexique","Mexico"],["Brésil","Brasília"],["Argentine","Buenos Aires"],
     ["Chili","Santiago"],["Pérou","Lima"],["Colombie","Bogota"],["Cuba","La Havane"],["Venezuela","Caracas"],
@@ -296,7 +302,7 @@ function drawCards(themeKey, seed) {
   const pairs = grid(themeKey, seed);
   const caps = new Array(20);
   pairs.forEach((p, i) => { caps[WIRING[i] - 1] = p[1]; });
-  const card = (code, name, cls) => `<div class="card ${cls}"><span class="code">${code}</span>${name}</div>`;
+  const card = (code, name, cls) => `<div class="card ${cls}"><span class="code">${code}</span><span dir="auto">${name}</span></div>`;
   document.getElementById("cards").innerHTML =
     pairs.map((p, i) => card("P" + (i + 1), p[0], "")).join("") +
     caps.map((c, i) => card("C" + (i + 1), c, "cap")).join("");

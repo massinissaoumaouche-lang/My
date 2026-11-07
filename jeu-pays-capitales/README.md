@@ -11,6 +11,7 @@ sur le bouton **VALIDER** : LED verte + buzzer si la capitale est la bonne, LED 
 | `gabarits-A3.pdf` | Gabarit de perçage face avant + plan de câblage face arrière, échelle 1:1, format A3 |
 | `cablage-etiquettes-A4.pdf` | Tableau de câblage, schéma électrique, tests, étiquettes de la grille « Monde » n° 0 |
 | `notice-montage.html` / `notice-montage.pdf` | **Notice de montage illustrée** de la version 9 V, de la planche nue aux tests (13 pages) |
+| `notice-montage-ar.html` / `notice-montage-ar.pdf` | Même notice **en arabe** (mise en page de droite à gauche, image de couverture `rendu/rendu-cyberpunk-ar.png`) |
 | `schema-9V.html` / `schema-9V.pdf` | **Version simple** : pile 9 V, interrupteur, 3 lampes en série, 40 tiges, planche 30 × 40 cm |
 
 Le format A3 s'imprime en reprographie (environ 1 € la page). Imprimer à **100 %** (pas « ajuster à la page ») et
