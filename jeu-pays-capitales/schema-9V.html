@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Schéma 9 V trois lampes</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Arial, Helvetica, sans-serif; color: #1a1a1a; background: #e9e9e9; }
+  .sheet { width: min(210mm, calc(100% - 32px)); margin: 16px auto; padding: 10mm; background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,.2); }
+  .sheet svg { display: block; width: 100%; height: auto; margin: 0 auto; }
+  .sheet svg.schema { width: 88%; }
+  .sheet svg.plan { width: 66%; }
+  h1 { font-size: 17pt; margin: 0 0 2mm; }
+  h2 { font-size: 12pt; margin: 5mm 0 2mm; }
+  p, li { font-size: 9.5pt; line-height: 1.35; margin: 1mm 0; }
+  ul, ol { padding-left: 6mm; margin: 1mm 0; }
+  table { border-collapse: collapse; width: 100%; font-size: 9pt; }
+  th, td { border: 1px solid #999; padding: .9mm 1.5mm; text-align: left; }
+  td.c, th.c { text-align: center; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; }
+  @page { size: A4 portrait; margin: 0; }
+  @media print {
+    body { background: #fff; }
+    .sheet { width: 210mm; height: 297mm; margin: 0; box-shadow: none; break-after: page; }
+  }
+</style>
+</head>
+<body>
+
+<section class="sheet">
+  <h1>Pays ↔ Capitales — version 9 V, trois lampes</h1>
+  <p>Planche 30 × 40 cm · 40 tiges (20 pays, 20 capitales) · pile 9 V · interrupteur marche/arrêt · 3 lampes en série · 2 câbles souples.</p>
+
+  <h2>Schéma électrique</h2>
+  <svg class="schema" viewBox="0 0 190 126" width="190mm" height="126mm" font-family="Arial" font-size="3.4">
+    <g fill="none" stroke="#1a1a1a" stroke-width=".5">
+      <!-- pile 9 V -->
+      <line x1="14" y1="14" x2="14" y2="56"/><line x1="8" y1="56" x2="20" y2="56"/>
+      <line x1="11" y1="61" x2="17" y2="61"/><line x1="14" y1="61" x2="14" y2="116"/>
+      <!-- interrupteur S1 -->
+      <line x1="14" y1="14" x2="30" y2="14"/>
+      <line x1="31" y1="14" x2="42" y2="8"/>
+      <line x1="44" y1="14" x2="58" y2="14"/>
+      <!-- lampes L1 L2 L3 en série -->
+      <circle cx="65" cy="14" r="6"/><line x1="60.8" y1="9.8" x2="69.2" y2="18.2"/><line x1="69.2" y1="9.8" x2="60.8" y2="18.2"/>
+      <line x1="71" y1="14" x2="83" y2="14"/>
+      <circle cx="89" cy="14" r="6"/><line x1="84.8" y1="9.8" x2="93.2" y2="18.2"/><line x1="93.2" y1="9.8" x2="84.8" y2="18.2"/>
+      <line x1="95" y1="14" x2="107" y2="14"/>
+      <circle cx="113" cy="14" r="6"/><line x1="108.8" y1="9.8" x2="117.2" y2="18.2"/><line x1="117.2" y1="9.8" x2="108.8" y2="18.2"/>
+      <line x1="119" y1="14" x2="182" y2="14"/>
+      <!-- câble B (côté lampes) vers une tige capitale -->
+      <line x1="182" y1="14" x2="182" y2="74" stroke-width=".9"/>
+      <line x1="182" y1="74" x2="172" y2="74" stroke-width=".9"/>
+      <!-- câble A (côté pile −) vers une tige pays -->
+      <line x1="14" y1="116" x2="34" y2="116"/>
+      <line x1="34" y1="116" x2="34" y2="42" stroke-width=".9"/>
+      <line x1="34" y1="42" x2="44" y2="42" stroke-width=".9"/>
+      <!-- planche -->
+      <rect x="48" y="30" width="122" height="80" stroke-dasharray="2 1.2"/>
+      <!-- fils derrière la planche (exemples) -->
+      <line x1="62" y1="42" x2="156" y2="74" stroke="#c0392b" stroke-width=".8"/>
+      <line x1="62" y1="52" x2="156" y2="52" stroke="#2471a3"/>
+      <line x1="62" y1="62" x2="156" y2="63" stroke="#1e8449"/>
+      <line x1="62" y1="86" x2="156" y2="42" stroke="#b9770e"/>
+    </g>
+    <!-- pinces crocodile -->
+    <g fill="#1a1a1a">
+      <polygon points="44,40 49,42 44,44"/><polygon points="172,72 167,74 172,76"/>
+      <circle cx="14" cy="14" r=".8"/><circle cx="14" cy="116" r=".8"/>
+    </g>
+    <!-- tiges -->
+    <g fill="#777" stroke="#1a1a1a" stroke-width=".3">
+      <circle cx="60" cy="42" r="2"/><circle cx="60" cy="52" r="2"/><circle cx="60" cy="62" r="2"/><circle cx="60" cy="86" r="2"/>
+      <circle cx="158" cy="42" r="2"/><circle cx="158" cy="52" r="2"/><circle cx="158" cy="63" r="2"/><circle cx="158" cy="74" r="2"/>
+    </g>
+    <g fill="#1a1a1a">
+      <text x="2" y="55">+</text><text x="2" y="65">−</text>
+      <text x="1" y="72">Pile</text><text x="1" y="76">9 V</text>
+      <text x="26" y="22">S1 marche/arrêt</text>
+      <text x="65" y="26" text-anchor="middle">L1</text><text x="89" y="26" text-anchor="middle">L2</text><text x="113" y="26" text-anchor="middle">L3</text>
+      <text x="89" y="5" text-anchor="middle">3 ampoules identiques 3,5 V 0,2 A (≈ 3 V chacune)</text>
+      <text x="125" y="22">câble B</text>
+      <text x="17" y="113">câble A</text>
+      <g font-size="3">
+        <text x="63" y="39.5">P1</text><text x="63" y="49.5">P2</text><text x="63" y="59.5">P3</text>
+        <text x="60" y="76" text-anchor="middle">⋮</text><text x="63" y="92">P20</text>
+        <text x="155" y="39.5" text-anchor="end">C9</text><text x="155" y="49.5" text-anchor="end">C11</text>
+        <text x="155" y="60.5" text-anchor="end">C15</text><text x="155" y="80" text-anchor="end">C17</text>
+        <text x="158" y="88" text-anchor="middle">⋮</text>
+        <text x="109" y="100" text-anchor="middle">PLANCHE : 20 fils séparés, un par paire pays → capitale (tableau page 2)</text>
+        <text x="109" y="105" text-anchor="middle" fill="#555">Exemple : A sur P1 (France) + B sur C17 (Paris) → les 3 lampes s'allument</text>
+      </g>
+      <g font-size="3.2">
+        <text x="1" y="121.5">Une seule boucle : + pile → S1 → L1 → L2 → L3 → câble B → tige capitale → fil caché → tige pays → câble A → − pile.</text>
+        <text x="1" y="125.5">Mauvaise paire : la boucle reste ouverte, les lampes restent éteintes.</text>
+      </g>
+    </g>
+  </svg>
+
+  <h2>Ce qu'il faut savoir sur ce montage</h2>
+  <ul>
+    <li><b>Choix des ampoules.</b> En série, les 3 lampes se partagent les 9 V : environ 3 V chacune. Il faut donc 3 ampoules
+        <b>identiques</b> de 3,5 V (ou 3,8 V), culot E10. Des ampoules de 6 V ou 9 V resteraient presque éteintes ; des ampoules de 1,5 V ou 2,5 V grilleraient.</li>
+    <li><b>Série = tout ou rien.</b> Le même courant (≈ 0,18 A) traverse les trois lampes. Si une ampoule est dévissée ou grillée, <b>les trois</b> restent éteintes.</li>
+    <li><b>L'interrupteur</b> sert surtout au rangement : sans contact entre les câbles, rien ne consomme. Il évite de vider la pile si les pinces se touchent dans un tiroir.</li>
+    <li><b>Autonomie.</b> Une pile 9 V tient environ 1 à 2 h de lampes allumées, soit des centaines de bonnes réponses. Un boîtier de 6 piles AA (9 V aussi) dure environ 5 fois plus.</li>
+    <li><b>Sécurité.</b> 9 V est sans danger pour un enfant. Les lampes limitent le courant : les deux pinces l'une contre l'autre allument simplement les lampes.
+        Ne jamais relier un câble directement à la pile sans passer par les lampes (court-circuit : la pile et les fils chauffent).</li>
+    <li><b>Les tiges.</b> Vis M4 × 35 mm passées depuis l'arrière : fil serré sous la tête, écrou serré devant. La partie filetée qui dépasse (≈ 2 cm) est la tige où se pince la pince crocodile.</li>
+  </ul>
+
+  <h2>Matériel</h2>
+  <table>
+    <tr><th>Qté</th><th>Élément</th><th>Détail</th></tr>
+    <tr><td class="c">1</td><td>Planche contreplaqué 30 × 40 cm, 10 mm</td><td>+ 4 tasseaux pour la surélever (fils et pile dessous)</td></tr>
+    <tr><td class="c">40</td><td>Vis M4 × 35 mm + 40 écrous + 80 rondelles</td><td>Les 40 « tiges » ; perçage Ø 4 mm</td></tr>
+    <tr><td class="c">3</td><td>Ampoules 3,5 V 0,2 A culot E10 + 3 douilles E10 sur socle</td><td>Identiques, branchées en série</td></tr>
+    <tr><td class="c">1</td><td>Interrupteur à bascule marche/arrêt</td><td>Perçage selon le modèle</td></tr>
+    <tr><td class="c">1</td><td>Pile 9 V + clip à pression 9 V</td><td>Fil rouge = +, fil noir = −</td></tr>
+    <tr><td class="c">2</td><td>Câbles souples 1 m + 2 pinces crocodile</td><td>Câbles A et B ; nœud derrière la planche contre l'arrachement</td></tr>
+    <tr><td class="c">10 m</td><td>Fil de câblage 0,5 mm²</td><td>20 fils pays → capitale + liaisons des lampes</td></tr>
+  </table>
+</section>
+
+<section class="sheet">
+  <h1>Plan de la planche et câblage</h1>
+  <p>Vue de face, dessin réduit (non à l'échelle sur papier). Cotes en mm depuis le coin haut gauche.
+     Les positions des tiges sont les mêmes que sur <code>gabarits-A3.pdf</code> (à 1:1) : ignorer seulement les trous d'en-tête de ce gabarit (LED, bouton).</p>
+  <svg id="plan" class="plan" viewBox="-14 -8 330 432" width="150mm" height="196mm" font-family="Arial"></svg>
+  <h2>Tableau de câblage (derrière la planche)</h2>
+  <div class="cols">
+    <table id="t1"></table>
+    <table id="t2"></table>
+  </div>
+  <p>Ordre de branchement des lampes, sous la planche : fil rouge (+) du clip → S1 → L1 → L2 → L3 → câble B. Fil noir (−) du clip → câble A.
+     Test : interrupteur sur marche, pinces l'une contre l'autre → les 3 lampes s'allument ; puis les 20 bonnes paires → allumé ; deux tiges voisines → éteint.</p>
+</section>
+
+<script>
+// Même câblage que gabarit.html : WIRING[i] = capitale reliée au pays P(i+1).
+const WIRING = [17, 11, 15, 20, 10, 13, 19, 12, 16, 1, 7, 4, 18, 6, 2, 8, 3, 14, 5, 9];
+const ROW_Y = i => 76 + i * 16.5, X_P = 28, X_C = 269;
+const NS = "http://www.w3.org/2000/svg";
+const svg = document.getElementById("plan");
+function el(tag, a, text) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in a) e.setAttribute(k, a[k]);
+  if (text != null) e.textContent = text;
+  svg.appendChild(e);
+  return e;
+}
+el("rect", { x: 0, y: 0, width: 300, height: 400, fill: "#f6efe3", stroke: "#1a1a1a", "stroke-width": 1 });
+el("text", { x: 150, y: -2, "font-size": 7, "text-anchor": "middle" }, "300 mm");
+el("text", { x: -4, y: 200, "font-size": 7, "text-anchor": "middle", transform: "rotate(-90 -4 200)" }, "400 mm");
+// En-tête : sorties de câbles, lampes, interrupteur
+const parts = [
+  [40, 38, 4, "câble A"], [110, 38, 9, "L1"], [150, 38, 9, "L2"], [190, 38, 9, "L3"],
+  [235, 38, 4, "câble B"], [272, 38, 6, "S1"]
+];
+for (const [x, y, r, label] of parts) {
+  el("circle", { cx: x, cy: y, r, fill: label[0] === "L" ? "#fff6c8" : "#fff", stroke: "#1a1a1a", "stroke-width": .8 });
+  el("text", { x, y: y + r + 9, "font-size": 7, "text-anchor": "middle" }, label);
+}
+el("text", { x: 70, y: 66, "font-size": 9, "font-weight": "bold", "text-anchor": "middle" }, "PAYS");
+el("text", { x: 227, y: 66, "font-size": 9, "font-weight": "bold", "text-anchor": "middle" }, "CAPITALES");
+for (let i = 0; i < 20; i++) {
+  const y = ROW_Y(i);
+  el("circle", { cx: X_P, cy: y, r: 3.5, fill: "#888", stroke: "#1a1a1a", "stroke-width": .6 });
+  el("circle", { cx: X_C, cy: y, r: 3.5, fill: "#888", stroke: "#1a1a1a", "stroke-width": .6 });
+  el("text", { x: X_P + 8, y: y + 2.5, "font-size": 7 }, "P" + (i + 1));
+  el("text", { x: X_C - 8, y: y + 2.5, "font-size": 7, "text-anchor": "end" }, "C" + (i + 1));
+  el("rect", { x: 53, y: y - 6, width: 66, height: 12, fill: "none", stroke: "#b8a98c", "stroke-width": .5, "stroke-dasharray": "2 1.5" });
+  el("rect", { x: 178, y: y - 6, width: 66, height: 12, fill: "none", stroke: "#b8a98c", "stroke-width": .5, "stroke-dasharray": "2 1.5" });
+}
+el("text", { x: 150, y: 220, "font-size": 7, "text-anchor": "middle", fill: "#7a6a4f" }, "cases en pointillé :");
+el("text", { x: 150, y: 229, "font-size": 7, "text-anchor": "middle", fill: "#7a6a4f" }, "noms des pays / capitales");
+// Cotes
+const cote = (x1, y1, x2, y2, t, tx, ty) => {
+  el("line", { x1, y1, x2, y2, stroke: "#c0392b", "stroke-width": .5 });
+  el("text", { x: tx, y: ty, "font-size": 6, fill: "#c0392b", "text-anchor": "middle" }, t);
+};
+cote(0, 406, X_P, 406, "28", 14, 414);
+cote(X_C, 406, 300, 406, "31", 284.5, 414);
+cote(10, 0, 10, ROW_Y(0), "76", 17, 58);
+cote(290, ROW_Y(0), 290, ROW_Y(1), "16,5", 302, ROW_Y(0) + 10);
+el("text", { x: 150, y: 414, "font-size": 6, "text-anchor": "middle", fill: "#c0392b" }, "rangées tous les 16,5 mm · tiges Ø 4 mm · en-tête : y = 38 mm");
+
+const head = "<tr><th class='c'>Fil</th><th class='c'>Tige pays</th><th class='c'>Tige capitale</th><th class='c'>Testé</th></tr>";
+const row = i => `<tr><td class="c">${i + 1}</td><td class="c">P${i + 1}</td><td class="c">C${WIRING[i]}</td><td class="c">☐</td></tr>`;
+document.getElementById("t1").innerHTML = head + [...Array(10).keys()].map(row).join("");
+document.getElementById("t2").innerHTML = head + [...Array(10).keys()].map(i => row(i + 10)).join("");
+</script>
+</body>
+</html>

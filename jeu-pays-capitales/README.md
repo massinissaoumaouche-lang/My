@@ -10,10 +10,23 @@ sur le bouton **VALIDER** : LED verte + buzzer si la capitale est la bonne, LED 
 | `gabarit.html` | Outil à ouvrir dans un navigateur : choix du thème, nouvelle grille d'étiquettes, impression |
 | `gabarits-A3.pdf` | Gabarit de perçage face avant + plan de câblage face arrière, échelle 1:1, format A3 |
 | `cablage-etiquettes-A4.pdf` | Tableau de câblage, schéma électrique, tests, étiquettes de la grille « Monde » n° 0 |
+| `schema-9V.html` / `schema-9V.pdf` | **Version simple** : pile 9 V, interrupteur, 3 lampes en série, 40 tiges, planche 30 × 40 cm |
 
 Le format A3 s'imprime en reprographie (environ 1 € la page). Imprimer à **100 %** (pas « ajuster à la page ») et
 vérifier que la barre de contrôle en bas mesure 100 mm. Sans imprimante A3 : les cotes suffisent pour tracer à la règle
 (voir « Cotes »).
+
+## Version simple : pile 9 V, interrupteur, 3 lampes en série
+
+Variante sans transistor ni LED rouge, décrite dans `schema-9V.pdf` (schéma, plan de la planche 30 × 40 cm, matériel,
+tableau de câblage). Une seule boucle : + pile → interrupteur → L1 → L2 → L3 → câble B → tige capitale → fil →
+tige pays → câble A → − pile. Points clés :
+- 3 ampoules **identiques** de 3,5 V (culot E10) : en série, chacune reçoit ≈ 3 V sur les 9 V.
+- Une ampoule dévissée ou grillée éteint les trois.
+- Les tiges sont des vis M4 × 35 passées depuis l'arrière ; les câbles se terminent par des pinces crocodile.
+- Mêmes positions de tiges et même câblage (`WIRING`) que les gabarits A3 : les étiquettes de `gabarit.html` restent utilisables.
+
+Le reste de ce document décrit la version avec LED verte, LED rouge et bouton VALIDER.
 
 ## Le principe électrique
 
