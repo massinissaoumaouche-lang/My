@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plan coté</title>
+<style>
+  html, body { margin: 0; background: #d9dbe2; }
+  .sheet { width: 420mm; height: 297mm; margin: 12px auto; background: #fff; box-shadow: 0 1px 6px rgba(0,0,0,.25); }
+  .sheet svg { display: block; width: 100%; height: 100%; }
+  @page { size: A3 landscape; margin: 0; }
+  @media print { body { background: #fff; } .sheet { margin: 0; box-shadow: none; } }
+  @media screen and (max-width: 1640px) { .sheet { width: calc(100vw - 24px); height: calc((100vw - 24px) * 297 / 420); } }
+</style>
+</head>
+<body>
+<div class="sheet">
+<svg id="plan" viewBox="0 0 420 297" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <pattern id="bois" width="2" height="2" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="2" stroke="#7a5b2e" stroke-width=".18"/>
+    </pattern>
+    <pattern id="bois2" width="2.4" height="2.4" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)">
+      <line x1="0" y1="0" x2="0" y2="2.4" stroke="#7a5b2e" stroke-width=".18"/>
+    </pattern>
+  </defs>
+</svg>
+</div>
+
+<script>
+// Toutes les coordonnées de la planche sont en mm (0,0 = coin haut gauche, vue de face).
+const ROW_Y = i => 76 + i * 16.5, X_P = 28, X_C = 269;
+const HEADER_Y = 38;
+const HEADER = [[40, 6, "sortie A"], [110, 8, "L1"], [150, 8, "L2"], [190, 8, "L3"], [235, 6, "sortie B"], [272, 6, "interr."]];
+const NS = "http://www.w3.org/2000/svg";
+const svg = document.getElementById("plan");
+const INK = "#1a1a1a", DIM = "#c0392b", HID = "#555";
+function el(tag, a, text, parent = svg) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in a) e.setAttribute(k, a[k]);
+  if (text != null) e.textContent = text;
+  parent.appendChild(e); return e;
+}
+const fmt = n => String(Math.round(n * 10) / 10).replace(".", ",");
+const line = (x1, y1, x2, y2, w = .25, c = INK, extra = {}) => el("line", { x1, y1, x2, y2, stroke: c, "stroke-width": w, ...extra });
+const text = (x, y, t, fs = 2.2, extra = {}) => el("text", { x, y, "font-size": fs, fill: extra.fill || INK, ...extra }, t);
+
+// ---------- Cotation façon architecte : traits obliques, lignes d'attache, cotes en chaîne ----------
+const tick = (x, y) => line(x - .9, y + .9, x + .9, y - .9, .35, DIM);
+function chainH(xs, labels, y, objY, fs = 2.2) {
+  const dir = Math.sign(y - objY) || -1;
+  xs.forEach(x => line(x, objY + dir * 1, x, y + dir * 1.4, .15, DIM));
+  line(xs[0] - 1.4, y, xs[xs.length - 1] + 1.4, y, .18, DIM);
+  xs.forEach(x => tick(x, y));
+  let alt = 0;
+  for (let i = 0; i < xs.length - 1; i++) {
+    const t = labels[i], seg = xs[i + 1] - xs[i], w = t.length * fs * .55;
+    let tx = (xs[i] + xs[i + 1]) / 2, ty = y - .8;
+    if (w + .8 > seg) { ty = y - .8 - (alt++ % 2 ? 0 : 2.6); }
+    text(tx, ty, t, fs, { "text-anchor": "middle", fill: DIM });
+  }
+}
+function chainV(ys, labels, x, objX, fs = 2.2) {
+  const dir = Math.sign(x - objX) || -1;
+  ys.forEach(y => line(objX + dir * 1, y, x + dir * 1.4, y, .15, DIM));
+  line(x, ys[0] - 1.4, x, ys[ys.length - 1] + 1.4, .18, DIM);
+  ys.forEach(y => tick(x, y));
+  let alt = 0;
+  for (let i = 0; i < ys.length - 1; i++) {
+    const t = labels[i], seg = ys[i + 1] - ys[i], w = t.length * fs * .55;
+    let ty = (ys[i] + ys[i + 1]) / 2, tx = x - .8;
+    if (w + .8 > seg) { tx = x - .8 - (alt++ % 2 ? 0 : 2.6); }
+    text(tx, ty, t, fs, { "text-anchor": "middle", fill: DIM, transform: `rotate(-90 ${tx} ${ty})` });
+  }
+}
+const diffs = pts => pts.slice(1).map((p, i) => fmt(p - pts[i]));
+const title = (x, y, t, sub) => { text(x, y, t, 3.4, { "font-weight": "bold" }); if (sub) text(x, y + 3.6, sub, 2.2, { fill: HID }); line(x, y + 1, x + t.length * 2.05, y + 1, .3); };
+
+// ---------- Cadre de la feuille ----------
+el("rect", { x: 8, y: 8, width: 404, height: 281, fill: "none", stroke: INK, "stroke-width": .6 });
+
+// ================= VUE DE FACE (1:2) =================
+const FX = x => 45 + x / 2, FY = y => 50 + y / 2;
+title(14, 18, "VUE DE FACE", "échelle 1:2 — planche 300 × 400 mm, ép. 10 mm");
+// axes des colonnes de tiges (trait mixte)
+for (const x of [X_P, X_C]) line(FX(x), FY(-12), FX(x), FY(412), .15, HID, { "stroke-dasharray": "4 1 .6 1" });
+el("rect", { x: FX(0), y: FY(0), width: 150, height: 200, fill: "#fbf7ef", stroke: INK, "stroke-width": .6 });
+// pieds (cachés, en pointillé)
+for (const [x, y] of [[0, 0], [280, 0], [0, 380], [280, 380]])
+  el("rect", { x: FX(x), y: FY(y), width: 10, height: 10, fill: "none", stroke: HID, "stroke-width": .2, "stroke-dasharray": "1 .7" });
+// vis des pieds
+for (const [x, y] of [[10, 10], [290, 10], [10, 390], [290, 390]]) el("circle", { cx: FX(x), cy: FY(y), r: .8, fill: "none", stroke: INK, "stroke-width": .15 });
+// bandeau titre
+el("rect", { x: FX(60), y: FY(5), width: 90, height: 8, fill: "#e8f7fb", stroke: INK, "stroke-width": .25 });
+text(FX(150), FY(15.6), "CIRCUIT CAPITAL", 3.6, { "text-anchor": "middle", "font-weight": "bold" });
+// en-tête : sorties, lampes, interrupteur
+for (const [x, d, t] of HEADER) {
+  const lamp = t[0] === "L";
+  if (lamp) el("circle", { cx: FX(x), cy: FY(HEADER_Y), r: 6, fill: "none", stroke: HID, "stroke-width": .15, "stroke-dasharray": ".8 .6" });
+  el("circle", { cx: FX(x), cy: FY(HEADER_Y), r: d / 4, fill: lamp ? "#fff3b0" : "#fff", stroke: INK, "stroke-width": .25 });
+  line(FX(x) - 1.6, FY(HEADER_Y), FX(x) + 1.6, FY(HEADER_Y), .1); line(FX(x), FY(HEADER_Y) - 1.6, FX(x), FY(HEADER_Y) + 1.6, .1);
+  text(FX(x), FY(HEADER_Y) + (lamp ? 8.2 : 4.6), `${t} Ø${d}`, 1.7, { "text-anchor": "middle" });
+}
+// en-têtes de colonnes et étiquettes
+const zone = (x, y, w, h, t, fs) => {
+  el("rect", { x: FX(x), y: FY(y), width: w / 2, height: h / 2, fill: "#fff", stroke: INK, "stroke-width": .18 });
+  if (t) text(FX(x + w / 2), FY(y + h / 2) + fs * .35, t, fs, { "text-anchor": "middle", fill: HID });
+};
+zone(38, 58, 63, 8, "PAYS", 1.8); zone(196, 58, 63, 8, "CAPITALES", 1.8);
+for (let i = 0; i < 20; i++) {
+  const y = ROW_Y(i);
+  zone(38, y - 7, 63, 14, "P" + (i + 1), 1.7); zone(196, y - 7, 63, 14, "C" + (i + 1), 1.7);
+  for (const x of [X_P, X_C]) {
+    el("circle", { cx: FX(x), cy: FY(y), r: 2.25, fill: "none", stroke: HID, "stroke-width": .12 });
+    el("circle", { cx: FX(x), cy: FY(y), r: 1, fill: INK });
+  }
+}
+// trait de coupe A-A (au niveau de la rangée 20, à travers les pieds du bas)
+const yA = FY(389.5);
+line(FX(-14), yA, FX(314), yA, .3, INK, { "stroke-dasharray": "5 1.2 .8 1.2" });
+for (const [x, s] of [[FX(-14), 1], [FX(314), -1]]) {
+  el("path", { d: `M${x} ${yA} v-4 M${x} ${yA - 4} l${s * 1.2} 0 l${-s * 1.2} -1.6`, fill: "none", stroke: INK, "stroke-width": .35 });
+  el("path", { d: `M${x - 1.1} ${yA - 7.2} l1.1 -2.2 l1.1 2.2 Z`, fill: INK });
+  text(x, yA - 10.2, "A", 3, { "text-anchor": "middle", "font-weight": "bold" });
+}
+// cotes horizontales, en haut : en-tête
+// (lignes d'attache depuis le bord haut pour ne pas traverser le bandeau titre)
+chainH([0, 40, 110, 150, 190, 235, 272, 300].map(FX), diffs([0, 40, 110, 150, 190, 235, 272, 300]), FY(-8), FY(0));
+chainH([0, 60, 240, 300].map(FX), ["60", "180", "60"], FY(-19), FY(0));
+chainH([FX(0), FX(300)], ["300"], FY(-30), FY(0));
+// cotes horizontales, en bas : tiges et étiquettes
+chainH([0, 28, 38, 101, 196, 259, 269, 300].map(FX), diffs([0, 28, 38, 101, 196, 259, 269, 300]), FY(414), FY(400));
+chainH([FX(0), FX(300)], ["300"], FY(426), FY(400));
+// cotes verticales, à gauche
+const vL = [0, 5, 21, 38, 58, 66, 76, 389.5, 400];
+chainV(vL.map(FY), ["5", "16", "17", "20", "8", "10", "19 × 16,5 = 313,5", "10,5"], FX(-14), FX(0));
+chainV([FY(0), FY(400)], ["400"], FX(-28), FX(0));
+// cotes verticales, à droite : étiquettes et pas
+chainV([0, 69, 83, 85.5, 99.5].map(FY), ["69", "14", "2,5", "14"], FX(314), FX(300));
+chainV([382.5, 396.5, 400].map(FY), ["14", "3,5"], FX(314), FX(300));
+chainV([76, 92.5].map(FY), ["16,5"], FX(328), FX(300), 2);
+text(FX(332), FY(84), "pas", 1.8, { fill: DIM, transform: `rotate(-90 ${FX(332)} ${FY(84)})`, "text-anchor": "middle" });
+text(FX(150), FY(230), "zone libre", 2, { "text-anchor": "middle", fill: "#999" });
+// renvois
+text(FX(150), FY(340), "Pieds 20 × 20 (dessous) en pointillé", 1.8, { "text-anchor": "middle", fill: HID });
+text(FX(150), FY(350), "Tiges Ø 4 (vis M4 × 35), rondelle Ø 9", 1.8, { "text-anchor": "middle", fill: HID });
+
+// ================= COUPE A-A (1:2) =================
+const CX = x => 246 + x / 2, CY0 = 82, CY = h => CY0 - h / 2;   // h = hauteur en mm au-dessus de la table
+title(232, 18, "COUPE A-A", "échelle 1:2 — coupe au niveau de la rangée 20 et des pieds du bas");
+line(CX(-12), CY0, CX(312), CY0, .35);                                                // table
+for (let x = -12; x < 312; x += 5) line(CX(x), CY0, CX(x) - 1.2, CY0 + 1.2, .15);      // hachures du sol
+for (const x of [0, 280]) el("rect", { x: CX(x), y: CY(30), width: 10, height: 15, fill: "url(#bois2)", stroke: INK, "stroke-width": .35 });
+el("rect", { x: CX(0), y: CY(40), width: 150, height: 5, fill: "url(#bois)", stroke: INK, "stroke-width": .45 });
+// tiges P20 et C20 coupées
+for (const x of [X_P, X_C]) {
+  el("rect", { x: CX(x) - 1, y: CY(62.6), width: 2, height: 22.6 / 2 + 5 + 1.2, fill: "#c9d1df", stroke: INK, "stroke-width": .2 });
+  el("rect", { x: CX(x) - 1.75, y: CY(44), width: 3.5, height: 1.6, fill: "#9aa3b5", stroke: INK, "stroke-width": .2 });   // écrou
+  el("rect", { x: CX(x) - 1.75, y: CY(30) - .2, width: 3.5, height: 1.6, fill: "#9aa3b5", stroke: INK, "stroke-width": .2 }); // tête
+  line(CX(x), CY(66), CX(x), CY(24), .12, HID, { "stroke-dasharray": "3 .8 .5 .8" });
+}
+// étiquettes (épaisseur exagérée)
+for (const x of [38, 196]) el("rect", { x: CX(x), y: CY(40) - .5, width: 31.5, height: .5, fill: "#2de2ff" });
+text(CX(69.5), CY(43), "étiquette 63", 1.7, { "text-anchor": "middle", fill: HID });
+text(CX(227.5), CY(43), "étiquette 63", 1.7, { "text-anchor": "middle", fill: HID });
+text(CX(150), CY(34.2), "contreplaqué 10 mm", 1.9, { "text-anchor": "middle" });
+text(CX(150), CY(22), "vide pour fils et pile", 1.9, { "text-anchor": "middle", fill: HID });
+text(CX(10), CY(14), "pied", 1.7, { "text-anchor": "middle" });
+text(CX(290), CY(14), "pied", 1.7, { "text-anchor": "middle" });
+// cotes de la coupe
+chainH([0, 20, 28, 269, 280, 300].map(CX), ["20", "8", "241", "11", "20"], CY0 + 7, CY0);
+chainH([CX(0), CX(300)], ["300"], CY0 + 14, CY0);
+chainV([62.6, 40, 30, 0].map(CY), ["≈ 22,6", "10", "30"], CX(312), CX(300));
+chainV([CY(62.6), CY0], ["≈ 62,6"], CX(322), CX(300));
+text(CX(-14), CY(52), "tige", 1.8, { "text-anchor": "end" });
+line(CX(-13), CY(52) - .6, CX(X_P) - 1.2, CY(52), .12);
+
+// ================= DÉTAIL 1 : TIGE (1:1) =================
+const DX = 268, DF = 160;   // axe de la tige, face avant (en mm papier, échelle 1:1)
+title(232, 112, "DÉTAIL 1 — TIGE", "échelle 1:1 — vis M4 × 35 passée depuis l'arrière");
+// planche avec lignes de rupture
+el("path", { d: `M${DX - 22} ${DF} H${DX + 22} l1 2 l-2 2 l2 2 l-2 2 l1 2 H${DX - 22} l1 -2 l-2 -2 l2 -2 l-2 -2 Z`, fill: "url(#bois)", stroke: INK, "stroke-width": .4 });
+el("rect", { x: DX - 2, y: DF, width: 4, height: 10, fill: "#fff" });                       // perçage Ø4
+// pièces (de haut en bas) : tige, écrou, rondelle, [planche], rondelle, œillet, rondelle, tête
+el("rect", { x: DX - 2, y: DF + 12.4 - 35, width: 4, height: 35, fill: "#c9d1df", stroke: INK, "stroke-width": .25 });
+for (let y = DF + 12.4 - 35 + .6; y < DF + 12.2; y += .7) line(DX - 2, y, DX + 2, y + .35, .08, "#7d8698");
+el("rect", { x: DX - 4.5, y: DF - .8, width: 9, height: .8, fill: "#8a93a8", stroke: INK, "stroke-width": .15 });
+el("rect", { x: DX - 3.5, y: DF - 4, width: 7, height: 3.2, fill: "#9aa3b5", stroke: INK, "stroke-width": .25 });
+el("rect", { x: DX - 4.5, y: DF + 10, width: 9, height: .8, fill: "#8a93a8", stroke: INK, "stroke-width": .15 });
+el("rect", { x: DX - 3.2, y: DF + 10.8, width: 6.4, height: .8, fill: "#c87533" });
+el("rect", { x: DX - 4.5, y: DF + 11.6, width: 9, height: .8, fill: "#8a93a8", stroke: INK, "stroke-width": .15 });
+el("rect", { x: DX - 3.5, y: DF + 12.4, width: 7, height: 2.8, rx: .6, fill: "#9aa3b5", stroke: INK, "stroke-width": .25 });
+el("path", { d: `M${DX + 3.2} ${DF + 11.2} C ${DX + 9} ${DF + 11.5}, ${DX + 12} ${DF + 15}, ${DX + 20} ${DF + 16}`, fill: "none", stroke: "#2563eb", "stroke-width": 1.1 });
+line(DX, DF - 26, DX, DF + 18, .12, HID, { "stroke-dasharray": "3 .8 .5 .8" });
+// cotes du détail
+const yTop = DF + 12.4 - 35;
+chainV([yTop, DF - 4, DF, DF + 10, DF + 15.2], ["18,6", "4", "10", "5,2"], DX - 28, DX - 2);
+chainV([yTop, DF], ["22,6"], DX - 36, DX - 2);
+chainH([DX - 2, DX + 2], ["Ø4"], yTop - 3, yTop);
+chainH([DX - 3.5, DX + 3.5], ["7"], DF + 19, DF + 15.2);
+// légendes
+const call = (y, t) => { line(DX + 5, y, DX + 24, y, .12); text(DX + 25, y + .7, t, 1.9); };
+call(DF - 15, "zone de pince (filetage)");
+call(DF - 2.4, "écrou M4 + rondelle");
+call(DF + 5, "planche 10 mm, perçage Ø4");
+call(DF + 21.5, "fil : œillet entre 2 rondelles");
+line(DX + 3.6, DF + 13.8, DX + 5, DF + 13.8, .12); call(DF + 13.8, "tête de vis");
+
+// ================= VUE DE DOS (1:5) =================
+const BX = x => 342 + (300 - x) / 5, BY = y => 122 + y / 5;
+title(338, 112, "VUE DE DOS", "échelle 1:5 — gauche et droite inversées");
+el("rect", { x: BX(300), y: BY(0), width: 60, height: 80, fill: "#fbf7ef", stroke: INK, "stroke-width": .45 });
+for (const [x, y] of [[0, 0], [280, 0], [0, 380], [280, 380]])
+  el("rect", { x: BX(x + 20), y: BY(y), width: 4, height: 4, fill: "url(#bois2)", stroke: INK, "stroke-width": .3 });
+for (let i = 0; i < 20; i++) for (const x of [X_P, X_C]) el("circle", { cx: BX(x), cy: BY(ROW_Y(i)), r: .45, fill: INK });
+for (const [x] of HEADER) el("circle", { cx: BX(x), cy: BY(HEADER_Y), r: .7, fill: "none", stroke: INK, "stroke-width": .2 });
+el("rect", { x: BX(150 + 24), y: BY(60), width: 9.7, height: 5.3, fill: "#2a2f40" });
+text(BX(150), BY(60) + 9, "pile 9 V", 1.7, { "text-anchor": "middle" });
+text(BX(X_P), BY(70), "P", 2, { "text-anchor": "middle", "font-weight": "bold" });
+text(BX(X_C), BY(70), "C", 2, { "text-anchor": "middle", "font-weight": "bold" });
+chainH([BX(300), BX(280), BX(20), BX(0)], ["20", "260", "20"], BY(400) + 6, BY(400), 1.9);
+chainV([BY(0), BY(20), BY(380), BY(400)], ["20", "360", "20"], BX(0) + 6, BX(0), 1.9);
+text(BX(150), BY(400) + 13, "4 pieds 20 × 20 × 30 mm, collés + 1 vis 4 × 45", 1.8, { "text-anchor": "middle" });
+
+// ================= NOTES =================
+const notes = [
+  "NOTES",
+  "1. Cotes en millimètres. Origine des cotes : coin haut gauche de la face avant.",
+  "2. Tiges : vis M4 × 35 depuis l'arrière, perçage Ø 4 ; 40 tiges sur 2 axes (x = 28 et x = 269), 20 rangées au pas de 16,5.",
+  "3. En-tête (y = 38) : sorties A et B Ø 6, lampes Ø 8 (passage des fils sous douille E10), interrupteur Ø 6 + lamage arrière Ø 25 × 7.",
+  "4. Étiquettes : titre 180 × 16, en-têtes 63 × 8, noms 63 × 14 ; 10 mm entre l'axe d'une tige et son étiquette.",
+  "5. Les cotes restent valables quelle que soit l'impression ; le dessin n'est à l'échelle qu'en A3 à 100 %.",
+];
+notes.forEach((t, i) => text(14, 270 + i * 3.4, t, i ? 2.1 : 2.4, i ? {} : { "font-weight": "bold" }));
+
+// ================= CARTOUCHE =================
+const K = { x: 290, y: 238, w: 118, h: 47 };
+el("rect", { x: K.x, y: K.y, width: K.w, height: K.h, fill: "#fff", stroke: INK, "stroke-width": .6 });
+const rows = [K.y + 14, K.y + 23, K.y + 31, K.y + 39];
+rows.forEach(y => line(K.x, y, K.x + K.w, y, .25));
+line(K.x + 59, rows[1], K.x + 59, K.y + K.h, .25);
+text(K.x + 3, K.y + 6.5, "PROJET", 1.7, { fill: HID });
+text(K.x + 3, K.y + 12, "CIRCUIT CAPITAL", 5, { "font-weight": "bold" });
+text(K.x + K.w - 3, K.y + 12, "دائرة العواصم", 3.6, { "text-anchor": "end" });
+text(K.x + 3, rows[0] + 3.4, "OBJET", 1.7, { fill: HID });
+text(K.x + 3, rows[0] + 7.4, "Plan coté — planche de jeu, version 9 V, 3 lampes", 2.6);
+const cell = (cx, y, lab, val) => { text(cx + 3, y + 3, lab, 1.6, { fill: HID }); text(cx + 3, y + 6.8, val, 2.5); };
+cell(K.x, rows[1], "ÉCHELLES", "1:2 · détail 1:1 · dos 1:5");
+cell(K.x + 59, rows[1], "FORMAT / UNITÉ", "A3 paysage · mm");
+cell(K.x, rows[2], "DATE", "novembre 2026");
+cell(K.x + 59, rows[2], "INDICE", "A — première diffusion");
+cell(K.x, rows[3], "PLANCHE", "1 / 1");
+cell(K.x + 59, rows[3], "RÉFÉRENCES", "notice-montage.pdf");
+
+document.body.dataset.ready = "1";
+</script>
+</body>
+</html>
