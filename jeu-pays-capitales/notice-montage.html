@@ -1,0 +1,762 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notice de montage</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root { --ink: #161824; --muted: #5d6275; --cyan: #00a9c7; --mag: #d4169f; --green: #13a35a; --amber: #e39b00; --dark: #0b0e1d; --line: #c9cdd8; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #d9dbe2; font-family: Inter, Arial, sans-serif; color: var(--ink); }
+  .page { position: relative; width: 210mm; height: 297mm; margin: 12px auto; background: #fff; padding: 22mm 14mm 14mm; overflow: hidden; box-shadow: 0 1px 6px rgba(0,0,0,.25); }
+  .band { position: absolute; top: 0; left: 0; right: 0; height: 14mm; background: var(--dark); color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 14mm; }
+  .band b { font-family: Orbitron, sans-serif; font-weight: 700; font-size: 10pt; letter-spacing: 1.5px; color: #6ff3ff; }
+  .band span { font-family: Orbitron, sans-serif; font-size: 8pt; color: #ff7ae6; letter-spacing: 1px; }
+  .foot { position: absolute; bottom: 6mm; left: 14mm; right: 14mm; font-size: 7.5pt; color: var(--muted); display: flex; justify-content: space-between; border-top: 1px solid var(--line); padding-top: 1.5mm; }
+  h1 { font-family: Orbitron, sans-serif; font-size: 18pt; margin: 0 0 3mm; letter-spacing: .5px; }
+  h2 { font-family: Orbitron, sans-serif; font-size: 12.5pt; margin: 0 0 2mm; display: flex; align-items: center; gap: 3mm; }
+  h3 { font-size: 10.5pt; margin: 3mm 0 1.5mm; }
+  p, li, td, th { font-size: 9.6pt; line-height: 1.4; }
+  p { margin: 1.2mm 0; }
+  ul, ol { margin: 1mm 0; padding-left: 5.5mm; }
+  li { margin: .6mm 0; }
+  .num { flex: none; width: 10mm; height: 10mm; border-radius: 2mm; background: var(--dark); color: #6ff3ff; display: inline-flex; align-items: center; justify-content: center; font-family: Orbitron, sans-serif; font-weight: 900; font-size: 13pt; }
+  .step { margin-bottom: 6mm; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; align-items: start; }
+  .fig { border: 1px solid var(--line); border-radius: 2mm; padding: 2mm; background: #fafbfd; }
+  .fig svg { display: block; width: 100%; height: auto; }
+  .cap { font-size: 8pt; color: var(--muted); text-align: center; margin-top: 1mm; }
+  .tip, .warn, .check { border-radius: 2mm; padding: 2mm 3mm; margin: 2mm 0; font-size: 9.2pt; }
+  .tip { background: #e6f8fb; border-left: 3px solid var(--cyan); }
+  .warn { background: #fdecef; border-left: 3px solid #d33; }
+  .check { background: #e8f7ee; border-left: 3px solid var(--green); }
+  .tip b:first-child, .warn b:first-child, .check b:first-child { text-transform: uppercase; font-size: 8pt; letter-spacing: .6px; }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { border: 1px solid var(--line); padding: 1mm 2mm; text-align: left; vertical-align: top; }
+  th { background: #eef0f5; }
+  td.c, th.c { text-align: center; white-space: nowrap; }
+  .items { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3mm; }
+  .item { border: 1px solid var(--line); border-radius: 2mm; padding: 2mm; text-align: center; font-size: 8.3pt; line-height: 1.25; }
+  .item svg { width: 100%; height: 24mm; display: block; }
+  .item .q { font-family: Orbitron, sans-serif; font-weight: 700; color: var(--mag); font-size: 10pt; }
+  /* couverture */
+  .cover { background: #05060f; color: #fff; padding: 14mm; }
+  .cover h1 { font-size: 30pt; color: #6ff3ff; font-weight: 900; text-shadow: 0 0 6px rgba(45,226,255,.6); margin: 0; letter-spacing: 2px; }
+  .cover .sub { font-family: Orbitron, sans-serif; color: #ff7ae6; font-size: 13pt; letter-spacing: 3px; margin: 2mm 0 5mm; }
+  .cover img { display: block; width: 128mm; margin: 0 auto; border: 1px solid #2de2ff; border-radius: 2mm; }
+  .cover .facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3mm; margin-top: 5mm; }
+  .cover .fact { border: 1px solid #2de2ff; border-radius: 2mm; padding: 2.5mm; text-align: center; }
+  .cover .fact b { display: block; font-family: Orbitron, sans-serif; color: #6ff3ff; font-size: 11pt; }
+  .cover .fact span { font-size: 8pt; color: #c9cde0; }
+  .toc { columns: 2; column-gap: 8mm; }
+  .toc li { break-inside: avoid; }
+  @page { size: A4 portrait; margin: 0; }
+  @media print { body { background: #fff; } .page { margin: 0; box-shadow: none; break-after: page; } }
+  svg text { font-family: Inter, Arial, sans-serif; }
+</style>
+</head>
+<body>
+
+<!-- ============ COUVERTURE ============ -->
+<section class="page cover">
+  <h1>PAYS ⟷ CAPITALES</h1>
+  <div class="sub">NOTICE DE MONTAGE · VERSION 9 V</div>
+  <img src="rendu/rendu-cyberpunk.png" alt="Rendu de la planche terminée">
+  <div class="facts">
+    <div class="fact"><b>≈ 8 h</b><span>2 week-ends, séchage compris</span></div>
+    <div class="fact"><b>≈ 40 €</b><span>matériel, hors outils</span></div>
+    <div class="fact"><b>12 ans +</b><span>avec un adulte pour percer</span></div>
+    <div class="fact"><b>★★☆</b><span>difficulté moyenne, sans soudure</span></div>
+  </div>
+</section>
+
+<!-- ============ SOMMAIRE / PRINCIPE / SÉCURITÉ ============ -->
+<section class="page">
+  <div class="band"><b>AVANT DE COMMENCER</b><span>PAYS ⟷ CAPITALES</span></div>
+  <h1>Comment ça marche</h1>
+  <p>La planche porte 20 tiges « pays » et 20 tiges « capitales ». Derrière, chaque pays est relié à <b>sa</b> capitale par un fil, et à rien d'autre.
+     Deux câbles terminés par des <b>pinces crocodile</b> sortent de la planche. Quand on pince un pays et sa capitale, le courant fait le tour et les <b>3 lampes s'allument</b>.
+     Sur une mauvaise paire, il n'y a pas de chemin : les lampes restent éteintes.</p>
+  <div class="fig">
+    <svg viewBox="0 0 180 62">
+      <defs><marker id="ar" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#13a35a"/></marker></defs>
+      <g fill="none" stroke="#161824" stroke-width=".6">
+        <line x1="12" y1="12" x2="12" y2="27"/><line x1="7" y1="27" x2="17" y2="27"/><line x1="9.5" y1="31" x2="14.5" y2="31"/><line x1="12" y1="31" x2="12" y2="52"/>
+        <line x1="12" y1="12" x2="26" y2="12"/><line x1="27" y1="12" x2="36" y2="7"/><line x1="38" y1="12" x2="52" y2="12"/>
+        <circle cx="58" cy="12" r="5"/><path d="M54.5 8.5 L61.5 15.5 M61.5 8.5 L54.5 15.5"/>
+        <line x1="63" y1="12" x2="73" y2="12"/>
+        <circle cx="78" cy="12" r="5"/><path d="M74.5 8.5 L81.5 15.5 M81.5 8.5 L74.5 15.5"/>
+        <line x1="83" y1="12" x2="93" y2="12"/>
+        <circle cx="98" cy="12" r="5"/><path d="M94.5 8.5 L101.5 15.5 M101.5 8.5 L94.5 15.5"/>
+        <line x1="103" y1="12" x2="168" y2="12"/><line x1="168" y1="12" x2="168" y2="38"/><line x1="168" y1="38" x2="150" y2="38"/>
+        <line x1="12" y1="52" x2="40" y2="52"/><line x1="40" y1="52" x2="40" y2="30"/><line x1="40" y1="30" x2="58" y2="30"/>
+        <rect x="62" y="22" width="84" height="34" rx="2" stroke-dasharray="2 1.2"/>
+        <line x1="70" y1="30" x2="142" y2="38" stroke="#13a35a" stroke-width="1"/>
+      </g>
+      <path d="M40 46 L40 34" stroke="#13a35a" stroke-width=".8" marker-end="url(#ar)"/>
+      <path d="M120 15 L135 15" stroke="#13a35a" stroke-width=".8" marker-end="url(#ar)"/>
+      <g fill="#161824" font-size="3.6">
+        <circle cx="68" cy="30" r="2" fill="#8a93a8"/><circle cx="144" cy="38" r="2" fill="#8a93a8"/>
+        <polygon points="58,28 62,30 58,32" fill="#d4169f"/><polygon points="150,36 146,38 150,40" fill="#00a9c7"/>
+        <text x="2" y="22">+</text><text x="2" y="36">−</text><text x="1" y="58">pile 9 V</text>
+        <text x="25" y="20">interrupteur</text>
+        <text x="78" y="4.5" text-anchor="middle" font-size="3.2">3 lampes 3,5 V en série</text>
+        <text x="72" y="28" font-size="3.2">Algérie</text><text x="140" y="44" text-anchor="end" font-size="3.2">Alger</text>
+        <text x="104" y="52" text-anchor="middle" font-size="3.2" fill="#5d6275">planche : 20 fils cachés, un par paire</text>
+        <text x="44" y="58" font-size="3.2" fill="#d4169f">pince A</text><text x="150" y="46" font-size="3.2" fill="#00a9c7">pince B</text>
+        <text x="122" y="10" font-size="3.2" fill="#13a35a">courant</text>
+      </g>
+    </svg>
+    <div class="cap">Une seule boucle : + pile → interrupteur → L1 → L2 → L3 → pince B → tige capitale → fil caché → tige pays → pince A → − pile.</div>
+  </div>
+
+  <h3>Les étapes</h3>
+  <ol class="toc">
+    <li>Couper et poncer la planche</li><li>Peindre</li><li>Tracer les trous</li><li>Percer</li>
+    <li>Poser les pieds</li><li>Monter lampes et interrupteur</li><li>Préparer les 20 fils</li><li>Poser les tiges et relier les paires</li>
+    <li>Câbler les lampes et la pile</li><li>Monter les câbles et les pinces</li><li>Tester</li><li>Étiquettes et finition</li>
+  </ol>
+
+  <h3>Sécurité</h3>
+  <div class="warn"><b>Règles</b>
+    <ul>
+      <li>La perceuse et la scie sont utilisées par un adulte, avec lunettes de protection. Pièce serrée par un serre-joint, jamais tenue à la main.</li>
+      <li>Uniquement la pile 9 V : <b>jamais</b> de transformateur ni de prise secteur.</li>
+      <li>Ne jamais relier les deux bornes de la pile directement (sans passer par les lampes) : la pile et les fils chauffent.</li>
+      <li>Les ampoules allumées chauffent un peu : ne pas les toucher après une longue utilisation.</li>
+    </ul>
+  </div>
+  <div class="tip"><b>Qui fait quoi</b> — L'adulte : sciage, perçage, lamage. Ton fils peut faire : ponçage, peinture, dénudage, vissage des tiges, câblage des 20 paires, tests, étiquettes.</div>
+  <div class="foot"><span>Notice de montage · Pays ⟷ Capitales</span><span>2</span></div>
+</section>
+
+<!-- ============ MATÉRIEL ============ -->
+<section class="page">
+  <div class="band"><b>MATÉRIEL ET OUTILS</b><span>PAYS ⟷ CAPITALES</span></div>
+  <h1>Matériel</h1>
+  <div class="items" id="items"></div>
+  <h3>Outils</h3>
+  <table>
+    <tr><th>Outil</th><th>Usage</th><th>Outil</th><th>Usage</th></tr>
+    <tr><td>Perceuse + forets bois Ø 3, 4, 6, 8 mm</td><td>Tous les trous</td><td>Mèche Forstner Ø 25 mm</td><td>Lamage de l'interrupteur</td></tr>
+    <tr><td>Scie (ou découpe en magasin)</td><td>Planche et tasseaux</td><td>Clé plate 7 mm (ou pince)</td><td>Écrous M4</td></tr>
+    <tr><td>Tournevis plat et cruciforme</td><td>Tiges, douilles, pinces</td><td>Pince à dénuder + pince coupante</td><td>Fils</td></tr>
+    <tr><td>Règle 50 cm, équerre, crayon</td><td>Traçage</td><td>Papier de verre grain 120, pinceau</td><td>Finition</td></tr>
+    <tr><td>Serre-joint + chute de bois</td><td>Perçage propre</td><td>Colle à bois, vis à bois 3 × 30</td><td>Pieds</td></tr>
+  </table>
+  <div class="tip"><b>Astuce achat</b> — Les magasins de bricolage découpent la planche et les tasseaux à la cote gratuitement ou pour 1 €. Prends les ampoules, douilles, interrupteur, pinces et pile dans une boutique d'électronique ou en ligne.</div>
+  <div class="warn"><b>À vérifier en achetant</b> — Les 3 ampoules doivent être <b>identiques, 3,5 V</b>, culot E10. En série sur 9 V, chacune reçoit environ 3 V. Des ampoules de 6 V ou 9 V resteraient presque éteintes.</div>
+  <div class="foot"><span>Notice de montage · Pays ⟷ Capitales</span><span>3</span></div>
+</section>
+
+<!-- ============ ÉTAPES 1-2 ============ -->
+<section class="page">
+  <div class="band"><b>ÉTAPES 1 – 2 · LA PLANCHE</b><span>PAYS ⟷ CAPITALES</span></div>
+  <div class="step">
+    <h2><span class="num">1</span>Couper et poncer la planche</h2>
+    <div class="grid2">
+      <div class="fig"><svg viewBox="0 0 100 92">
+        <polygon points="20,14 26,9 86,9 80,14" fill="#e5c79a" stroke="#7a5b2e" stroke-width=".4"/>
+        <polygon points="80,14 86,9 86,84 80,89" fill="#c9a46c" stroke="#7a5b2e" stroke-width=".4"/>
+        <rect x="20" y="14" width="60" height="75" fill="#f0d8ae" stroke="#7a5b2e" stroke-width=".5"/>
+        <g stroke="#d4b680" stroke-width=".3" fill="none"><path d="M24 22 q20 -3 52 2"/><path d="M24 40 q25 4 52 -1"/><path d="M24 62 q18 -4 52 1"/><path d="M24 78 q22 3 52 -2"/></g>
+        <g stroke="#d4169f" stroke-width=".4" fill="#d4169f" font-size="4">
+          <line x1="20" y1="5" x2="80" y2="5"/><line x1="20" y1="3" x2="20" y2="7"/><line x1="80" y1="3" x2="80" y2="7"/>
+          <text x="50" y="3.6" text-anchor="middle" stroke="none">300 mm</text>
+          <line x1="13" y1="14" x2="13" y2="89"/><line x1="11" y1="14" x2="15" y2="14"/><line x1="11" y1="89" x2="15" y2="89"/>
+          <text x="9" y="52" text-anchor="middle" stroke="none" transform="rotate(-90 9 52)">400 mm</text>
+          <text x="89" y="50" stroke="none">10 mm</text>
+        </g>
+      </svg><div class="cap">Contreplaqué 10 mm, 300 × 400 mm</div></div>
+      <div>
+        <ol>
+          <li>Fais couper la planche à <b>300 × 400 mm</b> et 4 tasseaux 27 × 27 mm : deux de 400 mm, deux de 246 mm.</li>
+          <li>Ponce les deux faces et les chants au grain 120, toujours dans le sens du bois.</li>
+          <li>Arrondis légèrement les 4 coins au papier de verre (pas d'échardes pour les mains).</li>
+          <li>Dépoussière avec un chiffon sec.</li>
+        </ol>
+        <div class="check"><b>Contrôle</b> — La planche est plane, sans écharde, et mesure 300 × 400 mm.</div>
+      </div>
+    </div>
+  </div>
+  <div class="step">
+    <h2><span class="num">2</span>Peindre</h2>
+    <div class="grid2">
+      <div class="fig"><svg viewBox="0 0 100 80">
+        <rect x="10" y="8" width="54" height="68" fill="#14161f" stroke="#000" stroke-width=".5"/>
+        <rect x="10" y="8" width="54" height="68" fill="none" stroke="#2de2ff" stroke-width=".6" stroke-dasharray="3 2" opacity=".7"/>
+        <g transform="rotate(35 76 30)">
+          <rect x="72" y="2" width="8" height="30" rx="2" fill="#ffb347" stroke="#8a5a14" stroke-width=".4"/>
+          <rect x="71" y="32" width="10" height="8" fill="#b8bfcc" stroke="#555" stroke-width=".4"/>
+          <path d="M71 40 h10 l-1 10 h-8 Z" fill="#14161f"/>
+        </g>
+        <text x="37" y="45" fill="#6ff3ff" font-size="5" text-anchor="middle" font-family="Orbitron">NOIR MAT</text>
+      </svg><div class="cap">Face avant et chants en noir mat</div></div>
+      <div>
+        <ol>
+          <li>Peins la face avant et les 4 chants en <b>noir mat</b> (acrylique pour bois, en bombe ou au pinceau).</li>
+          <li>Laisse sécher 2 h, ponce très légèrement, passe une deuxième couche.</li>
+          <li>Laisse sécher une nuit avant de tracer.</li>
+        </ol>
+        <div class="tip"><b>Look cyberpunk</b> — Un liseré d'adhésif fluorescent cyan à 5 mm du bord (à poser à l'étape 12) donne l'effet néon du rendu, sans électricité.</div>
+        <div class="check"><b>Contrôle</b> — Peinture sèche au toucher, couleur uniforme.</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Notice de montage · Pays ⟷ Capitales</span><span>4</span></div>
+</section>
+
+<!-- ============ ÉTAPES 3-4 ============ -->
+<section class="page">
+  <div class="band"><b>ÉTAPES 3 – 4 · TRAÇAGE ET PERÇAGE</b><span>PAYS ⟷ CAPITALES</span></div>
+  <div class="step">
+    <h2><span class="num">3</span>Tracer l'emplacement des trous</h2>
+    <div class="grid2">
+      <div class="fig"><svg viewBox="0 0 100 128" id="fig-trace"></svg><div class="cap">Cotes en mm depuis le coin haut gauche (vue de face)</div></div>
+      <div>
+        <p><b>Option A, gabarit :</b> imprime la page 1 de <code>gabarits-A3.pdf</code> à 100 % (format A3, en reprographie), vérifie que la barre de contrôle mesure 100 mm, scotche-la sur la planche et marque chaque croix d'un coup de pointe (clou + marteau). Ignore les trous LED / bouton du haut de ce gabarit.</p>
+        <p><b>Option B, à la règle :</b></p>
+        <ul>
+          <li>Ligne verticale des pays à <b>x = 28 mm</b>, des capitales à <b>x = 269 mm</b>.</li>
+          <li>Première rangée à <b>y = 76 mm</b>, puis une rangée tous les <b>16,5 mm</b> (20 rangées ; la dernière à y = 389,5).</li>
+          <li>En haut, sur la ligne <b>y = 38 mm</b> : câble A à x = 40, lampes à x = 110, 150 et 190, câble B à x = 235, interrupteur à x = 272.</li>
+        </ul>
+        <div class="check"><b>Contrôle</b> — 46 marques : 40 tiges + 3 lampes + 2 câbles + 1 interrupteur. Les rangées gauche et droite sont à la même hauteur.</div>
+      </div>
+    </div>
+  </div>
+  <div class="step">
+    <h2><span class="num">4</span>Percer</h2>
+    <div class="grid2">
+      <div class="fig"><svg viewBox="0 0 100 70">
+        <rect x="8" y="40" width="84" height="7" fill="#14161f"/>
+        <rect x="8" y="47" width="84" height="10" fill="#e5c79a" stroke="#7a5b2e" stroke-width=".4"/>
+        <rect x="4" y="57" width="92" height="4" fill="#9aa3b5"/>
+        <rect x="44" y="4" width="12" height="16" rx="2" fill="#3b82c4"/>
+        <rect x="47" y="20" width="6" height="5" fill="#666"/>
+        <path d="M49 25 h2 v15 l-1 3 l-1 -3 Z" fill="#b8bfcc" stroke="#555" stroke-width=".3"/>
+        <path d="M58 26 a6 3 0 1 1 -16 0" fill="none" stroke="#d4169f" stroke-width=".6"/>
+        <text x="57" y="38" font-size="3">planche, face peinte en haut</text>
+        <text x="62" y="54" font-size="3.6">chute de bois</text>
+        <text x="62" y="66" font-size="3.6" fill="#5d6275">établi</text>
+        <text x="60" y="14" font-size="3.6" fill="#d4169f">perceuse bien verticale</text>
+      </svg><div class="cap">La chute de bois dessous évite que le dos éclate</div></div>
+      <div>
+        <table>
+          <tr><th>Trou</th><th class="c">Nb</th><th class="c">Ø</th></tr>
+          <tr><td>Tiges pays et capitales</td><td class="c">40</td><td class="c">4 mm</td></tr>
+          <tr><td>Passage des fils des lampes (sous chaque douille)</td><td class="c">3</td><td class="c">8 mm</td></tr>
+          <tr><td>Sorties des câbles A et B</td><td class="c">2</td><td class="c">6 mm</td></tr>
+          <tr><td>Interrupteur</td><td class="c">1</td><td class="c">6 mm*</td></tr>
+        </table>
+        <ol>
+          <li>Serre la planche sur une chute de bois avec un serre-joint.</li>
+          <li>Perce d'abord tous les trous à Ø 3 mm (avant-trous), puis au diamètre final.</li>
+          <li>* Au dos, à l'emplacement de l'interrupteur, creuse un <b>lamage</b> Ø 25 mm, 7 mm de profondeur (mèche Forstner) : il ne reste que 3 mm de bois, et le filetage court de l'interrupteur peut dépasser devant.</li>
+        </ol>
+        <div class="tip"><b>Interrupteur</b> — Vérifie le diamètre sur sa fiche (souvent 6 mm pour un interrupteur à levier miniature, 12 mm pour certains modèles).</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Notice de montage · Pays ⟷ Capitales</span><span>5</span></div>
+</section>
+
+<!-- ============ ÉTAPES 5-6 ============ -->
+<section class="page">
+  <div class="band"><b>ÉTAPES 5 – 6 · PIEDS, LAMPES, INTERRUPTEUR</b><span>PAYS ⟷ CAPITALES</span></div>
+  <div class="step">
+    <h2><span class="num">5</span>Poser les pieds (tasseaux)</h2>
+    <div class="grid2">
+      <div class="fig"><svg viewBox="0 0 100 120" id="fig-pieds"></svg><div class="cap">Planche retournée : vue de DOS</div></div>
+      <div>
+        <ol>
+          <li>Retourne la planche, face peinte sur un chiffon.</li>
+          <li>Colle et visse les deux tasseaux de 400 mm le long des grands côtés, puis les deux de 246 mm en haut et en bas (vis à bois 3 × 30, 3 par tasseau, avant-trou Ø 2).</li>
+          <li>Les vis ne doivent pas traverser la face avant : 27 mm de tasseau + 10 mm de planche = 37 mm, des vis de 30 mm conviennent.</li>
+        </ol>
+        <div class="warn"><b>Attention, vue de dos</b> — Planche retournée, la gauche et la droite sont inversées : les tiges <b>pays</b> sont à <b>droite</b>, les <b>capitales</b> à <b>gauche</b>.</div>
+        <div class="check"><b>Contrôle</b> — Posée sur ses pieds, la planche ne bascule pas et laisse 27 mm de vide dessous pour les fils et la pile.</div>
+      </div>
+    </div>
+  </div>
+  <div class="step">
+    <h2><span class="num">6</span>Monter les 3 douilles et l'interrupteur</h2>
+    <div class="grid2">
+      <div class="fig"><svg viewBox="0 0 100 76">
+        <g id="sockets"></g>
+        <rect x="4" y="52" width="92" height="8" fill="#14161f"/>
+        <rect x="76" y="55" width="14" height="5" fill="#fafbfd"/>
+        <rect x="81" y="40" width="4" height="17" fill="#b8bfcc" stroke="#555" stroke-width=".3"/>
+        <rect x="78.5" y="48" width="9" height="3" fill="#8a93a8"/>
+        <rect x="82" y="30" width="2" height="10" rx="1" fill="#555" transform="rotate(-15 83 40)"/>
+        <rect x="79" y="55" width="8" height="7" fill="#3a3f52"/>
+        <text x="64" y="70" font-size="3.4" fill="#d4169f">lamage au dos</text>
+        <text x="72" y="28" font-size="3.4">interrupteur</text>
+        <text x="4" y="73" font-size="3.4" fill="#5d6275">coupe de la planche</text>
+      </svg><div class="cap">Douilles vissées devant ; interrupteur dans son lamage</div></div>
+      <div>
+        <ol>
+          <li>Visse chaque douille E10 sur socle au-dessus de son trou Ø 8 mm (2 petites vis à bois). Le trou sert à faire passer les fils vers l'arrière.</li>
+          <li>Ne visse pas encore les ampoules.</li>
+          <li>Passe l'interrupteur par l'arrière, dans le lamage. Serre son écrou devant, levier vers le haut = marche.</li>
+        </ol>
+        <div class="tip"><b>Astuce</b> — Repère au crayon, au dos, L1 (gauche, vue de face), L2 et L3 : vue de dos, L1 est à droite.</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Notice de montage · Pays ⟷ Capitales</span><span>6</span></div>
+</section>
+
+<!-- ============ ÉTAPE 7 ============ -->
+<section class="page">
+  <div class="band"><b>ÉTAPE 7 · PRÉPARER LES FILS ET LES TIGES</b><span>PAYS ⟷ CAPITALES</span></div>
+  <div class="step">
+    <h2><span class="num">7</span>Préparer les 20 fils</h2>
+    <div class="fig"><svg viewBox="0 0 180 44">
+      <g transform="translate(0 4)">
+        <text x="2" y="6" font-size="3.8" font-weight="bold">a. Couper</text>
+        <path d="M6 18 C 20 10, 34 26, 52 18" fill="none" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round"/>
+        <text x="29" y="30" font-size="3.4" text-anchor="middle">45 cm</text>
+        <text x="64" y="6" font-size="3.8" font-weight="bold">b. Dénuder 1 cm</text>
+        <line x1="64" y1="18" x2="96" y2="18" stroke="#2563eb" stroke-width="2.2"/>
+        <g stroke="#c87533" stroke-width=".35"><line x1="96" y1="17.3" x2="106" y2="17.3"/><line x1="96" y1="18" x2="106" y2="18.1"/><line x1="96" y1="18.7" x2="106" y2="18.7"/></g>
+        <text x="101" y="26" font-size="3.4" text-anchor="middle">1 cm</text>
+        <text x="120" y="6" font-size="3.8" font-weight="bold">c. Torsader et boucler</text>
+        <line x1="120" y1="18" x2="150" y2="18" stroke="#2563eb" stroke-width="2.2"/>
+        <path d="M150 18 h4 a4 4 0 1 1 0.1 0" fill="none" stroke="#c87533" stroke-width="1"/>
+        <text x="158" y="30" font-size="3.4" text-anchor="middle">œillet Ø 4–5</text>
+      </g>
+    </svg><div class="cap">Fais la boucle autour d'un tournevis de Ø 4 mm, dans le sens des aiguilles d'une montre</div></div>
+    <ol>
+      <li>Coupe <b>20 fils de 45 cm</b>, assez pour relier n'importe quel pays à n'importe quelle capitale.</li>
+      <li>Dénude <b>1 cm</b> à chaque bout, torsade les brins de cuivre, puis forme un petit œillet.</li>
+      <li>L'œillet se pose <b>dans le sens des aiguilles d'une montre</b> autour de la vis : en serrant, il se referme au lieu de s'ouvrir.</li>
+    </ol>
+  </div>
+  <div class="step">
+    <h2><span class="num">i</span>Comment est faite une tige</h2>
+    <div class="fig"><svg viewBox="0 0 180 66" id="fig-tige"></svg>
+      <div class="cap">Vue en coupe d'une tige : la vis traverse la planche depuis l'arrière ; le fil est serré sous la tête</div></div>
+    <div class="tip"><b>Pourquoi depuis l'arrière</b> — La tête de la vis serre le fil au dos ; devant, il ne reste que la partie filetée, sur laquelle la pince crocodile mord bien.</div>
+  </div>
+  <div class="foot"><span>Notice de montage · Pays ⟷ Capitales</span><span>7</span></div>
+</section>
+
+<!-- ============ ÉTAPE 8 ============ -->
+<section class="page">
+  <div class="band"><b>ÉTAPE 8 · POSER LES TIGES ET RELIER LES PAIRES</b><span>PAYS ⟷ CAPITALES</span></div>
+  <h2><span class="num">8</span>Poser les tiges et relier les paires</h2>
+  <div class="grid2">
+    <div class="fig"><svg viewBox="0 0 100 134" id="fig-dos"></svg><div class="cap">Vue de DOS. Les 3 premiers fils du tableau sont dessinés</div></div>
+    <div>
+      <p>On pose les tiges <b>par paires</b>, en suivant le tableau ligne par ligne. Exemple, fil 1 : P1 → C17.</p>
+      <ol>
+        <li>Enfile un œillet du fil sur une vis M4, avec une rondelle de chaque côté de l'œillet.</li>
+        <li>Passe la vis par l'arrière dans le trou <b>P1</b>.</li>
+        <li>Devant : une rondelle + un écrou. Tiens la tête au tournevis derrière, serre l'écrou à la clé de 7.</li>
+        <li>Même chose avec l'autre bout du fil dans le trou <b>C17</b>.</li>
+        <li>Coche la ligne du tableau. Passe au fil suivant.</li>
+      </ol>
+      <div class="warn"><b>Le piège</b> — Vue de dos, les pays (P) sont à <b>droite</b>. Vérifie le numéro du trou deux fois avant de serrer.</div>
+      <div class="tip"><b>Fils bien rangés</b> — Laisse les fils passer librement entre les tasseaux. Aucun cuivre nu ne doit toucher une autre vis.</div>
+    </div>
+  </div>
+  <table style="margin-top:3mm" id="table-cablage"></table>
+  <div class="foot"><span>Notice de montage · Pays ⟷ Capitales</span><span>8</span></div>
+</section>
+
+<!-- ============ ÉTAPE 9 ============ -->
+<section class="page">
+  <div class="band"><b>ÉTAPE 9 · CIRCUIT DES LAMPES</b><span>PAYS ⟷ CAPITALES</span></div>
+  <h2><span class="num">9</span>Câbler les lampes, l'interrupteur et la pile</h2>
+  <div class="fig"><svg viewBox="0 0 182 96" id="fig-lampes"></svg>
+    <div class="cap">Vue de DOS de la partie haute (L1 est à droite, l'interrupteur à gauche ; les 40 tiges, plus bas, ne sont pas dessinées). Dans l'ordre : ① à ⑥</div></div>
+  <div class="grid2" style="margin-top:3mm">
+    <div>
+      <ol>
+        <li>① Fil <b>rouge (+)</b> du clip de pile → une borne de l'interrupteur (domino si besoin).</li>
+        <li>② Autre borne de l'interrupteur → une vis de la douille <b>L1</b>.</li>
+        <li>③ Autre vis de L1 → une vis de <b>L2</b>.</li>
+        <li>④ Autre vis de L2 → une vis de <b>L3</b>.</li>
+        <li>⑤ Autre vis de L3 → <b>câble B</b> (domino, à côté de la sortie B).</li>
+        <li>⑥ Fil <b>noir (−)</b> du clip → <b>câble A</b> (domino, à côté de la sortie A).</li>
+      </ol>
+    </div>
+    <div>
+      <div class="tip"><b>Les ampoules n'ont pas de sens</b> — On peut brancher les deux vis d'une douille dans n'importe quel ordre.</div>
+      <div class="tip"><b>Interrupteur à cosses à souder</b> — Sans fer à souder, utilise des cosses femelles 4,8 mm à sertir, ou demande à un adulte de souder.</div>
+      <div class="warn"><b>Pas de pile tout de suite</b> — Ne clipse la pile qu'à l'étape 11, interrupteur sur arrêt.</div>
+      <p>Fixe la pile au dos avec un morceau de velcro adhésif, loin des vis des tiges.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Notice de montage · Pays ⟷ Capitales</span><span>9</span></div>
+</section>
+
+<!-- ============ ÉTAPE 10 ============ -->
+<section class="page">
+  <div class="band"><b>ÉTAPE 10 · CÂBLES ET PINCES CROCODILE</b><span>PAYS ⟷ CAPITALES</span></div>
+  <h2><span class="num">10</span>Monter les câbles A et B et les pinces</h2>
+  <div class="fig"><svg viewBox="0 0 180 70" id="fig-pinces"></svg>
+    <div class="cap">a. Nœud d'arrêt derrière la sortie · b. Dénuder · c. Fixer la pince · d. Remettre la gaine</div></div>
+  <div class="grid2" style="margin-top:3mm">
+    <div>
+      <ol>
+        <li>Coupe 2 câbles souples de <b>1 m</b> : A (rose ou rouge) et B (bleu).</li>
+        <li>Passe chaque câble dans sa sortie Ø 6 mm, de l'avant vers l'arrière.</li>
+        <li>Fais un <b>nœud</b> dans le câble juste derrière la planche : si ton fils tire sur la pince, c'est le nœud qui force, pas le domino.</li>
+        <li>Branche le bout arrière dans son domino (étape 9 : A avec le noir −, B avec la sortie de L3).</li>
+        <li>Côté avant : enfile d'abord la gaine isolante de la pince sur le câble.</li>
+        <li>Dénude 1 cm, torsade, serre le cuivre sous la vis de la pince (ou dans la languette à sertir, écrasée à la pince).</li>
+        <li>Fais glisser la gaine sur la pince.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="tip"><b>Couleurs</b> — Gaine rose sur A, bleue sur B, comme sur le rendu. Ton fils saura vite quelle pince va côté pays et laquelle côté capitales (en réalité, les deux sens marchent).</div>
+      <div class="check"><b>Contrôle</b> — Tire fermement sur chaque pince : rien ne bouge derrière la planche. La pince s'ouvre et se referme sur une tige sans glisser.</div>
+    </div>
+  </div>
+  <div class="foot"><span>Notice de montage · Pays ⟷ Capitales</span><span>10</span></div>
+</section>
+
+<!-- ============ ÉTAPES 11-12 ============ -->
+<section class="page">
+  <div class="band"><b>ÉTAPES 11 – 12 · TESTS ET FINITION</b><span>PAYS ⟷ CAPITALES</span></div>
+  <div class="step">
+    <h2><span class="num">11</span>Tester</h2>
+    <p>Visse les 3 ampoules. Clipse la pile, interrupteur sur <b>marche</b>. Fais les tests dans l'ordre :</p>
+    <div class="fig"><svg viewBox="0 0 180 62" id="fig-tests"></svg></div>
+    <table style="margin-top:2mm">
+      <tr><th class="c">Test</th><th>Ce que tu fais</th><th>Résultat attendu</th><th>Sinon</th></tr>
+      <tr><td class="c">1</td><td>Pince A contre pince B</td><td>Les 3 lampes s'allument</td><td>Ampoule dévissée, interrupteur sur arrêt, pile à plat, domino desserré</td></tr>
+      <tr><td class="c">2</td><td>Les 20 bonnes paires du tableau</td><td>Allumé à chaque fois</td><td>Fil mal serré sur cette paire, mauvais trou</td></tr>
+      <tr><td class="c">3</td><td>P1–P2, P2–P3, …, P19–P20, puis C1–C2, …, C19–C20</td><td>Éteint à chaque fois</td><td>Deux œillets ou deux fils nus se touchent derrière</td></tr>
+      <tr><td class="c">4</td><td>Interrupteur sur arrêt, pinces ensemble</td><td>Éteint</td><td>Interrupteur mal câblé</td></tr>
+    </table>
+  </div>
+  <div class="step">
+    <h2><span class="num">12</span>Étiquettes et finition</h2>
+    <div class="grid2">
+      <div class="fig"><svg viewBox="0 0 100 46">
+        <rect x="0" y="0" width="100" height="46" fill="#14161f"/>
+        <circle cx="10" cy="14" r="3" fill="#b8bfcc" stroke="#2de2ff" stroke-width=".5"/>
+        <path d="M18 9 h40 l3 3 v5 l-3 3 h-40 l-3 -3 v-5 Z" fill="#0b1024" stroke="#2de2ff" stroke-width=".5"/>
+        <text x="38" y="16.5" fill="#6ff3ff" font-size="5" text-anchor="middle" font-family="Orbitron">ALGÉRIE</text>
+        <circle cx="90" cy="32" r="3" fill="#b8bfcc" stroke="#ff2bd6" stroke-width=".5"/>
+        <path d="M42 27 h40 l3 3 v5 l-3 3 h-40 l-3 -3 v-5 Z" fill="#0b1024" stroke="#ff2bd6" stroke-width=".5"/>
+        <text x="62" y="34.5" fill="#ff7ae6" font-size="5" text-anchor="middle" font-family="Orbitron">ALGER</text>
+        <rect x="3" y="3" width="94" height="40" fill="none" stroke="#2de2ff" stroke-width=".4" stroke-dasharray="4 2" opacity=".6"/>
+      </svg><div class="cap">Étiquettes néon sur fond noir, liseré fluo</div></div>
+      <div>
+        <ol>
+          <li>Ouvre <code>gabarit.html</code>, imprime la page d'étiquettes (grille n° 0 ou une nouvelle grille).</li>
+          <li>Découpe, plastifie ou recouvre d'adhésif transparent.</li>
+          <li>Colle chaque étiquette à droite de sa tige pays, ou à gauche de sa tige capitale, avec de la pâte adhésive : le code P… / C… dans le coin indique la tige.</li>
+          <li>Pose le liseré fluorescent à 5 mm du bord.</li>
+        </ol>
+        <div class="tip"><b>Rejouer sans tricher</b> — Une nouvelle grille d'étiquettes change la position des noms sans toucher aux fils.</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Notice de montage · Pays ⟷ Capitales</span><span>11</span></div>
+</section>
+
+<!-- ============ JOUER / DÉPANNAGE ============ -->
+<section class="page">
+  <div class="band"><b>JOUER ET DÉPANNER</b><span>PAYS ⟷ CAPITALES</span></div>
+  <h1>Règles du jeu</h1>
+  <ol>
+    <li>Interrupteur sur marche. Le joueur pince un pays avec la pince A.</li>
+    <li>Il annonce la capitale <b>à voix haute</b>, puis pince l'étiquette correspondante avec la pince B.</li>
+    <li>Lampes allumées et capitale annoncée avant : <b>1 point</b>. Lampes éteintes : la main passe.</li>
+    <li>Fin de partie quand les 20 pays sont trouvés. Le plus de points gagne.</li>
+    <li>Variante chrono : trouver les 20 paires le plus vite possible.</li>
+  </ol>
+  <div class="tip"><b>Pourquoi annoncer avant</b> — Sans cette règle, on peut tout trouver en essayant les capitales une par une. Annoncer d'abord oblige à savoir.</div>
+  <p>Après la partie : interrupteur sur <b>arrêt</b>, pinces accrochées sur leur tige de rangement (ou séparées), pour ne pas vider la pile.</p>
+
+  <h1 style="margin-top:6mm">Dépannage</h1>
+  <table>
+    <tr><th>Symptôme</th><th>Cause probable</th><th>Solution</th></tr>
+    <tr><td>Rien ne s'allume, même pinces ensemble</td><td>Une ampoule dévissée ou grillée (en série, une seule suffit à tout éteindre), pile vide, interrupteur sur arrêt</td><td>Revisser les 3 ampoules, essayer chaque ampoule sur la pile, changer la pile</td></tr>
+    <tr><td>Lampes très faibles</td><td>Pile usée, ou ampoules de 6 V / 9 V au lieu de 3,5 V</td><td>Changer la pile, vérifier le marquage des ampoules</td></tr>
+    <tr><td>Une ampoule brille, les autres non</td><td>Impossible en série : vérifier qu'il n'y a pas un fil qui court-circuite deux douilles</td><td>Suivre le câblage ① à ⑥ de l'étape 9</td></tr>
+    <tr><td>Une bonne paire reste éteinte</td><td>Fil desserré, œillet mal serré, mauvais trou</td><td>Resserrer les deux écrous de la paire, revoir le tableau</td></tr>
+    <tr><td>Une mauvaise paire s'allume</td><td>Deux fils ou deux œillets se touchent derrière</td><td>Chercher le cuivre nu qui dépasse entre les deux tiges concernées</td></tr>
+    <tr><td>Ça marche par moments</td><td>Domino ou pince mal serré</td><td>Resserrer, refaire le dénudage</td></tr>
+    <tr><td>Pile vide très vite</td><td>Pinces restées l'une contre l'autre, interrupteur sur marche</td><td>Ranger interrupteur sur arrêt ; ou passer à un boîtier de 6 piles AA (9 V, environ 5 fois plus d'autonomie)</td></tr>
+  </table>
+  <div class="foot"><span>Notice de montage · Pays ⟷ Capitales</span><span>12</span></div>
+</section>
+
+<!-- ============ ANNEXE ============ -->
+<section class="page">
+  <div class="band"><b>ANNEXE · RÉSERVÉE AUX PARENTS</b><span>PAYS ⟷ CAPITALES</span></div>
+  <h1>Câblage et grille n° 0</h1>
+  <p>Ce tableau donne les réponses : garde cette page hors de vue du joueur. Le câblage ne change jamais ; seules les étiquettes changent d'une grille à l'autre.</p>
+  <table id="annexe"></table>
+  <div class="foot"><span>Notice de montage · Pays ⟷ Capitales</span><span>13</span></div>
+</section>
+
+<script>
+const WIRING = [17, 11, 15, 20, 10, 13, 19, 12, 16, 1, 7, 4, 18, 6, 2, 8, 3, 14, 5, 9];
+const PAIRS = [
+  ["France","Paris"],["Algérie","Alger"],["Maroc","Rabat"],["Tunisie","Tunis"],["Espagne","Madrid"],
+  ["Italie","Rome"],["Allemagne","Berlin"],["Royaume-Uni","Londres"],["Portugal","Lisbonne"],["Suisse","Berne"],
+  ["Égypte","Le Caire"],["Sénégal","Dakar"],["États-Unis","Washington"],["Canada","Ottawa"],["Brésil","Brasília"],
+  ["Argentine","Buenos Aires"],["Japon","Tokyo"],["Chine","Pékin"],["Turquie","Ankara"],["Australie","Canberra"]];
+const ROW_Y = i => 76 + i * 16.5;
+const set = (id, html) => { document.getElementById(id).innerHTML = html; };
+
+// ---- Matériel ----
+const ICONS = {
+  planche: `<svg viewBox="0 0 60 40"><polygon points="12,8 16,5 50,5 46,8" fill="#e5c79a"/><polygon points="46,8 50,5 50,33 46,36" fill="#c9a46c"/><rect x="12" y="8" width="34" height="28" fill="#f0d8ae" stroke="#7a5b2e" stroke-width=".4"/></svg>`,
+  tasseau: `<svg viewBox="0 0 60 40"><g fill="#f0d8ae" stroke="#7a5b2e" stroke-width=".4"><rect x="6" y="8" width="48" height="5"/><rect x="6" y="16" width="48" height="5"/><rect x="12" y="24" width="36" height="5"/><rect x="12" y="32" width="36" height="5"/></g></svg>`,
+  vis: `<svg viewBox="0 0 60 40"><rect x="8" y="14" width="5" height="12" rx="1" fill="#9aa3b5"/><rect x="13" y="17.5" width="38" height="5" fill="#c9d1df"/><g stroke="#7d8698" stroke-width=".5">${Array.from({length: 12}, (_, k) => `<line x1="${15 + k * 3}" y1="17.5" x2="${16.5 + k * 3}" y2="22.5"/>`).join("")}</g></svg>`,
+  ecrou: `<svg viewBox="0 0 60 40"><polygon points="20,12 28,12 32,20 28,28 20,28 16,20" fill="#c9d1df" stroke="#6c7891" stroke-width=".6"/><circle cx="24" cy="20" r="3.5" fill="#fff" stroke="#6c7891" stroke-width=".5"/><circle cx="44" cy="20" r="8" fill="#c9d1df" stroke="#6c7891" stroke-width=".6"/><circle cx="44" cy="20" r="3" fill="#fff" stroke="#6c7891" stroke-width=".5"/></svg>`,
+  ampoule: `<svg viewBox="0 0 60 40"><circle cx="30" cy="15" r="9" fill="#fff6c8" stroke="#c99500" stroke-width=".6"/><path d="M26 15 l1.3 -2 l1.3 2 l1.3 -2 l1.3 2 l1.3 -2" fill="none" stroke="#c99500" stroke-width=".5"/><rect x="26" y="23" width="8" height="8" fill="#c9d1df" stroke="#6c7891" stroke-width=".4"/><g stroke="#6c7891" stroke-width=".4"><line x1="26" y1="25.5" x2="34" y2="25.5"/><line x1="26" y1="28" x2="34" y2="28"/></g><text x="30" y="38" font-size="5" text-anchor="middle" fill="#c99500">3,5 V</text></svg>`,
+  douille: `<svg viewBox="0 0 60 40"><rect x="14" y="26" width="32" height="8" rx="2" fill="#2a2f40"/><rect x="23" y="12" width="14" height="14" fill="#c9d1df" stroke="#6c7891" stroke-width=".4"/><circle cx="18" cy="30" r="1.6" fill="#c9d1df"/><circle cx="42" cy="30" r="1.6" fill="#c9d1df"/></svg>`,
+  inter: `<svg viewBox="0 0 60 40"><rect x="20" y="20" width="20" height="14" rx="2" fill="#2a2f40"/><rect x="26" y="15" width="8" height="5" fill="#c9d1df"/><rect x="29" y="4" width="2.5" height="12" rx="1.2" fill="#9aa3b5" transform="rotate(-15 30 16)"/><rect x="23" y="34" width="3" height="5" fill="#c9a46c"/><rect x="34" y="34" width="3" height="5" fill="#c9a46c"/></svg>`,
+  pile: `<svg viewBox="0 0 60 40"><rect x="16" y="12" width="18" height="26" rx="2" fill="#2a2f40"/><rect x="16" y="22" width="18" height="6" fill="#e39b00"/><text x="25" y="27" font-size="5" fill="#000" text-anchor="middle" font-weight="bold">9V</text><rect x="18" y="7" width="5" height="5" fill="#c9d1df"/><polygon points="28,7 32,7 33,9.5 32,12 28,12 27,9.5" fill="#c9d1df"/><path d="M40 10 q8 0 8 10 t8 10" fill="none" stroke="#d33" stroke-width="1.2"/><path d="M40 14 q6 0 6 10 t8 10" fill="none" stroke="#111" stroke-width="1.2"/></svg>`,
+  fil: `<svg viewBox="0 0 60 40"><ellipse cx="22" cy="20" rx="10" ry="14" fill="#2563eb"/><ellipse cx="22" cy="20" rx="4" ry="6" fill="#fff"/><ellipse cx="42" cy="20" rx="10" ry="14" fill="#d33"/><ellipse cx="42" cy="20" rx="4" ry="6" fill="#fff"/></svg>`,
+  pince: `<svg viewBox="0 0 60 40"><g transform="translate(46 13)"><path d="M-30 -3.5 H-16 L-13 -4 V4 L-16 3.5 H-30 Q-32 0 -30 -3.5Z" fill="#d4169f"/><path d="M-13 -4 L-2 -2 L1 -.8 V-.2 L-13 -1Z M-13 4 L-2 2 L1 .8 V.2 L-13 1Z" fill="#c9d1df" stroke="#6c7891" stroke-width=".3"/></g><g transform="translate(46 29)"><path d="M-30 -3.5 H-16 L-13 -4 V4 L-16 3.5 H-30 Q-32 0 -30 -3.5Z" fill="#00a9c7"/><path d="M-13 -4 L-2 -2 L1 -.8 V-.2 L-13 -1Z M-13 4 L-2 2 L1 .8 V.2 L-13 1Z" fill="#c9d1df" stroke="#6c7891" stroke-width=".3"/></g></svg>`,
+  cable: `<svg viewBox="0 0 60 40"><path d="M8 14 C 20 2, 30 26, 52 12" fill="none" stroke="#d4169f" stroke-width="2.4" stroke-linecap="round"/><path d="M8 28 C 20 16, 30 40, 52 26" fill="none" stroke="#00a9c7" stroke-width="2.4" stroke-linecap="round"/></svg>`,
+  domino: `<svg viewBox="0 0 60 40"><rect x="10" y="14" width="40" height="12" rx="1" fill="#f2f2f2" stroke="#888" stroke-width=".5"/>${[0,1,2,3].map(k => `<circle cx="${15 + k * 10}" cy="20" r="2.2" fill="#c9d1df" stroke="#6c7891" stroke-width=".4"/>`).join("")}</svg>`,
+};
+const ITEMS = [
+  ["planche", "1", "Contreplaqué 300 × 400 mm, ép. 10 mm"],
+  ["tasseau", "4", "Tasseaux 27 × 27 mm : 2 × 400 et 2 × 246 mm"],
+  ["vis", "40", "Vis M4 × 35 mm (les tiges)"],
+  ["ecrou", "40 + 120", "Écrous M4 + rondelles M4"],
+  ["ampoule", "3", "Ampoules 3,5 V 0,2 A, culot E10, identiques"],
+  ["douille", "3", "Douilles E10 sur socle, à vis"],
+  ["inter", "1", "Interrupteur marche/arrêt (2 bornes)"],
+  ["pile", "1", "Pile 9 V + clip à pression"],
+  ["fil", "12 m", "Fil de câblage 0,5 mm², 2 couleurs"],
+  ["pince", "2", "Pinces crocodile isolées (rose, bleue)"],
+  ["cable", "2 × 1 m", "Câble souple 0,75 mm² (câbles A et B)"],
+  ["domino", "1", "Barrette de dominos (3 plots utilisés)"],
+];
+set("items", ITEMS.map(([k, q, t]) => `<div class="item">${ICONS[k]}<div class="q">× ${q}</div>${t}</div>`).join(""));
+
+// ---- Fig traçage (vue de face, échelle 1/3) ----
+(() => {
+  const k = 1 / 3, ox = 0, oy = 0;
+  let s = `<rect x="0" y="0" width="${300 * k}" height="${400 * k}" fill="#14161f"/>`;
+  for (let i = 0; i < 20; i++) {
+    const y = ROW_Y(i) * k;
+    s += `<path d="M${28 * k - 2} ${y} h4 M${28 * k} ${y - 2} v4 M${269 * k - 2} ${y} h4 M${269 * k} ${y - 2} v4" stroke="#6ff3ff" stroke-width=".35"/>`;
+  }
+  for (const [x, c] of [[40, "#ff7ae6"], [110, "#ffd76a"], [150, "#ffd76a"], [190, "#ffd76a"], [235, "#6ff3ff"], [272, "#39ff88"]])
+    s += `<circle cx="${x * k}" cy="${38 * k}" r="1.6" fill="none" stroke="${c}" stroke-width=".5"/>`;
+  s += `<g font-size="3" fill="#ff7ae6"><text x="${28 * k + 2}" y="${ROW_Y(0) * k + 1}">P1</text><text x="${269 * k - 2}" y="${ROW_Y(0) * k + 1}" text-anchor="end">C1</text>
+        <text x="${28 * k + 2}" y="${ROW_Y(19) * k + 1}">P20</text><text x="${269 * k - 2}" y="${ROW_Y(19) * k + 1}" text-anchor="end">C20</text></g>
+        <g font-size="2.8" fill="#ffffff"><text x="50" y="${38 * k + 6}" text-anchor="middle">lampes · y = 38</text>
+        <text x="${28 * k + 2}" y="60">x = 28</text><text x="${269 * k - 2}" y="60" text-anchor="end">x = 269</text>
+        <text x="50" y="${ROW_Y(0) * k + 1}" text-anchor="middle">1ʳᵉ rangée y = 76</text>
+        <text x="50" y="${ROW_Y(1) * k + 1}" text-anchor="middle">puis tous les 16,5</text></g>`;
+  set("fig-trace", s);
+})();
+
+// ---- Fig pieds (vue de dos) ----
+(() => {
+  const k = 0.3, W = 300 * k, H = 400 * k;
+  let s = `<g transform="translate(5 0)"><rect x="0" y="0" width="${W}" height="${H}" fill="#e5c79a" stroke="#7a5b2e" stroke-width=".4"/>`;
+  s += `<g fill="#c9a46c" stroke="#7a5b2e" stroke-width=".4"><rect x="0" y="0" width="${27 * k}" height="${H}"/><rect x="${W - 27 * k}" y="0" width="${27 * k}" height="${H}"/>
+        <rect x="${27 * k}" y="0" width="${W - 54 * k}" height="${27 * k}"/><rect x="${27 * k}" y="${H - 27 * k}" width="${W - 54 * k}" height="${27 * k}"/></g>`;
+  for (let i = 0; i < 20; i++) {
+    const y = ROW_Y(i) * k;
+    s += `<circle cx="${(300 - 28) * k}" cy="${y}" r=".9" fill="#555"/><circle cx="${(300 - 269) * k}" cy="${y}" r=".9" fill="#555"/>`;
+  }
+  s += `<g font-size="3.6" font-weight="bold"><text x="${(300 - 28) * k - 2}" y="${ROW_Y(5) * k}" text-anchor="end" fill="#d4169f">P</text>
+        <text x="${(300 - 269) * k + 2}" y="${ROW_Y(5) * k}" fill="#00a9c7">C</text></g>
+        <text x="${W / 2}" y="${H / 2}" font-size="3.6" text-anchor="middle" fill="#5d6275">DOS</text>
+        <text x="${W / 2}" y="${H / 2 + 5}" font-size="2.8" text-anchor="middle" fill="#5d6275">tasseaux 27 × 27</text></g>`;
+  set("fig-pieds", s);
+})();
+
+// ---- Douilles (étape 6) ----
+set("sockets", [14, 34, 54].map((x, i) => `
+  <rect x="${x - 7}" y="46" width="14" height="6" rx="1.5" fill="#2a2f40"/>
+  <rect x="${x - 3.5}" y="38" width="7" height="8" fill="#c9d1df" stroke="#6c7891" stroke-width=".3"/>
+  <circle cx="${x}" cy="31" r="6" fill="#fff6c8" stroke="#c99500" stroke-width=".5" opacity=".5"/>
+  <rect x="${x - 2}" y="52" width="4" height="8" fill="#fafbfd"/>
+  <path d="M${x - 1} 46 v14 M${x + 1} 46 v14" stroke="#d33" stroke-width=".5"/>
+  <text x="${x}" y="25" font-size="3.4" text-anchor="middle">L${i + 1}</text>`).join("") +
+  `<text x="34" y="66" font-size="3.4" text-anchor="middle">trou Ø 8 : passage des fils</text>`);
+
+// ---- Coupe d'une tige ----
+set("fig-tige", (() => {
+  const thread = (x1, x2) => Array.from({ length: Math.floor((x2 - x1) / 2.5) }, (_, k) => `<line x1="${x1 + k * 2.5}" y1="29" x2="${x1 + 1.2 + k * 2.5}" y2="33" stroke="#7d8698" stroke-width=".35"/>`).join("");
+  return `
+  <text x="2" y="8" font-size="4" font-weight="bold" fill="#00a9c7">AVANT</text>
+  <text x="178" y="8" font-size="4" font-weight="bold" fill="#d4169f" text-anchor="end">ARRIÈRE</text>
+  <!-- planche -->
+  <rect x="96" y="4" width="20" height="56" fill="#e5c79a" stroke="#7a5b2e" stroke-width=".4"/>
+  <rect x="96" y="4" width="1.5" height="56" fill="#14161f"/>
+  <rect x="96" y="29" width="20" height="4" fill="#fafbfd"/>
+  <!-- tige -->
+  <rect x="48" y="29" width="76" height="4" fill="#c9d1df" stroke="#6c7891" stroke-width=".3"/>
+  ${thread(49, 123)}
+  <!-- devant : rondelle + écrou -->
+  <rect x="94" y="23" width="1.6" height="16" fill="#8a93a8"/>
+  <rect x="88" y="24.5" width="6" height="13" fill="#9aa3b5" stroke="#6c7891" stroke-width=".3"/>
+  <!-- derrière : rondelle, œillet, rondelle, tête -->
+  <rect x="116.2" y="23" width="1.6" height="16" fill="#8a93a8"/>
+  <rect x="118" y="27.5" width="1.6" height="7" fill="#c87533"/>
+  <path d="M119 34.5 C 122 44, 132 48, 150 50" fill="none" stroke="#2563eb" stroke-width="2"/>
+  <rect x="119.8" y="23" width="1.6" height="16" fill="#8a93a8"/>
+  <rect x="121.6" y="25" width="5" height="12" rx="1" fill="#9aa3b5" stroke="#6c7891" stroke-width=".3"/>
+  <!-- pince fantôme -->
+  <g opacity=".55" transform="translate(54 31)"><path d="M-40 -4 H-22 L-19 -5 V5 L-22 4 H-40 Q-42 0 -40 -4Z" fill="#d4169f"/>
+    <path d="M-19 -5 L-4 -2.6 L1 -1 V-.2 L-19 -1.4Z M-19 5 L-4 2.6 L1 1 V.2 L-19 1.4Z" fill="#c9d1df" stroke="#6c7891" stroke-width=".3"/></g>
+  <g font-size="3.2">
+    <text x="93" y="47" text-anchor="end">écrou</text><text x="93" y="51" text-anchor="end">+ rondelle</text>
+    <text x="106" y="64.5" text-anchor="middle" fill="#5d6275">planche 10 mm</text>
+    <text x="122" y="20">tête de vis</text>
+    <text x="152" y="47">fil (œillet entre</text><text x="152" y="51">deux rondelles)</text>
+    <text x="70" y="25" text-anchor="middle" fill="#00a9c7">≈ 20 mm de tige</text>
+    <text x="22" y="44" fill="#d4169f">pince crocodile</text>
+  </g>`;
+})());
+
+// ---- Vue de dos : câblage des paires ----
+(() => {
+  const k = 0.32, W = 300 * k, H = 400 * k, xP = (300 - 28) * k, xC = (300 - 269) * k;
+  let s = `<g transform="translate(2 2)"><rect x="0" y="0" width="${W}" height="${H}" fill="#f0d8ae" stroke="#7a5b2e" stroke-width=".4"/>`;
+  const colors = ["#d33", "#2563eb", "#13a35a"];
+  for (let i = 0; i < 3; i++) {
+    const y1 = ROW_Y(i) * k, y2 = ROW_Y(WIRING[i] - 1) * k;
+    s += `<path d="M${xP} ${y1} C ${xP - 30} ${y1 + 4}, ${xC + 30} ${y2 - 4}, ${xC} ${y2}" fill="none" stroke="${colors[i]}" stroke-width=".9"/>`;
+  }
+  for (let i = 0; i < 20; i++) {
+    const y = ROW_Y(i) * k;
+    s += `<circle cx="${xP}" cy="${y}" r="1.4" fill="#9aa3b5" stroke="#555" stroke-width=".2"/><circle cx="${xC}" cy="${y}" r="1.4" fill="#9aa3b5" stroke="#555" stroke-width=".2"/>
+          <text x="${xP + 2.5}" y="${y + 1}" font-size="2.4" fill="#d4169f">P${i + 1}</text><text x="${xC - 2.5}" y="${y + 1}" font-size="2.4" fill="#00a9c7" text-anchor="end">C${i + 1}</text>`;
+  }
+  s += `<text x="${W / 2}" y="9" font-size="3.4" text-anchor="middle" font-weight="bold">VUE DE DOS</text>
+        <text x="${xC}" y="${ROW_Y(0) * k - 5}" font-size="2.8" text-anchor="middle" fill="#00a9c7">CAPITALES</text>
+        <text x="${xP}" y="${ROW_Y(0) * k - 5}" font-size="2.8" text-anchor="middle" fill="#d4169f">PAYS</text></g>`;
+  set("fig-dos", s);
+})();
+(() => {
+  let s = "<tr>" + [0, 1].map(() => "<th class='c'>Fil</th><th class='c'>Pays</th><th class='c'>Capitale</th><th class='c'>✓</th>").join("") + "</tr>";
+  for (let r = 0; r < 10; r++) {
+    s += "<tr>" + [r, r + 10].map(i => `<td class="c">${i + 1}</td><td class="c">P${i + 1}</td><td class="c">C${WIRING[i]}</td><td class="c">☐</td>`).join("") + "</tr>";
+  }
+  set("table-cablage", s);
+})();
+
+// ---- Circuit des lampes (vue de dos, haut de la planche) ----
+(() => {
+  // Vue de dos : x_dos = 300 - x_face. Échelle horizontale 0,58, verticale 0,95.
+  const X = x => (300 - x) * 0.58 + 4, Y = y => y * 0.95 + 4, W = 300 * 0.58;
+  const yl = Y(40), sw = X(272), bx = X(150), by = Y(82), dA = X(40), dB = X(235), dy = Y(62);
+  let s = `<rect x="4" y="4" width="${W}" height="${Y(96) - 4}" fill="#f0d8ae" stroke="#7a5b2e" stroke-width=".4"/>
+           <rect x="4" y="4" width="${W}" height="${27 * .95}" fill="#c9a46c" opacity=".7"/>
+           <text x="${4 + W / 2}" y="${Y(16)}" font-size="3" text-anchor="middle" fill="#5d6275">tasseau du haut</text>`;
+  const t = x => [X(x) + 3.5, X(x) - 3.5];            // [borne côté droit, borne côté gauche] en vue de dos
+  const [l1r, l1l] = t(110), [l2r, l2l] = t(150), [l3r, l3l] = t(190);
+  const wire = (pts, c, n, tx, ty) => `<polyline points="${pts.map(p => p.join(",")).join(" ")}" fill="none" stroke="${c}" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/>` +
+    `<circle cx="${tx}" cy="${ty}" r="2.5" fill="#fff" stroke="${c}" stroke-width=".5"/><text x="${tx}" y="${ty + 1.15}" font-size="3" text-anchor="middle" fill="${c}" font-weight="bold">${n}</text>`;
+  s += wire([[bx - 4, by - 5], [bx - 4, Y(74)], [sw + 6, Y(74)], [sw + 6, yl + 2.5], [sw, yl + 2.5]], "#d33", "①", (bx + sw) / 2, Y(74));
+  s += wire([[sw, yl - 2.5], [sw - 2, yl - 2.5], [sw - 2, Y(33)], [l1r, Y(33)], [l1r, yl]], "#2563eb", "②", (sw + l1r) / 2, Y(33));
+  s += wire([[l1l, yl], [l1l, Y(49)], [l2r, Y(49)], [l2r, yl]], "#2563eb", "③", (l1l + l2r) / 2, Y(49));
+  s += wire([[l2l, yl], [l2l, Y(49)], [l3r, Y(49)], [l3r, yl]], "#2563eb", "④", (l2l + l3r) / 2, Y(49));
+  s += wire([[l3l, yl], [l3l, dy], [dB + 3, dy]], "#2563eb", "⑤", (l3l + dB) / 2 + 2, dy);
+  s += wire([[bx + 4, by - 5], [bx + 4, Y(74)], [dA, Y(74)], [dA, dy + 2.5]], "#111", "⑥", (bx + dA) / 2, Y(74));
+  // douilles, interrupteur, sorties, dominos, pile
+  for (const [x, n] of [[110, 1], [150, 2], [190, 3]]) s += `<rect x="${X(x) - 6}" y="${yl - 4}" width="12" height="8" rx="1.5" fill="#2a2f40"/>
+       <circle cx="${X(x) - 3.5}" cy="${yl}" r="1.3" fill="#c9d1df"/><circle cx="${X(x) + 3.5}" cy="${yl}" r="1.3" fill="#c9d1df"/>
+       <text x="${X(x)}" y="${yl + 1.1}" font-size="2.8" text-anchor="middle" fill="#ffd76a" font-weight="bold">L${n}</text>`;
+  s += `<rect x="${sw - 3.5}" y="${yl - 5}" width="7" height="10" rx="1" fill="#2a2f40"/>
+        <circle cx="${sw}" cy="${yl - 2.5}" r="1" fill="#c9a46c"/><circle cx="${sw}" cy="${yl + 2.5}" r="1" fill="#c9a46c"/>`;
+  for (const [x, c] of [[dA, "#d4169f"], [dB, "#00a9c7"]]) {
+    s += `<circle cx="${x}" cy="${yl}" r="2.2" fill="#fff" stroke="#555" stroke-width=".4"/>
+          <path d="M${x} ${dy - 2.5} V${yl + 2.2}" stroke="${c}" stroke-width="1.8"/>
+          <rect x="${x - 3}" y="${dy - 2.5}" width="6" height="5" fill="#f2f2f2" stroke="#888" stroke-width=".4"/>`;
+  }
+  s += `<rect x="${bx - 9}" y="${by - 5}" width="18" height="12" rx="1.5" fill="#2a2f40"/><rect x="${bx - 3}" y="${by - 5}" width="6" height="12" fill="#e39b00"/>
+        <text x="${bx}" y="${by + 2.4}" font-size="3.4" text-anchor="middle" font-weight="bold">9V</text>
+        <text x="${bx - 8}" y="${by - 6}" font-size="3" fill="#d33" font-weight="bold">+</text><text x="${bx + 6}" y="${by - 6}" font-size="3" font-weight="bold">−</text>`;
+  s += `<g font-size="2.9">
+     <text x="${sw}" y="${yl + 9}" text-anchor="middle">interr.</text>
+     <text x="${dB + 4.5}" y="${dy + 6.5}" fill="#00a9c7">domino → câble B</text>
+     <text x="${dA - 4.5}" y="${dy - 4}" text-anchor="end" fill="#d4169f">domino → câble A</text>
+     <text x="${dB}" y="${yl - 3.5}" text-anchor="middle" fill="#00a9c7">sortie B</text>
+     <text x="${dA}" y="${yl - 3.5}" text-anchor="middle" fill="#d4169f">sortie A</text>
+     <text x="${bx + 12}" y="${by + 3}">pile 9 V (velcro)</text>
+  </g>`;
+  set("fig-lampes", s);
+})();
+
+// ---- Pinces ----
+set("fig-pinces", `
+  <g>
+    <text x="2" y="6" font-size="3.8" font-weight="bold">a. Nœud d'arrêt</text>
+    <rect x="18" y="12" width="8" height="44" fill="#e5c79a" stroke="#7a5b2e" stroke-width=".4"/><rect x="18" y="12" width="1.2" height="44" fill="#14161f"/>
+    <rect x="18" y="31" width="8" height="4" fill="#fafbfd"/>
+    <path d="M2 33 H40" stroke="#d4169f" stroke-width="2.2"/>
+    <circle cx="31" cy="33" r="3" fill="none" stroke="#d4169f" stroke-width="2"/>
+    <text x="8" y="62" font-size="3">avant</text><text x="30" y="62" font-size="3">arrière</text>
+    <text x="31" y="26" font-size="3" text-anchor="middle">nœud</text>
+  </g>
+  <g transform="translate(48 0)">
+    <text x="0" y="6" font-size="3.8" font-weight="bold">b. Gaine puis dénuder</text>
+    <path d="M0 33 H24" stroke="#d4169f" stroke-width="2.2"/>
+    <path d="M6 28 H18 L20 29 V37 L18 38 H6 Q4 33 6 28Z" fill="#d4169f" opacity=".6"/>
+    <g stroke="#c87533" stroke-width=".4"><line x1="24" y1="32.3" x2="31" y2="32.3"/><line x1="24" y1="33" x2="31" y2="33"/><line x1="24" y1="33.7" x2="31" y2="33.7"/></g>
+    <text x="27" y="42" font-size="3" text-anchor="middle">1 cm</text>
+    <text x="12" y="25" font-size="3" text-anchor="middle">gaine enfilée</text>
+  </g>
+  <g transform="translate(92 0)">
+    <text x="0" y="6" font-size="3.8" font-weight="bold">c. Serrer sous la vis</text>
+    <path d="M0 33 H12" stroke="#d4169f" stroke-width="2.2"/>
+    <path d="M12 30 L38 31.5 L44 32.6 V33.4 L38 34.5 L12 36 Z" fill="#c9d1df" stroke="#6c7891" stroke-width=".3"/>
+    <circle cx="17" cy="33" r="2" fill="#9aa3b5" stroke="#555" stroke-width=".3"/><line x1="15.6" y1="33" x2="18.4" y2="33" stroke="#555" stroke-width=".4"/>
+    <text x="17" y="26" font-size="3" text-anchor="middle">vis de la pince</text>
+  </g>
+  <g transform="translate(140 0)">
+    <text x="0" y="6" font-size="3.8" font-weight="bold">d. Remettre la gaine</text>
+    <path d="M0 33 H6" stroke="#d4169f" stroke-width="2.2"/>
+    <path d="M6 28 H22 L26 27 V39 L22 38 H6 Q4 33 6 28Z" fill="#d4169f"/>
+    <path d="M26 30 L34 31.5 L38 32.6 V33.4 L34 34.5 L26 36 Z" fill="#c9d1df" stroke="#6c7891" stroke-width=".3"/>
+  </g>
+`);
+
+// ---- Tests ----
+(() => {
+  const panel = (ox, title, on, pa, pb, note) => {
+    let s = `<g transform="translate(${ox} 0)"><text x="27" y="5" font-size="3.6" text-anchor="middle" font-weight="bold">${title}</text>
+      <rect x="2" y="8" width="50" height="46" rx="1.5" fill="#14161f"/>`;
+    [16, 27, 38].forEach(x => {
+      if (on) s += `<circle cx="${x}" cy="15" r="6" fill="#ffd76a" opacity=".35"/>`;
+      s += `<circle cx="${x}" cy="15" r="3.2" fill="${on ? "#ffe680" : "#3a3f52"}" stroke="#9aa3b5" stroke-width=".4"/>`;
+    });
+    for (let r = 0; r < 4; r++) {
+      s += `<circle cx="9" cy="${26 + r * 7}" r="1.4" fill="#9aa3b5"/><circle cx="45" cy="${26 + r * 7}" r="1.4" fill="#9aa3b5"/>
+            <rect x="12" y="${24.5 + r * 7}" width="12" height="3" fill="none" stroke="#2de2ff" stroke-width=".3"/>
+            <rect x="30" y="${24.5 + r * 7}" width="12" height="3" fill="none" stroke="#ff2bd6" stroke-width=".3"/>`;
+    }
+    const clipAt = (x, y, dir, c) => `<g transform="translate(${x} ${y}) scale(${dir} 1)"><path d="M-10 -1.6 H-4 L-3 -2 V2 L-4 1.6 H-10Z" fill="${c}"/><path d="M-3 -2 L0 -.5 V.5 L-3 2Z" fill="#c9d1df"/></g>`;
+    s += clipAt(pa[0], pa[1], 1, "#d4169f") + clipAt(pb[0], pb[1], -1, "#00a9c7");
+    s += `<text x="27" y="60" font-size="3.2" text-anchor="middle" fill="${on ? "#13a35a" : "#d33"}" font-weight="bold">${note}</text></g>`;
+    return s;
+  };
+  set("fig-tests",
+    panel(0, "1 · Pinces ensemble", true, [26, 47], [28, 47], "3 lampes allumées") +
+    panel(63, "2 · Bonne paire", true, [9, 33], [45, 47], "allumé") +
+    panel(126, "3 · Deux voisins", false, [9, 26], [9, 33], "éteint"));
+})();
+
+// ---- Annexe ----
+(() => {
+  const caps = []; PAIRS.forEach((p, i) => { caps[WIRING[i] - 1] = p[1]; });
+  let s = "<tr><th class='c'>Fil</th><th>Tige pays</th><th>Pays (grille 0)</th><th>Tige capitale</th><th>Capitale (grille 0)</th><th class='c'>Testé</th></tr>";
+  PAIRS.forEach((p, i) => { s += `<tr><td class="c">${i + 1}</td><td>P${i + 1}</td><td>${p[0]}</td><td>C${WIRING[i]}</td><td>${p[1]}</td><td class="c">☐</td></tr>`; });
+  set("annexe", s);
+})();
+document.fonts.ready.then(() => document.body.dataset.ready = "1");
+</script>
+</body>
+</html>
