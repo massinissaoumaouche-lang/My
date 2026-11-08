@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>مخطط 9 فولت</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Cairo, Arial, sans-serif; color: #1a1a1a; background: #e9e9e9; }
+  .sheet { width: min(210mm, calc(100% - 32px)); margin: 16px auto; padding: 10mm; background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,.2); }
+  .sheet svg { display: block; width: 100%; height: auto; margin: 0 auto; }
+  .sheet svg.schema { width: 80%; }
+  .sheet svg.plan { width: 56%; }
+  h1 { font-size: 16pt; margin: 0 0 1mm; }
+  h2 { font-size: 11.5pt; margin: 3mm 0 1mm; }
+  p, li { font-size: 9.5pt; line-height: 1.35; margin: 1mm 0; }
+  ul, ol { padding-inline-start: 6mm; padding-inline-end: 0; margin: 1mm 0; }
+  table { border-collapse: collapse; width: 100%; font-size: 8.6pt; }
+  th, td { border: 1px solid #999; padding: .3mm 1.5mm; text-align: start; line-height: 1.35; }
+  td.c, th.c { text-align: center; white-space: nowrap; }
+  .sheet svg { direction: ltr; }
+  svg text { font-family: Cairo, Arial, sans-serif; }
+  code, bdi.n { direction: ltr; unicode-bidi: isolate; white-space: nowrap; }
+  p, li { font-size: 9pt; line-height: 1.42; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; }
+  @page { size: A4 portrait; margin: 0; }
+  @media print {
+    body { background: #fff; }
+    .sheet { width: 210mm; height: 297mm; margin: 0; box-shadow: none; break-after: page; }
+  }
+</style>
+</head>
+<body>
+
+<section class="sheet">
+  <h1>دائرة العواصم — نسخة 9 فولت، ثلاثة مصابيح</h1>
+  <p>لوح 30 × 40 سم · 40 قضيبًا (20 بلدًا و20 عاصمة) · بطارية 9 فولت · قاطع تشغيل/إيقاف · 3 مصابيح على التوالي · كابلان مرنان.</p>
+
+  <h2>المخطط الكهربائي</h2>
+  <svg class="schema" viewBox="0 0 190 127" width="190mm" height="127mm" font-family="Arial" font-size="3.4">
+    <g fill="none" stroke="#1a1a1a" stroke-width=".5">
+      <!-- pile 9 V -->
+      <line x1="14" y1="14" x2="14" y2="56"/><line x1="8" y1="56" x2="20" y2="56"/>
+      <line x1="11" y1="61" x2="17" y2="61"/><line x1="14" y1="61" x2="14" y2="116"/>
+      <!-- interrupteur S1 -->
+      <line x1="14" y1="14" x2="30" y2="14"/>
+      <line x1="31" y1="14" x2="42" y2="8"/>
+      <line x1="44" y1="14" x2="58" y2="14"/>
+      <!-- lampes L1 L2 L3 en série -->
+      <circle cx="65" cy="14" r="6"/><line x1="60.8" y1="9.8" x2="69.2" y2="18.2"/><line x1="69.2" y1="9.8" x2="60.8" y2="18.2"/>
+      <line x1="71" y1="14" x2="83" y2="14"/>
+      <circle cx="89" cy="14" r="6"/><line x1="84.8" y1="9.8" x2="93.2" y2="18.2"/><line x1="93.2" y1="9.8" x2="84.8" y2="18.2"/>
+      <line x1="95" y1="14" x2="107" y2="14"/>
+      <circle cx="113" cy="14" r="6"/><line x1="108.8" y1="9.8" x2="117.2" y2="18.2"/><line x1="117.2" y1="9.8" x2="108.8" y2="18.2"/>
+      <line x1="119" y1="14" x2="182" y2="14"/>
+      <!-- câble B (côté lampes) vers une tige capitale -->
+      <line x1="182" y1="14" x2="182" y2="74" stroke-width=".9"/>
+      <line x1="182" y1="74" x2="172" y2="74" stroke-width=".9"/>
+      <!-- câble A (côté pile −) vers une tige pays -->
+      <line x1="14" y1="116" x2="34" y2="116"/>
+      <line x1="34" y1="116" x2="34" y2="42" stroke-width=".9"/>
+      <line x1="34" y1="42" x2="44" y2="42" stroke-width=".9"/>
+      <!-- planche -->
+      <rect x="48" y="30" width="122" height="80" stroke-dasharray="2 1.2"/>
+      <!-- fils derrière la planche (exemples) -->
+      <line x1="62" y1="42" x2="156" y2="74" stroke="#c0392b" stroke-width=".8"/>
+      <line x1="62" y1="52" x2="156" y2="52" stroke="#2471a3"/>
+      <line x1="62" y1="62" x2="156" y2="63" stroke="#1e8449"/>
+      <line x1="62" y1="86" x2="156" y2="42" stroke="#b9770e"/>
+    </g>
+    <!-- pinces crocodile -->
+    <g fill="#1a1a1a">
+      <polygon points="44,40 49,42 44,44"/><polygon points="172,72 167,74 172,76"/>
+      <circle cx="14" cy="14" r=".8"/><circle cx="14" cy="116" r=".8"/>
+    </g>
+    <!-- tiges -->
+    <g fill="#777" stroke="#1a1a1a" stroke-width=".3">
+      <circle cx="60" cy="42" r="2"/><circle cx="60" cy="52" r="2"/><circle cx="60" cy="62" r="2"/><circle cx="60" cy="86" r="2"/>
+      <circle cx="158" cy="42" r="2"/><circle cx="158" cy="52" r="2"/><circle cx="158" cy="63" r="2"/><circle cx="158" cy="74" r="2"/>
+    </g>
+    <g fill="#1a1a1a">
+      <text x="2" y="55">+</text><text x="2" y="65">−</text>
+      <text x="6" y="72" text-anchor="middle">بطارية</text><text x="6" y="77" text-anchor="middle">9V</text>
+      <text x="37" y="22" text-anchor="middle" direction="rtl">S1 قاطع تشغيل/إيقاف</text>
+      <text x="65" y="26" text-anchor="middle">L1</text><text x="89" y="26" text-anchor="middle">L2</text><text x="113" y="26" text-anchor="middle">L3</text>
+      <text x="89" y="5" text-anchor="middle" direction="rtl">3 مصابيح متطابقة 3,5V 0,2A (≈ 3V لكل مصباح)</text>
+      <text x="132" y="22" text-anchor="middle" direction="rtl">الكابل B</text>
+      <text x="24" y="113" text-anchor="middle" direction="rtl">الكابل A</text>
+      <g font-size="3">
+        <text x="63" y="39.5">P1</text><text x="63" y="49.5">P2</text><text x="63" y="59.5">P3</text>
+        <text x="60" y="76" text-anchor="middle">⋮</text><text x="63" y="92">P20</text>
+        <text x="155" y="39.5" text-anchor="end">C9</text><text x="155" y="49.5" text-anchor="end">C11</text>
+        <text x="155" y="60.5" text-anchor="end">C15</text><text x="155" y="80" text-anchor="end">C17</text>
+        <text x="158" y="88" text-anchor="middle">⋮</text>
+        <text x="109" y="100" text-anchor="middle" direction="rtl">اللوح: 20 سلكًا منفصلًا، سلك لكل زوج بلد ← عاصمة (الجدول في الصفحة 2)</text>
+        <text x="109" y="105.5" text-anchor="middle" fill="#555" direction="rtl">مثال: A على P1 (فرنسا) + B على C17 (باريس) ← تضيء المصابيح الثلاثة</text>
+      </g>
+      <g font-size="3.2">
+        <text x="189" y="121.5" text-anchor="start" direction="rtl">حلقة واحدة: + البطارية ← S1 ← L1 ← L2 ← L3 ← الكابل B ← قضيب العاصمة ← السلك المخفي ← قضيب البلد ← الكابل A ← − البطارية.</text>
+        <text x="189" y="125.8" text-anchor="start" direction="rtl">زوج خاطئ: تبقى الحلقة مفتوحة وتبقى المصابيح مطفأة.</text>
+      </g>
+    </g>
+  </svg>
+
+  <h2>ما يجب معرفته عن هذا التركيب</h2>
+  <ul>
+    <li><b>اختيار المصابيح.</b> على التوالي، تتقاسم المصابيح الثلاثة 9 فولت: نحو 3 فولت لكل مصباح. لذلك يلزم 3 مصابيح
+        <b>متطابقة</b> بقوة 3,5 فولت (أو 3,8 فولت) وقاعدة E10. المصابيح ذات 6 أو 9 فولت تبقى شبه مطفأة، والمصابيح ذات 1,5 أو 2,5 فولت تحترق.</li>
+    <li><b>التوالي = الكل أو لا شيء.</b> التيار نفسه (≈ 0,18 أمبير) يمرّ في المصابيح الثلاثة. إذا كان مصباح غير مشدود أو محترقًا، تبقى <b>الثلاثة</b> مطفأة.</li>
+    <li><b>القاطع</b> مفيد خاصة عند التخزين: ما دام الكابلان لا يتلامسان فلا استهلاك. وهو يمنع إفراغ البطارية إذا تلامس الملقطان في درج.</li>
+    <li><b>مدة التشغيل.</b> تكفي بطارية 9 فولت لنحو ساعة إلى ساعتين من الإضاءة، أي مئات الإجابات الصحيحة. علبة من 6 بطاريات AA (9 فولت أيضًا) تدوم نحو 5 مرات أكثر.</li>
+    <li><b>السلامة.</b> 9 فولت لا خطر فيها على الطفل. المصابيح تحدّ من التيار: الملقطان متلامسان يضيئان المصابيح فقط.
+        لا تصل كابلًا مباشرة بالبطارية دون المرور بالمصابيح (قصر في الدائرة: تسخن البطارية والأسلاك).</li>
+    <li><b>القضبان.</b> براغي <bdi class="n">M4 × 35</bdi> مم تدخل من الخلف: السلك مشدود تحت الرأس والصامولة مشدودة من الأمام. الجزء الملولب البارز (≈ 2 سم) هو القضيب الذي يُمسك عليه ملقط التمساح.</li>
+  </ul>
+
+  <h2>المواد</h2>
+  <table>
+    <tr><th>العدد</th><th>العنصر</th><th>تفاصيل</th></tr>
+    <tr><td class="c">1</td><td>لوح خشب رقائقي 30 × 40 سم، سمك 10 مم</td><td>+ 4 أرجل 20 × 20 × 30 مم في الزوايا</td></tr>
+    <tr><td class="c">40</td><td>براغي <bdi class="n">M4 × 35</bdi> مم + 40 صامولة + 80 حلقة</td><td>القضبان الأربعون؛ ثقب قطره 4 مم</td></tr>
+    <tr><td class="c">3</td><td>مصابيح 3,5 فولت 0,2 أمبير بقاعدة E10 + 3 قواعد E10 على حامل</td><td>متطابقة، موصولة على التوالي</td></tr>
+    <tr><td class="c">1</td><td>قاطع تشغيل/إيقاف</td><td>الثقب حسب النوع</td></tr>
+    <tr><td class="c">1</td><td>بطارية 9 فولت + مشبك 9 فولت</td><td>السلك الأحمر = +، السلك الأسود = −</td></tr>
+    <tr><td class="c">2</td><td>كابلان مرنان 1 م + ملقطا تمساح</td><td>الكابلان A وB؛ عقدة خلف اللوح ضد الشدّ</td></tr>
+    <tr><td class="c">12 م</td><td>سلك توصيل 0,5 مم²</td><td>20 سلكًا طول كل منها 45 سم + توصيلات المصابيح</td></tr>
+  </table>
+</section>
+
+<section class="sheet">
+  <h1>مخطط اللوح والتوصيل</h1>
+  <p>منظر أمامي، رسم مصغّر (ليس بالمقياس على الورق). المقاسات بالمليمتر من الزاوية العليا اليسرى.
+     كل المواقع مطابقة لـ <code>gabarits-A3.pdf</code> (بمقياس 1:1). البطاقات تُلصق حسب <code>etiquettes-AR.pdf</code>.</p>
+  <svg id="plan" class="plan" viewBox="-14 -8 330 432" width="150mm" height="196mm" font-family="Cairo, Arial"></svg>
+  <h2>جدول التوصيل (خلف اللوح)</h2>
+  <div class="cols">
+    <table id="t1"></table>
+    <table id="t2"></table>
+  </div>
+  <p>ترتيب توصيل المصابيح تحت اللوح: السلك الأحمر (+) للمشبك ← S1 ← L1 ← L2 ← L3 ← الكابل B. السلك الأسود (−) للمشبك ← الكابل A.
+     الاختبار: القاطع على التشغيل، الملقطان متلامسان ← تضيء المصابيح الثلاثة؛ ثم الأزواج الصحيحة العشرون ← إضاءة؛ قضيبان متجاوران ← مطفأة.</p>
+</section>
+
+<script>
+// Même câblage que gabarit.html : WIRING[i] = capitale reliée au pays P(i+1).
+const WIRING = [17, 11, 15, 20, 10, 13, 19, 12, 16, 1, 7, 4, 18, 6, 2, 8, 3, 14, 5, 9];
+const ROW_Y = i => 76 + i * 16.5, X_P = 28, X_C = 269;
+const NS = "http://www.w3.org/2000/svg";
+const svg = document.getElementById("plan");
+function el(tag, a, text) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in a) e.setAttribute(k, a[k]);
+  if (text != null) e.textContent = text;
+  svg.appendChild(e);
+  return e;
+}
+el("rect", { x: 0, y: 0, width: 300, height: 400, fill: "#f6efe3", stroke: "#1a1a1a", "stroke-width": 1 });
+el("text", { x: 150, y: -2, "font-size": 7, "text-anchor": "middle" }, "300 mm");
+el("text", { x: -4, y: 200, "font-size": 7, "text-anchor": "middle", transform: "rotate(-90 -4 200)" }, "400 mm");
+// Bandeau titre et pieds (dessous, en pointillé)
+el("rect", { x: 60, y: 5, width: 180, height: 16, fill: "none", stroke: "#7a6a4f", "stroke-width": .6, "stroke-dasharray": "2 1.5" });
+el("text", { x: 150, y: 16, "font-size": 8, "text-anchor": "middle", fill: "#7a6a4f", "font-weight": "bold" }, "دائرة العواصم");
+for (const [x, y] of [[0, 0], [280, 0], [0, 380], [280, 380]])
+  el("rect", { x, y, width: 20, height: 20, fill: "none", stroke: "#7a6a4f", "stroke-width": .5, "stroke-dasharray": "1.5 1.5" });
+// En-tête : sorties de câbles, lampes, interrupteur
+const parts = [
+  [40, 38, 4, "الكابل A"], [110, 38, 9, "L1"], [150, 38, 9, "L2"], [190, 38, 9, "L3"],
+  [235, 38, 4, "الكابل B"], [272, 38, 6, "S1"]
+];
+for (const [x, y, r, label] of parts) {
+  el("circle", { cx: x, cy: y, r, fill: label[0] === "L" ? "#fff6c8" : "#fff", stroke: "#1a1a1a", "stroke-width": .8 });
+  el("text", { x, y: label.startsWith("الكابل") ? y - r - 3 : y + r + 9, "font-size": 7, "text-anchor": "middle", direction: "rtl" }, label);
+}
+for (let i = 0; i < 20; i++) {
+  const y = ROW_Y(i);
+  el("circle", { cx: X_P, cy: y, r: 3.5, fill: "#888", stroke: "#1a1a1a", "stroke-width": .6 });
+  el("circle", { cx: X_C, cy: y, r: 3.5, fill: "#888", stroke: "#1a1a1a", "stroke-width": .6 });
+  el("text", { x: X_P + 8, y: y + 2.5, "font-size": 7 }, "P" + (i + 1));
+  el("text", { x: X_C - 8, y: y + 2.5, "font-size": 7, "text-anchor": "end" }, "C" + (i + 1));
+  el("rect", { x: 45, y: y - 7, width: 55.6, height: 14, fill: "none", stroke: "#b8a98c", "stroke-width": .5, "stroke-dasharray": "2 1.5" });
+  el("rect", { x: 196.4, y: y - 7, width: 55.6, height: 14, fill: "none", stroke: "#b8a98c", "stroke-width": .5, "stroke-dasharray": "2 1.5" });
+}
+el("text", { x: 150, y: 220, "font-size": 7, "text-anchor": "middle", fill: "#7a6a4f" }, "الخانات المنقطة:");
+el("text", { x: 150, y: 229, "font-size": 7, "text-anchor": "middle", fill: "#7a6a4f" }, "أسماء البلدان والعواصم");
+for (const x of [45, 196.4]) el("rect", { x, y: 52, width: 55.6, height: 14, fill: "none", stroke: "#7a6a4f", "stroke-width": .6, "stroke-dasharray": "2 1.5" });
+el("text", { x: 72.8, y: 62, "font-size": 8, "font-weight": "bold", "text-anchor": "middle" }, "البلدان");
+el("text", { x: 224.2, y: 62, "font-size": 8, "font-weight": "bold", "text-anchor": "middle" }, "العواصم");
+// Cotes
+const cote = (x1, y1, x2, y2, t, tx, ty) => {
+  el("line", { x1, y1, x2, y2, stroke: "#c0392b", "stroke-width": .5 });
+  el("text", { x: tx, y: ty, "font-size": 6, fill: "#c0392b", "text-anchor": "middle" }, t);
+};
+cote(0, 406, X_P, 406, "28", 14, 414);
+cote(X_P, 406, 45, 406, "17", 36.5, 414);
+cote(X_C, 406, 300, 406, "31", 284.5, 414);
+cote(10, 0, 10, ROW_Y(0), "76", 17, 58);
+cote(290, ROW_Y(0), 290, ROW_Y(1), "16,5", 302, ROW_Y(0) + 10);
+el("text", { x: 150, y: 414, "font-size": 6, "text-anchor": "middle", fill: "#c0392b" }, "صفّ كل 16,5 مم · قضبان قطرها 4 مم · المصابيح على 38 مم");
+
+const head = "<tr><th class='c'>السلك</th><th class='c'>قضيب البلد</th><th class='c'>قضيب العاصمة</th><th class='c'>مختبَر</th></tr>";
+const row = i => `<tr><td class="c">${i + 1}</td><td class="c">P${i + 1}</td><td class="c">C${WIRING[i]}</td><td class="c">☐</td></tr>`;
+document.getElementById("t1").innerHTML = head + [...Array(10).keys()].map(row).join("");
+document.getElementById("t2").innerHTML = head + [...Array(10).keys()].map(i => row(i + 10)).join("");
+</script>
+</body>
+</html>
