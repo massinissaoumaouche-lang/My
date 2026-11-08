@@ -12,7 +12,8 @@ sur le bouton **VALIDER** : LED verte + buzzer si la capitale est la bonne, LED 
 | `gabarit.html` | Outil à ouvrir dans un navigateur : choix du thème, nouvelle grille d'étiquettes, impression |
 | `gabarits-A3.pdf` | Gabarit de perçage face avant (version 9 V : tiges, lampes, interrupteur, sorties A/B, zones d'étiquettes) + plan de câblage face arrière avec les 4 pieds, échelle 1:1, format A3 |
 | `cablage-etiquettes-A4.pdf` | Tableau de câblage, schéma 9 V, tests, plan de pose et étiquettes de la grille « Monde » n° 0 |
-| `etiquettes-FR.pdf` / `etiquettes-AR.pdf` | **Étiquettes à imprimer** à 100 % : plan de pose + titre 180 × 16 mm, en-têtes 63 × 8 mm, 40 noms 63 × 14 mm (style néon) |
+| `etiquettes-FR.pdf` | **Étiquettes à imprimer** à 100 % : plan de pose + titre 180 × 16 mm, en-têtes 63 × 8 mm, 40 noms 63 × 14 mm (style néon) |
+| `etiquettes-AR.pdf` | Étiquettes arabes, style « cyberpunk avec trous » : page 1 les pays, page 2 les capitales. Chaque pièce (81 × 16 mm) porte un anneau Ø 16 à enfiler autour de la tige (disque central Ø 11 à découper, fente) et une étiquette 56 × 14 mm ; en-têtes de même taille |
 | `notice-montage.html` / `notice-montage.pdf` | **Notice de montage illustrée** de la version 9 V, de la planche nue aux tests (13 pages) |
 | `notice-montage-ar.html` / `notice-montage-ar.pdf` | Même notice **en arabe** (mise en page de droite à gauche, image de couverture `rendu/rendu-cyberpunk-ar.png`) |
 | `plan-cote.html` / `plan-cote.pdf` | **Plan coté** façon architecte (A3 paysage) : vue de face 1:2, coupe A-A, détail d'une tige 1:1, vue de dos 1:5, cartouche |

@@ -47,6 +47,18 @@
   table.cotes { border-collapse: collapse; width: 100%; font-size: 9.5pt; margin-top: 3mm; }
   table.cotes th, table.cotes td { border: 1px solid #999; padding: 1mm 2mm; text-align: left; }
   .plan { display: block; width: 150mm; height: 200mm; margin: 0 auto; }
+  /* style cyber : pièces 81 × 16 mm (anneau autour de la tige + piste + étiquette 56 × 14 mm) */
+  .cyberpage { display: none; }
+  body.style-cyber .cyberpage { display: block; }
+  body.style-cyber .planpage, body.style-cyber .labelspage { display: none !important; }
+  .cyberpage { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .cyberpage .note { font-size: 9.5pt; line-height: 1.45; margin: 0 0 3mm; }
+  .cyberpage .note.ar { font-family: Cairo, Arial, sans-serif; font-size: 10pt; }
+  .cyberpage .titlebox { display: flex; justify-content: center; margin: 2mm 0 4mm; }
+  .cyberpage .grid { display: grid; grid-template-columns: 81mm 81mm; grid-template-rows: repeat(11, 16mm);
+    grid-auto-flow: column; column-gap: 10mm; row-gap: 2.6mm; justify-content: center; }
+  .cyberpage .grid.rtl { direction: rtl; }
+  .cyberpage svg { display: block; }
 
   @page a3 { size: A3 portrait; margin: 0; }
   @page a4 { size: A4 portrait; margin: 0; }
@@ -68,7 +80,7 @@
     <select id="theme"></select>
   </label>
   <label>Style
-    <select id="style"><option value="neon">Néon (fond noir)</option><option value="clair">Clair (fond blanc)</option></select>
+    <select id="style"><option value="neon">Néon (fond noir)</option><option value="clair">Clair (fond blanc)</option><option value="cyber">Cyberpunk avec trous (pays / capitales sur 2 pages)</option></select>
   </label>
   <button id="shuffle">Nouvelle grille</button>
   <button data-print="a3">Imprimer les gabarits (A3)</button>
@@ -127,7 +139,7 @@
   </ol>
 </section>
 
-<section class="sheet a4">
+<section class="sheet a4 planpage">
   <h1>Plan de pose des étiquettes</h1>
   <p>Planche 300 × 400 mm vue de face, dessin à l'échelle 1:2. Cotes en mm depuis le coin <b>haut gauche</b>. Les étiquettes laissent libres le titre,
      les 3 lampes, l'interrupteur, les sorties A et B, et 5 mm autour de chaque tige pour la pince.</p>
@@ -141,12 +153,16 @@
   </table>
 </section>
 
-<section class="sheet a4">
+<section class="sheet a4 labelspage">
   <h1 id="cards-title">Étiquettes</h1>
   <p>Imprimer à <b>100 %</b> (taille réelle, pas « ajuster »). Contrôle : une étiquette de nom mesure 63 mm de large. Découpe, puis colle à la pâte adhésive
      selon le plan de pose : le code P… / C… dans le coin indique la tige.</p>
   <div class="labels" id="labels"></div>
 </section>
+
+<!-- Style « cyberpunk avec trous » : une page pour les pays, une page pour les capitales -->
+<section class="sheet a4 cyberpage" id="cyber-p"></section>
+<section class="sheet a4 cyberpage" id="cyber-c"></section>
 
 <script>
 // Câblage FIXE : WIRING[i] = numéro de la douille capitale reliée à la douille pays P(i+1).
@@ -338,6 +354,103 @@ function drawCards(themeKey, seed, style) {
   document.getElementById("info").textContent = label;
 }
 
+// ---------- Style « cyberpunk avec trous » ----------
+// Pièce de 81 × 16 mm, dessinée côté pays (anneau à gauche) puis retournée pour les capitales :
+// anneau Ø 16 centré sur la tige (x = 28 ou 269), piste de 9 mm, étiquette 56 × 14 mm (x = 45…101 ou 196…252).
+// Le disque central Ø 11 se découpe pour passer autour de l'écrou ; la fente permet d'enfiler la pièce sans démonter.
+const CY = "#2de2ff", MG = "#ff2bd6", BG = "#0b1024";
+const PW = 81, PH = 16, RC = 8, BOX = { x: 25, y: 1, w: 55.6, h: 14 }, CH = 2.6;
+const chamferPath = (x, y, w, h, c) => `M${x + c} ${y} H${x + w - c} L${x + w} ${y + c} V${y + h - c} L${x + w - c} ${y + h} H${x + c} L${x} ${y + h - c} V${y + c} Z`;
+function nameText(t, cx, cy, color, big) {
+  const ar = isArabic(t), label = ar ? t : t.toUpperCase();
+  let fs = ar ? (big ? 6.4 : 5.4) : (big ? 4.6 : 3.9);
+  const est = label.length * fs * (ar ? .5 : .78);
+  if (est > 50) fs *= 50 / est;
+  const font = ar ? "Cairo, Arial, sans-serif" : "Orbitron, Arial, sans-serif";
+  const y = cy + fs * (ar ? .32 : .36);
+  const common = `x="${cx}" y="${y}" font-family="${font}" font-weight="${ar ? 900 : 700}" font-size="${fs}" text-anchor="middle"${ar ? ' direction="rtl"' : ""}`;
+  return `<text ${common} fill="none" stroke="${color}" stroke-width=".7" opacity=".35">${label}</text><text ${common} fill="${color}">${label}</text>`;
+}
+function boxShapes(color, heavy) {
+  const { x, y, w, h } = BOX;
+  let s = `<path d="${chamferPath(x, y, w, h, CH)}" fill="${BG}" stroke="${color}" stroke-width="${heavy ? .7 : .5}"/>`;
+  s += `<path d="${chamferPath(x + 1.1, y + 1.1, w - 2.2, h - 2.2, CH - .6)}" fill="none" stroke="${color}" stroke-width=".15" opacity=".55"/>`;
+  // petits repères de coin
+  s += `<path d="M${x + w - 9} ${y + h - .6} h6" stroke="${color}" stroke-width=".5"/><path d="M${x + 3} ${y + .6} h6" stroke="${color}" stroke-width=".5"/>`;
+  return s;
+}
+function piece(kind, code, name) {
+  const color = kind === "p" ? CY : MG, flip = kind === "c";
+  let g = "";
+  // corps à découper : anneau, piste, étiquette
+  g += `<circle cx="${RC}" cy="8" r="8" fill="${BG}"/><rect x="13" y="6.4" width="13" height="3.2" fill="${BG}"/>`;
+  g += boxShapes(color);
+  g += `<circle cx="${RC}" cy="8" r="7.2" fill="none" stroke="${color}" stroke-width=".55"/>`;
+  g += `<circle cx="${RC}" cy="8" r="6.3" fill="none" stroke="${color}" stroke-width=".15" stroke-dasharray=".6 .5"/>`;
+  g += `<circle cx="${RC}" cy="8" r="5.5" fill="#fff" stroke="#bbb" stroke-width=".2" stroke-dasharray=".8 .6"/>`;
+  g += `<line x1="0" y1="8" x2="2.5" y2="8" stroke="#fff" stroke-width=".35" stroke-dasharray=".7 .4"/>`;
+  // piste lumineuse vers le trou
+  g += `<path d="M15.2 8 H18.6 L20.2 6.6 H25" fill="none" stroke="${color}" stroke-width="1.5" opacity=".28"/>`;
+  g += `<path d="M15.2 8 H18.6 L20.2 6.6 H25" fill="none" stroke="${color}" stroke-width=".5"/>`;
+  g += `<circle cx="15.2" cy="8" r=".75" fill="${color}"/><circle cx="25" cy="6.6" r=".65" fill="${color}"/>`;
+  const shapes = flip ? `<g transform="translate(${PW} 0) scale(-1 1)">${g}</g>` : g;
+  const cx = flip ? PW - (BOX.x + BOX.w / 2) : BOX.x + BOX.w / 2;
+  const codeX = flip ? PW - (BOX.x + 2.4) : BOX.x + 2.4;   // coin bas de l'étiquette, côté piste
+  const txt = nameText(name, cx, 8, color) +
+    `<text x="${codeX}" y="12.9" font-family="Arial, sans-serif" font-size="1.8" fill="#8a93a8" text-anchor="${flip ? "end" : "start"}">${code}</text>`;
+  return `<svg width="${PW}mm" height="${PH}mm" viewBox="0 0 ${PW} ${PH}">${shapes}${txt}</svg>`;
+}
+function headPiece(kind, name) {
+  const color = kind === "p" ? CY : MG, flip = kind === "c";
+  let g = boxShapes(color, true) +
+    `<path d="M13 8 H25" stroke="${color}" stroke-width=".5" stroke-dasharray="1.6 .8"/><circle cx="12.4" cy="8" r=".8" fill="none" stroke="${color}" stroke-width=".4"/>`;
+  const shapes = flip ? `<g transform="translate(${PW} 0) scale(-1 1)">${g}</g>` : g;
+  const cx = flip ? PW - (BOX.x + BOX.w / 2) : BOX.x + BOX.w / 2;
+  return `<svg width="${PW}mm" height="${PH}mm" viewBox="0 0 ${PW} ${PH}">${shapes}${nameText(name, cx, 8, color, true)}</svg>`;
+}
+function titlePiece(name) {
+  const W = 180, H = 16;
+  let s = `<path d="${chamferPath(0, 0, W, H, 3.5)}" fill="${BG}" stroke="${CY}" stroke-width=".7"/>`;
+  s += `<path d="${chamferPath(1.3, 1.3, W - 2.6, H - 2.6, 2.8)}" fill="none" stroke="${MG}" stroke-width=".2" stroke-dasharray="3 1 .6 1"/>`;
+  for (const [x, d] of [[8, 1], [W - 8, -1]])
+    s += `<path d="M${x} 8 h${d * 18} l${d * 2} -2.4 h${d * 10}" fill="none" stroke="${CY}" stroke-width=".45"/><circle cx="${x}" cy="8" r="1.1" fill="none" stroke="${CY}" stroke-width=".45"/>`;
+  const ar = isArabic(name);
+  const fs = ar ? 10 : 8;
+  const common = `x="${W / 2}" y="${8 + fs * (ar ? .32 : .36)}" font-family="${ar ? "Cairo" : "Orbitron"}, Arial, sans-serif" font-weight="900" font-size="${fs}" text-anchor="middle"${ar ? ' direction="rtl"' : ' letter-spacing="1.2"'}`;
+  s += `<text ${common} fill="none" stroke="${CY}" stroke-width="1" opacity=".35">${name}</text><text ${common} fill="#e8fdff">${name}</text>`;
+  return `<svg width="${W}mm" height="${H}mm" viewBox="0 0 ${W} ${H}">${s}</svg>`;
+}
+function drawCyber(themeKey, seed) {
+  const pairs = grid(themeKey, seed);
+  const caps = new Array(20);
+  pairs.forEach((p, i) => { caps[WIRING[i] - 1] = p[1]; });
+  const ar = themeKey === "monde_ar", ui = UI[ar ? "ar" : "fr"];
+  const T = ar ? {
+    hp: "البطاقات · البلدان", hc: "البطاقات · العواصم",
+    note: "اطبع بنسبة <b>100%</b> (عرض القطعة 81 مم). قصّ على حافة الشكل الأسود، ثم أزل الدائرة البيضاء في الوسط (قطرها 11 مم) واقطع الشق الأبيض الصغير. " +
+          "أدخل الحلقة حول القضيب من جهة الشق: البطاقة تأخذ مكانها وحدها. ثبّتها بعجينة لاصقة.",
+    tip: "العنوان في أعلى اللوح (بين 5 و21 مم من الحافة العليا)؛ رأس العمود فوق البطاقة الأولى مباشرة (بين 52 و66 مم).",
+  } : {
+    hp: "Étiquettes · PAYS", hc: "Étiquettes · CAPITALES",
+    note: "Imprimer à <b>100 %</b> (une pièce mesure 81 mm). Découper sur le bord noir, retirer le disque blanc central (Ø 11 mm) et couper la petite fente blanche. " +
+          "Enfiler l'anneau autour de la tige par la fente : l'étiquette se place toute seule. Fixer à la pâte adhésive.",
+    tip: "Titre en haut de la planche (y = 5 à 21 mm) ; en-tête de colonne juste au-dessus de la 1re étiquette (y = 52 à 66 mm).",
+  };
+  const dirAttr = ar ? ' dir="rtl"' : "";
+  const page = (head, items, title) =>
+    `<h1${dirAttr} style="${ar ? "font-family:Cairo,Arial,sans-serif" : ""}">${head} — ${THEMES[themeKey].name}, ${ar ? "الشبكة" : "grille"} ${seed}</h1>
+     <p class="note${ar ? " ar" : ""}"${dirAttr}>${T.note}</p>
+     <p class="note${ar ? " ar" : ""}"${dirAttr}>${T.tip}</p>
+     ${title ? `<div class="titlebox">${titlePiece(title)}</div>` : ""}
+     <div class="grid${ar ? " rtl" : ""}">${items.join("")}</div>`;
+  document.getElementById("cyber-p").innerHTML = page(T.hp,
+    [headPiece("p", ui.p), ...pairs.map((p, i) => piece("p", "P" + (i + 1), p[0]))], ui.title);
+  document.getElementById("cyber-c").innerHTML = page(T.hc,
+    [headPiece("c", ui.c), ...caps.map((c, i) => piece("c", "C" + (i + 1), c))], null);
+  const label = `${THEMES[themeKey].name} — grille n° ${seed}`;
+  document.getElementById("info").textContent = label;
+}
+
 // Plan de pose (vue de face, coordonnées en mm de la planche 300 × 400)
 function drawPlan() {
   const svg = document.getElementById("plan");
@@ -385,7 +498,7 @@ function readState() {
   const h = new URLSearchParams(location.hash.slice(1));
   const theme = THEMES[h.get("theme")] ? h.get("theme") : "monde";
   const seed = Number.isInteger(+h.get("grille")) && h.get("grille") !== null ? +h.get("grille") : 0;
-  const style = h.get("style") === "clair" ? "clair" : "neon";
+  const style = ["clair", "cyber"].includes(h.get("style")) ? h.get("style") : "neon";
   return { theme, seed, style };
 }
 const setState = st => { location.hash = `theme=${st.theme}&grille=${st.seed}&style=${st.style}`; };
@@ -393,7 +506,8 @@ function render() {
   const { theme, seed, style } = readState();
   document.getElementById("theme").value = theme;
   document.getElementById("style").value = style;
-  drawCards(theme, seed, style);
+  document.body.classList.toggle("style-cyber", style === "cyber");
+  if (style === "cyber") drawCyber(theme, seed); else drawCards(theme, seed, style);
 }
 
 const sel = document.getElementById("theme");
