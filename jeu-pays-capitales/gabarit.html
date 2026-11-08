@@ -54,11 +54,9 @@
   .cyberpage { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .cyberpage .note { font-size: 9.5pt; line-height: 1.45; margin: 0 0 3mm; }
   .cyberpage .note.ar { font-family: Cairo, Arial, sans-serif; font-size: 10pt; }
-  .cyberpage .titlebox { display: flex; justify-content: center; margin: 2mm 0 4mm; }
-  .cyberpage .grid { display: grid; grid-template-columns: 81mm 81mm; grid-template-rows: repeat(11, 16mm);
-    grid-auto-flow: column; column-gap: 10mm; row-gap: 2.6mm; justify-content: center; }
-  .cyberpage .grid.rtl { direction: rtl; }
-  .cyberpage svg { display: block; }
+  .cyberpage .titlebox { display: flex; justify-content: center; margin: 1mm 0 4mm; }
+  .cyberpage svg { display: block; margin: 0 auto; }
+  .cyberpage .bar { margin-top: 3mm; }
 
   @page a3 { size: A3 portrait; margin: 0; }
   @page a4 { size: A4 portrait; margin: 0; }
@@ -80,7 +78,7 @@
     <select id="theme"></select>
   </label>
   <label>Style
-    <select id="style"><option value="neon">Néon (fond noir)</option><option value="clair">Clair (fond blanc)</option><option value="cyber">Cyberpunk avec trous (pays / capitales sur 2 pages)</option></select>
+    <select id="style"><option value="neon">Néon (fond noir)</option><option value="clair">Clair (fond blanc)</option><option value="cyber">Cyberpunk en panneaux (pays et capitales en colonne, 4 pages)</option></select>
   </label>
   <button id="shuffle">Nouvelle grille</button>
   <button data-print="a3">Imprimer les gabarits (A3)</button>
@@ -161,8 +159,10 @@
 </section>
 
 <!-- Style « cyberpunk avec trous » : une page pour les pays, une page pour les capitales -->
-<section class="sheet a4 cyberpage" id="cyber-p"></section>
-<section class="sheet a4 cyberpage" id="cyber-c"></section>
+<section class="sheet a4 cyberpage" id="cyber-p1"></section>
+<section class="sheet a4 cyberpage" id="cyber-p2"></section>
+<section class="sheet a4 cyberpage" id="cyber-c1"></section>
+<section class="sheet a4 cyberpage" id="cyber-c2"></section>
 
 <script>
 // Câblage FIXE : WIRING[i] = numéro de la douille capitale reliée à la douille pays P(i+1).
@@ -354,12 +354,19 @@ function drawCards(themeKey, seed, style) {
   document.getElementById("info").textContent = label;
 }
 
-// ---------- Style « cyberpunk avec trous » ----------
-// Pièce de 81 × 16 mm, dessinée côté pays (anneau à gauche) puis retournée pour les capitales :
-// anneau Ø 16 centré sur la tige (x = 28 ou 269), piste de 9 mm, étiquette 56 × 14 mm (x = 45…101 ou 196…252).
-// Le disque central Ø 11 se découpe pour passer autour de l'écrou ; la fente permet d'enfiler la pièce sans démonter.
+// ---------- Style « cyberpunk en panneaux » ----------
+// Les étiquettes sont imprimées en colonne, à la position exacte qu'elles ont sur la planche (pas de 16,5 mm),
+// dans un cadre. On découpe le cadre : on obtient un panneau qui se pose d'un bloc sur la planche, chaque tige
+// passant dans son anneau. Chaque colonne tient sur 2 pages (rangées 1–10 et 11–20) qui se raccordent bord à bord.
+// Pièce locale de 81 × 16 mm, dessinée côté pays (anneau à gauche, centre en (8, 8)), retournée pour les capitales.
 const CY = "#2de2ff", MG = "#ff2bd6", BG = "#0b1024";
-const PW = 81, PH = 16, RC = 8, BOX = { x: 25, y: 1, w: 55.6, h: 14 }, CH = 2.6;
+const PW = 81, RC = 8, BOX = { x: 25, y: 1, w: 55.6, h: 14 }, CH = 2.6;
+const SEAM = (ROW_Y(9) + ROW_Y(10)) / 2;   // 232,75 : raccord entre les rangées 10 et 11
+const PANEL = {
+  p: { x0: 15, x1: 106, ring: X_P, at: X_P - RC },               // la pièce locale commence à 20
+  c: { x0: 191, x1: 282, ring: X_C, at: X_C + RC - PW },          // la pièce locale commence à 196
+  top: 49, bottom: 400,
+};
 const chamferPath = (x, y, w, h, c) => `M${x + c} ${y} H${x + w - c} L${x + w} ${y + c} V${y + h - c} L${x + w - c} ${y + h} H${x + c} L${x} ${y + h - c} V${y + c} Z`;
 function nameText(t, cx, cy, color, big) {
   const ar = isArabic(t), label = ar ? t : t.toUpperCase();
@@ -373,40 +380,30 @@ function nameText(t, cx, cy, color, big) {
 }
 function boxShapes(color, heavy) {
   const { x, y, w, h } = BOX;
-  let s = `<path d="${chamferPath(x, y, w, h, CH)}" fill="${BG}" stroke="${color}" stroke-width="${heavy ? .7 : .5}"/>`;
-  s += `<path d="${chamferPath(x + 1.1, y + 1.1, w - 2.2, h - 2.2, CH - .6)}" fill="none" stroke="${color}" stroke-width=".15" opacity=".55"/>`;
-  // petits repères de coin
-  s += `<path d="M${x + w - 9} ${y + h - .6} h6" stroke="${color}" stroke-width=".5"/><path d="M${x + 3} ${y + .6} h6" stroke="${color}" stroke-width=".5"/>`;
-  return s;
+  return `<path d="${chamferPath(x, y, w, h, CH)}" fill="${BG}" stroke="${color}" stroke-width="${heavy ? .7 : .5}"/>` +
+    `<path d="${chamferPath(x + 1.1, y + 1.1, w - 2.2, h - 2.2, CH - .6)}" fill="none" stroke="${color}" stroke-width=".15" opacity=".55"/>` +
+    `<path d="M${x + w - 9} ${y + h - .6} h6" stroke="${color}" stroke-width=".5"/><path d="M${x + 3} ${y + .6} h6" stroke="${color}" stroke-width=".5"/>`;
 }
-function piece(kind, code, name) {
-  const color = kind === "p" ? CY : MG, flip = kind === "c";
-  let g = "";
-  // corps à découper : anneau, piste, étiquette
-  g += `<circle cx="${RC}" cy="8" r="8" fill="${BG}"/><rect x="13" y="6.4" width="13" height="3.2" fill="${BG}"/>`;
-  g += boxShapes(color);
+const flipLocal = (kind, g) => kind === "c" ? `<g transform="translate(${PW} 0) scale(-1 1)">${g}</g>` : g;
+const localX = (kind, x) => kind === "c" ? PW - x : x;
+function pieceInner(kind, code, name) {
+  const color = kind === "p" ? CY : MG;
+  let g = boxShapes(color);
   g += `<circle cx="${RC}" cy="8" r="7.2" fill="none" stroke="${color}" stroke-width=".55"/>`;
   g += `<circle cx="${RC}" cy="8" r="6.3" fill="none" stroke="${color}" stroke-width=".15" stroke-dasharray=".6 .5"/>`;
   g += `<circle cx="${RC}" cy="8" r="5.5" fill="#fff" stroke="#bbb" stroke-width=".2" stroke-dasharray=".8 .6"/>`;
-  g += `<line x1="0" y1="8" x2="2.5" y2="8" stroke="#fff" stroke-width=".35" stroke-dasharray=".7 .4"/>`;
-  // piste lumineuse vers le trou
   g += `<path d="M15.2 8 H18.6 L20.2 6.6 H25" fill="none" stroke="${color}" stroke-width="1.5" opacity=".28"/>`;
   g += `<path d="M15.2 8 H18.6 L20.2 6.6 H25" fill="none" stroke="${color}" stroke-width=".5"/>`;
   g += `<circle cx="15.2" cy="8" r=".75" fill="${color}"/><circle cx="25" cy="6.6" r=".65" fill="${color}"/>`;
-  const shapes = flip ? `<g transform="translate(${PW} 0) scale(-1 1)">${g}</g>` : g;
-  const cx = flip ? PW - (BOX.x + BOX.w / 2) : BOX.x + BOX.w / 2;
-  const codeX = flip ? PW - (BOX.x + 2.4) : BOX.x + 2.4;   // coin bas de l'étiquette, côté piste
-  const txt = nameText(name, cx, 8, color) +
-    `<text x="${codeX}" y="12.9" font-family="Arial, sans-serif" font-size="1.8" fill="#8a93a8" text-anchor="${flip ? "end" : "start"}">${code}</text>`;
-  return `<svg width="${PW}mm" height="${PH}mm" viewBox="0 0 ${PW} ${PH}">${shapes}${txt}</svg>`;
+  const codeX = localX(kind, BOX.x + 2.4);
+  return flipLocal(kind, g) + nameText(name, localX(kind, BOX.x + BOX.w / 2), 8, color) +
+    `<text x="${codeX}" y="12.9" font-family="Arial, sans-serif" font-size="1.8" fill="#8a93a8" text-anchor="${kind === "c" ? "end" : "start"}">${code}</text>`;
 }
-function headPiece(kind, name) {
-  const color = kind === "p" ? CY : MG, flip = kind === "c";
-  let g = boxShapes(color, true) +
+function headInner(kind, name) {
+  const color = kind === "p" ? CY : MG;
+  const g = boxShapes(color, true) +
     `<path d="M13 8 H25" stroke="${color}" stroke-width=".5" stroke-dasharray="1.6 .8"/><circle cx="12.4" cy="8" r=".8" fill="none" stroke="${color}" stroke-width=".4"/>`;
-  const shapes = flip ? `<g transform="translate(${PW} 0) scale(-1 1)">${g}</g>` : g;
-  const cx = flip ? PW - (BOX.x + BOX.w / 2) : BOX.x + BOX.w / 2;
-  return `<svg width="${PW}mm" height="${PH}mm" viewBox="0 0 ${PW} ${PH}">${shapes}${nameText(name, cx, 8, color, true)}</svg>`;
+  return flipLocal(kind, g) + nameText(name, localX(kind, BOX.x + BOX.w / 2), 8, color, true);
 }
 function titlePiece(name) {
   const W = 180, H = 16;
@@ -414,41 +411,87 @@ function titlePiece(name) {
   s += `<path d="${chamferPath(1.3, 1.3, W - 2.6, H - 2.6, 2.8)}" fill="none" stroke="${MG}" stroke-width=".2" stroke-dasharray="3 1 .6 1"/>`;
   for (const [x, d] of [[8, 1], [W - 8, -1]])
     s += `<path d="M${x} 8 h${d * 18} l${d * 2} -2.4 h${d * 10}" fill="none" stroke="${CY}" stroke-width=".45"/><circle cx="${x}" cy="8" r="1.1" fill="none" stroke="${CY}" stroke-width=".45"/>`;
-  const ar = isArabic(name);
-  const fs = ar ? 10 : 8;
+  const ar = isArabic(name), fs = ar ? 10 : 8;
   const common = `x="${W / 2}" y="${8 + fs * (ar ? .32 : .36)}" font-family="${ar ? "Cairo" : "Orbitron"}, Arial, sans-serif" font-weight="900" font-size="${fs}" text-anchor="middle"${ar ? ' direction="rtl"' : ' letter-spacing="1.2"'}`;
   s += `<text ${common} fill="none" stroke="${CY}" stroke-width="1" opacity=".35">${name}</text><text ${common} fill="#e8fdff">${name}</text>`;
   return `<svg width="${W}mm" height="${H}mm" viewBox="0 0 ${W} ${H}">${s}</svg>`;
 }
+// Cadre cyberpunk autour d'une portion de colonne (coordonnées de la planche).
+// Les décors intérieurs évitent le côté des anneaux et les bords de raccord, où les anneaux touchent presque le cadre.
+function frame(x0, y0, x1, y1, color, ringSide, seamTop, seamBottom) {
+  const w = x1 - x0, h = y1 - y0, c = 4, alt = color === CY ? MG : CY;
+  let s = `<path d="${chamferPath(x0, y0, w, h, c)}" fill="${BG}" stroke="${color}" stroke-width=".8"/>`;
+  const xl = ringSide === "left" ? x1 - 1.6 : x0 + 1.6;              // filet intérieur, côté étiquettes
+  s += `<line x1="${xl}" y1="${y0 + (seamTop ? 2 : 5.5)}" x2="${xl}" y2="${y1 - (seamBottom ? 2 : 5.5)}" stroke="${alt}" stroke-width=".22" stroke-dasharray="4 1.2 .7 1.2"/>`;
+  if (!seamTop) s += `<line x1="${x0 + 5.5}" y1="${y0 + 1.6}" x2="${x1 - 5.5}" y2="${y0 + 1.6}" stroke="${alt}" stroke-width=".22" stroke-dasharray="4 1.2 .7 1.2"/>`;
+  // équerres : complètes côté étiquettes, verticales seulement côté anneaux
+  for (const [x, y, dx, dy, top] of [[x0 + 2.6, y0 + 2.6, 1, 1, true], [x1 - 2.6, y0 + 2.6, -1, 1, true], [x0 + 2.6, y1 - 2.6, 1, -1, false], [x1 - 2.6, y1 - 2.6, -1, -1, false]]) {
+    const ringCorner = (ringSide === "left") === (dx > 0);
+    if ((top && seamTop) || (!top && seamBottom)) { if (!ringCorner) s += `<path d="M${x} ${y - dy * 2} V${y + dy * 7}" stroke="${color}" stroke-width="1"/>`; continue; }
+    s += ringCorner && !top ? `<path d="M${x} ${y} V${y + dy * 9}" stroke="${color}" stroke-width="1"/>`
+                            : `<path d="M${x + dx * 9} ${y} H${x} V${y + dy * 9}" fill="none" stroke="${color}" stroke-width="1"/>`;
+  }
+  return s;
+}
+// Repères hors du panneau : code de la portion, raccord entre les deux pages
+function outside(x0, y0, x1, y1, color, tag, seamTop, seamBottom, seamText) {
+  const tx = (x0 + x1) / 2;
+  let s = seamTop ? "" : `<text x="${tx}" y="${y0 - 2.2}" font-family="Arial, sans-serif" font-size="2.4" font-weight="bold" fill="${color}" text-anchor="middle">${tag}</text>`;
+  for (const [on, y, d] of [[seamTop, y0, -1], [seamBottom, y1, 1]]) if (on) {
+    for (const x of [x0 + (x1 - x0) * .2, x0 + (x1 - x0) * .8]) s += `<path d="M${x - 2} ${y + d * 3.2} l2 ${-d * 2.6} l2 ${d * 2.6} Z" fill="${color}"/>`;
+    s += `<text x="${tx}" y="${y + d * 3.4 + (d > 0 ? 1.4 : 0)}" font-family="Cairo, Arial, sans-serif" font-size="2.6" fill="${color}" text-anchor="middle">${seamText}</text>`;
+  }
+  return s;
+}
+function panelSVG(kind, rows, withHead, headName, names, codes, seamText) {
+  const P = PANEL[kind], color = kind === "p" ? CY : MG;
+  const first = rows[0], last = rows[rows.length - 1];
+  const seamTop = first !== 0, seamBottom = last !== 19;
+  const y0 = seamTop ? SEAM : PANEL.top, y1 = seamBottom ? SEAM : PANEL.bottom;
+  const tag = `${kind.toUpperCase()}${first + 1} – ${kind.toUpperCase()}${last + 1}`;
+  let s = frame(P.x0, y0, P.x1, y1, color, kind === "p" ? "left" : "right", seamTop, seamBottom);
+  if (withHead) s += `<g transform="translate(${P.at} 51)">${headInner(kind, headName)}</g>`;
+  rows.forEach(i => { s += `<g transform="translate(${P.at} ${ROW_Y(i) - 8})">${pieceInner(kind, codes[i], names[i])}</g>`; });
+  s += outside(P.x0, y0, P.x1, y1, color, tag, seamTop, seamBottom, seamText);
+  const vx = P.x0 - 2.5, vy = y0 - 7, vw = P.x1 - P.x0 + 5, vh = y1 - y0 + 13;
+  return `<svg width="${vw}mm" height="${vh}mm" viewBox="${vx} ${vy} ${vw} ${vh}">${s}</svg>`;
+}
+const scaleBarSVG = t => `<svg class="bar" width="110mm" height="7mm" viewBox="0 0 110 7"><path d="M5 4 H105 M5 2.5 V5.5 M105 2.5 V5.5" stroke="#c0392b" stroke-width=".35"/><text x="55" y="2.2" font-size="2.3" font-family="Arial, sans-serif" fill="#c0392b" text-anchor="middle">${t}</text></svg>`;
 function drawCyber(themeKey, seed) {
   const pairs = grid(themeKey, seed);
   const caps = new Array(20);
   pairs.forEach((p, i) => { caps[WIRING[i] - 1] = p[1]; });
   const ar = themeKey === "monde_ar", ui = UI[ar ? "ar" : "fr"];
   const T = ar ? {
-    hp: "البطاقات · البلدان", hc: "البطاقات · العواصم",
-    note: "اطبع بنسبة <b>100%</b> (عرض القطعة 81 مم). قصّ على حافة الشكل الأسود، ثم أزل الدائرة البيضاء في الوسط (قطرها 11 مم) واقطع الشق الأبيض الصغير. " +
-          "أدخل الحلقة حول القضيب من جهة الشق: البطاقة تأخذ مكانها وحدها. ثبّتها بعجينة لاصقة.",
-    tip: "العنوان في أعلى اللوح (بين 5 و21 مم من الحافة العليا)؛ رأس العمود فوق البطاقة الأولى مباشرة (بين 52 و66 مم).",
+    p: "البلدان", c: "العواصم", page: "الصفحة", of: "من",
+    note: "اطبع بنسبة <b>100%</b>: يجب أن يكون الشريط الأحمر 100 مم. قصّ على حافة الإطار، وأزل الدوائر البيضاء (قطرها 11 مم). " +
+          "ضع اللوحة فوق القضبان: يمرّ كل قضيب في حلقته. اجمع الجزأين طرفًا لطرف عند العلامات ▲▼، ثم ثبّت بعجينة لاصقة.",
+    seam: "يُوصل هنا بالجزء الآخر", bar: "يجب أن يكون هذا الشريط 100 مم",
   } : {
-    hp: "Étiquettes · PAYS", hc: "Étiquettes · CAPITALES",
-    note: "Imprimer à <b>100 %</b> (une pièce mesure 81 mm). Découper sur le bord noir, retirer le disque blanc central (Ø 11 mm) et couper la petite fente blanche. " +
-          "Enfiler l'anneau autour de la tige par la fente : l'étiquette se place toute seule. Fixer à la pâte adhésive.",
-    tip: "Titre en haut de la planche (y = 5 à 21 mm) ; en-tête de colonne juste au-dessus de la 1re étiquette (y = 52 à 66 mm).",
+    p: "PAYS", c: "CAPITALES", page: "page", of: "sur",
+    note: "Imprimer à <b>100 %</b> : la barre rouge doit mesurer 100 mm. Découper sur le bord du cadre, retirer les disques blancs (Ø 11 mm). " +
+          "Poser le panneau sur la planche : chaque tige passe dans son anneau. Raccorder les deux moitiés bord à bord aux repères ▲▼, puis fixer à la pâte adhésive.",
+    seam: "raccord avec l'autre moitié", bar: "cette barre doit mesurer 100 mm",
   };
-  const dirAttr = ar ? ' dir="rtl"' : "";
-  const page = (head, items, title) =>
-    `<h1${dirAttr} style="${ar ? "font-family:Cairo,Arial,sans-serif" : ""}">${head} — ${THEMES[themeKey].name}, ${ar ? "الشبكة" : "grille"} ${seed}</h1>
-     <p class="note${ar ? " ar" : ""}"${dirAttr}>${T.note}</p>
-     <p class="note${ar ? " ar" : ""}"${dirAttr}>${T.tip}</p>
-     ${title ? `<div class="titlebox">${titlePiece(title)}</div>` : ""}
-     <div class="grid${ar ? " rtl" : ""}">${items.join("")}</div>`;
-  document.getElementById("cyber-p").innerHTML = page(T.hp,
-    [headPiece("p", ui.p), ...pairs.map((p, i) => piece("p", "P" + (i + 1), p[0]))], ui.title);
-  document.getElementById("cyber-c").innerHTML = page(T.hc,
-    [headPiece("c", ui.c), ...caps.map((c, i) => piece("c", "C" + (i + 1), c))], null);
-  const label = `${THEMES[themeKey].name} — grille n° ${seed}`;
-  document.getElementById("info").textContent = label;
+  const dir = ar ? ' dir="rtl" style="font-family:Cairo,Arial,sans-serif"' : "";
+  const codesP = pairs.map((_, i) => "P" + (i + 1)), codesC = caps.map((_, i) => "C" + (i + 1));
+  const namesP = pairs.map(p => p[0]);
+  const pages = [
+    ["cyber-p1", "p", 1, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], namesP, codesP, ui.p],
+    ["cyber-p2", "p", 2, [10, 11, 12, 13, 14, 15, 16, 17, 18, 19], namesP, codesP, ui.p],
+    ["cyber-c1", "c", 1, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], caps, codesC, ui.c],
+    ["cyber-c2", "c", 2, [10, 11, 12, 13, 14, 15, 16, 17, 18, 19], caps, codesC, ui.c],
+  ];
+  for (const [id, kind, n, rows, names, codes, head] of pages) {
+    const what = kind === "p" ? T.p : T.c;
+    document.getElementById(id).innerHTML =
+      `<h1${dir}>${what} · ${T.page} ${n} ${T.of} 2 — ${THEMES[themeKey].name}, ${ar ? "الشبكة" : "grille"} ${seed}</h1>
+       <p class="note${ar ? " ar" : ""}"${ar ? ' dir="rtl"' : ""}>${T.note}</p>
+       ${kind === "p" && n === 1 ? `<div class="titlebox">${titlePiece(ui.title)}</div>` : ""}
+       ${panelSVG(kind, rows, n === 1, head, names, codes, T.seam)}
+       ${scaleBarSVG(T.bar)}`;
+  }
+  document.getElementById("info").textContent = `${THEMES[themeKey].name} — grille n° ${seed}`;
 }
 
 // Plan de pose (vue de face, coordonnées en mm de la planche 300 × 400)
